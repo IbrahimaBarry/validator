@@ -3,57 +3,55 @@
 namespace App\Policies;
 
 use App\User;
-use App\Reception;
+use App\Document;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ReceptionPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view the reception.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Reception  $reception
-     * @return mixed
-     */
-    public function view(User $user, Reception $reception)
+    public function before($user, $ability)
     {
-        //
+        if ($user->role === 'admin') {
+            return true;
+        }
     }
 
-    /**
-     * Determine whether the user can create receptions.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function create(User $user)
+    public function scan(User $user)
     {
-        //
+        foreach ($user->permissions as $permission) {
+            if ($permission->name === 'scan')
+                return true;
+        }
     }
 
-    /**
-     * Determine whether the user can update the reception.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Reception  $reception
-     * @return mixed
-     */
-    public function update(User $user, Reception $reception)
+    public function import(User $user)
     {
-        //
+        foreach ($user->permissions as $permission) {
+            if ($permission->name === 'import')
+                return true;
+        }
     }
 
-    /**
-     * Determine whether the user can delete the reception.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Reception  $reception
-     * @return mixed
-     */
-    public function delete(User $user, Reception $reception)
+    public function affect(User $user)
     {
-        //
+        if ($user->role === 'admin')
+            return true;
+    }
+
+    public function clipping(User $user)
+    {
+        foreach ($user->permissions as $permission) {
+            if ($permission->name === 'clipping')
+                return true;
+        }
+    }
+
+    public function export(User $user)
+    {
+        foreach ($user->permissions as $permission) {
+            if ($permission->name === 'export')
+                return true;
+        }
     }
 }

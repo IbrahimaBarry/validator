@@ -1,85 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ app()->getLocale() }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+        <!-- Fonts -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/app.css">
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-</head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
+    </head>
+    <body>
+        
+        <div id="app">
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+            <section class="hero is-info is-medium">
+              <!-- Hero header: will stick at the top -->
+              <div class="hero-head">
+                <header class="nav">
+                  <div class="container">
+                    <div class="nav-left">
+                      <router-link to="/" exact>
+                          <a class="nav-item">
+                            DOCUMENTS MANAGEMENT
+                          </a>
+                      </router-link>
+                    </div>
+                    <span class="nav-toggle">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </span>
+                    <div class="nav-right nav-menu">
+                      <!-- <router-link to="/">
+                        <a class="nav-item">Accueil</a>
+                      </router-link> -->
+                      @if (Auth::user()->role === 'admin')
+                        <router-link to="/admin">
+                          <a class="nav-item">Espace d'administration</a>
+                        </router-link>
+                      @endif
+                      <a class="nav-item">
+                        {{ Auth::user()->name }}
+                      </a>
+                      <span class="nav-item">
+                        <a class="button is-small is-info is-inverted" href="{{ route('logout') }}"
+                                                        onclick="event.preventDefault();
+                                                                 document.getElementById('logout-form').submit();">
+                          <span class="icon">
+                            <i class="fa fa-sign-out"></i>
+                          </span>
+                          <span>Déconnexion</span>
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                      </span>
+                    </div>
+                  </div>
+                </header>
+              </div>
 
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
+              <!-- Hero content: will be in the middle -->
+              <div class="hero-body">
+                <div class="container has-text-centered">
+                  <h1 class="title">
+                    DOCUMENTS MANAGEMENT
+                  </h1>
+                  <h2 class="subtitle">
+                    Application de management des documents OXDATA
+                  </h2>
                 </div>
+              </div>
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+              <router-view></router-view>
+            
+        </div>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
-                        @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+        
 
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
+        
+        <script src="js/app.js"></script>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        @yield('content')
-    </div>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="https://unpkg.com/vue@2.3.4"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-    @yield('js')
-
-</body>
+        <!-- <script>
+            iziToast.info({
+                title: 'Hello',
+                message: 'Welcome!',
+                position: 'topCenter'
+            });
+        </script> -->
+    </body>
 </html>

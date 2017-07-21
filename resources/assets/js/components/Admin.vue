@@ -1,13 +1,17 @@
 <template>
 	<div>
-		<div class="columns">
+		</section>
+		<section class="section">
+		    <div class="container">
+
+		        <div class="columns">
 			<div class="column is-one-quarter">
 				<aside class="menu">
 				  <p class="menu-label">
 				    Administration
 				  </p>
 				  <ul class="menu-list">
-				    <li><a>Paramètres des equipes</a></li>
+				    <li><a class="is-active">Paramètres des equipes</a></li>
 				    <li>
 				      <a>Gérer les agents</a>
 				      <ul>
@@ -55,19 +59,29 @@
 				</div>
 			</div>
 	    </div>
+
+		    </div>
+		</section>
 	</div>
 </template>
 
 <script>
 	export default {
-		data() {
-			return {
-				data: {}
-			}
-		},
 
-		mounted() {
-			axios.get('/user').then(response => this.data = response.data)
-		}
 	}
 </script>
+
+<style scoped>
+	.hero.is-info a:not(.button) {
+		color: initial;
+	}
+
+	a.is-active {
+		background: lightgrey;
+		color: white
+	}
+
+	.menu-list a {
+		color: initial;
+	}
+</style>

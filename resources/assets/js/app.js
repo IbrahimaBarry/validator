@@ -1,7 +1,7 @@
 
 import './bootstrap';
 import router from './routes';
-import Notification from './components/Notification';
+import Admin from './components/Admin';
 
 new Vue({
     el: '#app',
@@ -9,6 +9,6 @@ new Vue({
     router,
 
     components: {
-		Notification
+		Admin
 	}
 });

@@ -8,7 +8,7 @@ class Reception extends Model
 {
 	protected $fillable = [
         'sourceDate', 'nbrPage', 'date_scan', 'scanned', 'user_scan', 'date_import', 'imported', 'user_import', 
-        'date_clipping', 'clipped', 'user_clippîng', 'date_export', 'exported', 'user_export'
+        'date_clipping', 'clipped', 'user_clippîng', 'date_export', 'exported', 'user_export', 'nbrArtTotal', 'time', 'message'
     ];
 
     public function user()

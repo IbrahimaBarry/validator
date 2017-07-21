@@ -10,28 +10,21 @@
 	      	<div class="field">
 			  <label class="label">Nom</label>
 			  <p class="control">
-			    <input class="input" type="text" placeholder="Text input" v-model="document.name">
+			    <input class="input" type="text" placeholder="Saisir le nom du document" v-model="document.name">
 			  </p>
 			</div>
 
 			<div class="field">
 			  <label class="label">Source</label>
 			  <p class="control">
-			    <input class="input" type="text" placeholder="Text input" v-model="document.source">
-			    <!-- <span class="icon is-small is-left">
-			      <i class="fa fa-user"></i>
-			    </span>
-			    <span class="icon is-small is-right">
-			      <i class="fa fa-check"></i>
-			    </span>
+			    <input class="input" type="text" placeholder="Saisir la source du document" v-model="document.source">
 			  </p>
-			  <p class="help is-success">This username is available --></p>
 			</div>
 
 			<div class="field">
 			  <label class="label">Source name</label>
 			  <p class="control">
-			    <input class="input" type="text" placeholder="Text input" v-model="document.sourceName">
+			    <input class="input" type="text" placeholder="Saisir le sourceName du document" v-model="document.sourceName">
 			  </p>
 			</div>
 

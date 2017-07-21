@@ -10,13 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/', function () {
-    return view('welcome');
+	return view('layouts.app');
+})->middleware('auth');
+
+Route::get('/home', function () {
+	return view('layouts.app');
 })->middleware('auth');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/user', 'HomeController@index');
 
 // DOCUMENT
 Route::get('/documents/index', 'DocumentController@index');
@@ -25,8 +30,25 @@ Route::post('/documents/store', 'DocumentController@store');
 // RECEPTION
 Route::get('/receptions/index', 'ReceptionController@index');
 Route::post('/receptions/store', 'ReceptionController@store');
+
+// SCAN
 Route::get('/receptions/scan/{id}', 'ReceptionController@scan');
 Route::get('/receptions/scan', 'ReceptionController@getScan');
 
-Route::group(['middleware' => ''], function () {
-});
+// IMPORT
+Route::get('/receptions/import/{id}', 'ReceptionController@import');
+Route::get('/receptions/import', 'ReceptionController@getImport');
+
+// CLIPPING
+Route::get('/receptions/clipping/{reception_id}/{agent_id}', 'ReceptionController@addAgent');
+Route::get('/receptions/clipping/agent', 'ReceptionController@agentClipping');
+Route::post('/receptions/clipping/{id}', 'ReceptionController@clipping');
+Route::get('/receptions/clipping', 'ReceptionController@getClipping');
+
+// EXPORT
+
+Route::get('/receptions/export/{id}', 'ReceptionController@export');
+Route::get('/receptions/export', 'ReceptionController@getExport'); 
+
+// ADMIN
+

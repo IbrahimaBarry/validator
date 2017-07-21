@@ -3,15 +3,22 @@
 	  <div class="modal-background"></div>
 	  <div class="modal-card">
 	    <header class="modal-card-head">
-	      <p class="modal-card-title">Valider réception du document {{ id }}</p>
+	      <p class="modal-card-title">Valider réception du document</p>
 	      <button class="delete" @click="hideModal"></button>
 	    </header>
 	    <section class="modal-card-body">
 	      <!-- Content ... -->
-	      <div class="field">
-			  <label class="label">Date de publication</label>
+	      	<div class="field">
+			  <label class="label">Jour de publication</label>
 			  <p class="control">
-			    <input class="input" type="date" placeholder="Text input" v-model="document.sourceDate">
+			    <input class="input" type="date" v-model="document.sourceDate">
+			  </p>
+			</div>
+
+			<div class="field">
+			  <label class="label">Heure de publication</label>
+			  <p class="control">
+			    <input class="input" type="time" v-model="document.time">
 			  </p>
 			</div>
 
@@ -22,12 +29,17 @@
 			  </p>
 			</div>
 
+			<textarea class="textarea" placeholder="Preciser la cause du retard de la réception ici" v-model="document.message"></textarea>
+
 			<div class="field">
 			  <p class="control">
 			    <label class="checkbox">
 			      <input type="checkbox" v-bind:true-value="id" v-bind:false-value="0" v-model="document.document_id">
-			      Je confirmer la reception du document
+			      Je confirme la reception du document
 			    </label>
+			    <div v-if="document.document_id == 0">
+                    <p class="help is-danger">Veilllez confirmer la reception du document avant de valider</p>
+			    </div>
 			  </p>
 			</div>
 	    </section>
@@ -47,8 +59,10 @@
 			return {
 				document: {
 					sourceDate: '',
+					time: '',
 					nbrPage: 0,
-					document_id: 0
+					document_id: 0,
+					message: ''
 				}
 			}
 		},
@@ -71,3 +85,9 @@
 		}
     }
 </script>
+
+<style scoped>
+	label.checkbox {
+		color: black
+	}
+</style>

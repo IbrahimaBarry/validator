@@ -32,34 +32,33 @@
       </nav>
       
       <table class="table is-striped">
-          <thead>
-            <tr>
-              <th><abbr title="type">Type du document</abbr></th>
-              <th><abbr title="nom">Nom du document</abbr></th>
-              <th><abbr title="sourceDate">Date de publication</abbr></th>
-              <th><abbr title="nbrPage">Nombre de page</abbr></th>
-              <th><abbr title="date">Date du scanne</abbr></th>
-              <th><abbr title="userName">Nom de l'agent</abbr></th>
-              <th><abbr title="nbrPage"></abbr></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="scan in filteredDocuments">
-              <td>{{ scan.document.type }}</td>
-              <td>{{ scan.document.name }}</td>
-              <td>{{ scan.sourceDate }}</td>
-              <td>{{ scan.nbrPage }}</td>
-              <td>{{ scan.date_scan }}</td>
-              <td>{{ scan.user_scan }}</td>
-              <td v-if="scan.imported == false"><a class="button is-small is-outlined is-info" @click.prevent="addImport(scan.id)">Valider l'import</a></td>
-              <td v-else>
-                <span class="icon">
-                  <i class="fa fa-check success"></i>
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <thead>
+          <tr>
+            <th><abbr title="type">Type du document</abbr></th>
+            <th><abbr title="nom">Nom du document</abbr></th>
+            <th><abbr title="date">Date de publication</abbr></th>
+            <th><abbr title="nbrPage">Nbr. de page</abbr></th>
+            <th><abbr title="nbrPage">Date export</abbr></th>
+            <th><abbr title="userName">Nom de l'agent</abbr></th>
+            <th><abbr title="userName"></abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="doc in filteredDocuments">
+            <td>{{ doc.document.type }}</td>
+            <td>{{ doc.document.name }}</td>
+            <td>{{ doc.sourceDate }}</td>
+            <td>{{ doc.nbrPage }}</td>
+            <td>{{ doc.date_export }}</td>
+            <td>{{ doc.user_export }}</td>
+            <td>
+              <span class="icon">
+                <i class="fa fa-check success"></i>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 </template>
 
@@ -67,7 +66,7 @@
     export default {
         beforeRouteEnter (to, from, next) {
           axios.get('/user').then(function(response) {
-            if (response.data.import)
+            if (response.data.export)
               next();
             else
               next({path: from.path});
@@ -76,34 +75,27 @@
 
         data() {
             return {
-                scans: [],
+                documents: [],
 
                 filter: 'all'
-            }
-        },
-
-        methods: {
-            addImport(id) {
-              axios.get('/receptions/import/'+id)
-                  .then(response => this.scans = response.data);
             }
         },
 
         computed: {
             filteredDocuments() {
                 if (this.filter == 'all')
-                    return this.scans;
+                    return this.documents;
                 else if (this.filter == 'quotidien')
-                    return this.scans.filter(scan => scan.document.frequence == 'quotidien');
+                    return this.documents.filter(doc => doc.document.frequence == 'quotidien');
                 else if (this.filter == 'hebdomadaire')
-                    return this.scans.filter(scan => scan.document.frequence == 'hebdomadaire');
+                    return this.documents.filter(doc => doc.document.frequence == 'hebdomadaire');
                 else
-                    return this.scans.filter(scan => scan.document.frequence == 'mensuel');
+                    return this.documents.filter(doc => doc.document.frequence == 'mensuel');
             }
         },
 
         mounted() {
-            axios.get('/receptions/scan').then(response => this.scans = response.data);
+            axios.get('/receptions/export').then(response => this.documents = response.data);
         }
     }
 </script>
