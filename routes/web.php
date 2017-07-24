@@ -22,6 +22,7 @@ Route::get('/home', function () {
 Auth::routes();
 
 Route::get('/user', 'HomeController@index');
+Route::post('/user/store', 'UserController@store');
 
 // DOCUMENT
 Route::get('/documents/index', 'DocumentController@index');
@@ -44,6 +45,7 @@ Route::get('/receptions/clipping/{reception_id}/{agent_id}', 'ReceptionControlle
 Route::get('/receptions/clipping/agent', 'ReceptionController@agentClipping');
 Route::post('/receptions/clipping/{id}', 'ReceptionController@clipping');
 Route::get('/receptions/clipping', 'ReceptionController@getClipping');
+Route::get('/receptions/deleteClipping/{id}', 'ReceptionController@deleteClipping');
 
 // EXPORT
 

@@ -16,7 +16,7 @@
         
         <div id="app">
 
-            <section class="hero is-info is-medium">
+            <section class="hero is-info is-bold is-medium">
               <!-- Hero header: will stick at the top -->
               <div class="hero-head">
                 <header class="nav">
@@ -34,9 +34,9 @@
                       <span></span>
                     </span>
                     <div class="nav-right nav-menu">
-                      <!-- <router-link to="/">
+                      <router-link to="/">
                         <a class="nav-item">Accueil</a>
-                      </router-link> -->
+                      </router-link>
                       @if (Auth::user()->role === 'admin')
                         <router-link to="/admin">
                           <a class="nav-item">Espace d'administration</a>

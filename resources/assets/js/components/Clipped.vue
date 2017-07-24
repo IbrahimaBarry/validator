@@ -42,6 +42,7 @@
             <th><abbr title="userName">Nom du clippeur</abbr></th>
             <th><abbr title="nbrPage"></abbr></th>
             <th><abbr title="nbrPage"></abbr></th>
+            <th><abbr title="nbrPage"></abbr></th>
           </tr>
         </thead>
         <tbody>
@@ -52,7 +53,10 @@
             <td>{{ doc.nbrPage }}</td>
             <td>{{ doc.date_clipping }}</td>
             <td>{{ doc.user_clipping }}</td>
-            <td v-if="doc.exported == false"><a class="button is-small is-outlined is-info" @click.prevent="addExport(doc.id)">Valider l'export</a></td>
+            <div v-if="doc.exported == false">
+              <td><a class="button is-small is-outlined is-info" @click.prevent="addExport(doc.id)">Valider l'export</a></td>
+              <td><a class="delete is-medium danger" @click.prevent="deleteClipped(doc.id)"></a></td>
+            </div>
             <td v-else>
               <span class="icon">
                 <i class="fa fa-check success"></i>
@@ -139,6 +143,11 @@
         methods: {
             addExport(id) {
               axios.get('/receptions/export/'+id)
+                  .then(response => this.documents = response.data);
+            },
+
+            deleteClipped(id) {
+              axios.get('/receptions/deleteClipping/'+id)
                   .then(response => this.documents = response.data);
             }
         },

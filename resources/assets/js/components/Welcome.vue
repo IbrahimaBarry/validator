@@ -25,7 +25,7 @@
 					</router-link>
 
 					<router-link tag="li" to="/documents/clipped">
-					    <a>Documents à exporter</a>
+					    <a>Documents clippés</a>
 					</router-link>
 		        </ul>
 		      </div>

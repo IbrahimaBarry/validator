@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\RegisterController;
 
 class UserController extends Controller
 {
@@ -33,9 +34,14 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, RegisterController $register)
     {
-        //
+        $register->create($request);
+
+        $user = User::find(count(User::all()));
+        $user->permissions()->attach($request['permissions']);
+
+        return ['success'];
     }
 
     /**

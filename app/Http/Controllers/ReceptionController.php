@@ -123,6 +123,15 @@ class ReceptionController extends Controller
         return Reception::with(['document'])->where('clipped', true)->latest()->get();
     }
 
+    public function deleteClipping($id) {
+        $reception = Reception::findOrFail($id);
+
+        $reception->clipped = false;
+        $reception->save();
+
+        return Reception::with(['document'])->where('clipped', true)->latest()->get();
+    }
+
     public function export($id)
     {
         $reception = Reception::find($id);

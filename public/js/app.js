@@ -471,88 +471,7 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
+/* 2 */,
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15998,7 +15917,7 @@ if(false) {
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -16147,7 +16066,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "tag": "li",
       "to": "/documents/clipped"
     }
-  }, [_c('a', [_vm._v("Documents à exporter")])])], 1)])])]), _vm._v(" "), _c('section', {
+  }, [_c('a', [_vm._v("Documents clippés")])])], 1)])])]), _vm._v(" "), _c('section', {
     staticClass: "section"
   }, [_c('div', {
     staticClass: "container"
@@ -16240,7 +16159,7 @@ if(false) {
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -16919,7 +16838,7 @@ if(false) {
 /* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -17445,7 +17364,7 @@ if(false) {
 /* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -17776,7 +17695,7 @@ if(false) {
 /* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -18099,7 +18018,7 @@ if(false) {
 /* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -18490,7 +18409,7 @@ if(false) {
 /* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -19045,12 +18964,12 @@ if(false) {
 /* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -19061,6 +18980,10 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
 //
 //
 //
@@ -19203,6 +19126,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/receptions/export/' + id).then(function (response) {
                 return _this.documents = response.data;
             });
+        },
+        deleteClipped: function deleteClipped(id) {
+            var _this2 = this;
+
+            axios.get('/receptions/deleteClipping/' + id).then(function (response) {
+                return _this2.documents = response.data;
+            });
         }
     },
 
@@ -19219,10 +19149,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     mounted: function mounted() {
-        var _this2 = this;
+        var _this3 = this;
 
         axios.get('/receptions/clipping').then(function (response) {
-            return _this2.documents = response.data;
+            return _this3.documents = response.data;
         });
     }
 });
@@ -19299,7 +19229,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.detail = doc
         }
       }
-    }, [_c('td', [_vm._v(_vm._s(doc.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.date_clipping))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.user_clipping))]), _vm._v(" "), (doc.exported == false) ? _c('td', [_c('a', {
+    }, [_c('td', [_vm._v(_vm._s(doc.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.date_clipping))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.user_clipping))]), _vm._v(" "), (doc.exported == false) ? _c('div', [_c('td', [_c('a', {
       staticClass: "button is-small is-outlined is-info",
       on: {
         "click": function($event) {
@@ -19307,7 +19237,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.addExport(doc.id)
         }
       }
-    }, [_vm._v("Valider l'export")])]) : _c('td', [_vm._m(1, true)]), _vm._v(" "), _c('td', [_c('a', {
+    }, [_vm._v("Valider l'export")])]), _vm._v(" "), _c('td', [_c('a', {
+      staticClass: "delete is-medium danger",
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.deleteClipped(doc.id)
+        }
+      }
+    })])]) : _c('td', [_vm._m(1, true)]), _vm._v(" "), _c('td', [_c('a', {
       staticClass: "button is-small is-success",
       on: {
         "click": function($event) {
@@ -19359,6 +19297,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "title": "userName"
     }
   }, [_vm._v("Nom du clippeur")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "nbrPage"
+    }
+  })]), _vm._v(" "), _c('th', [_c('abbr', {
     attrs: {
       "title": "nbrPage"
     }
@@ -19462,7 +19404,7 @@ if(false) {
 /* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
@@ -19722,12 +19664,12 @@ if(false) {
 /* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(undefined);
+exports = module.exports = __webpack_require__(97)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "\n.hero.is-info a[data-v-1d71e276]:not(.button) {\n\tcolor: initial;\n}\na.is-active[data-v-1d71e276] {\n\tbackground: lightgrey;\n\tcolor: white\n}\n.menu-list a[data-v-1d71e276] {\n\tcolor: initial;\n}\n", ""]);
+exports.push([module.i, "\nsection[data-v-1d71e276], .container h2.title[data-v-1d71e276] {\n\tcolor: black\n}\n.checkbox[data-v-1d71e276] {\n\tmargin-right: 7px;\n}\n", ""]);
 
 // exports
 
@@ -19805,63 +19747,498 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			user: {
+				name: '',
+				email: '',
+				password: '',
+				password_confirmation: '',
+				role: '',
+				permissions: []
+			},
+
+			etat: ''
+		};
+	},
+
+
+	computed: {
+		confirmedPassword: function confirmedPassword() {
+			if (this.user.password != '' && this.user.password_confirmation != '') {
+				return this.user.password == this.user.password_confirmation;
+			} else return true;
+		},
+		permissionsNotChecked: function permissionsNotChecked() {
+			if (this.user.role === 'agent') return this.user.permissions.length == 0;else return false;
+		}
+	},
+
+	methods: {
+		addPermssions: function addPermssions(val) {
+			this.user.permissions.push(val);
+		},
+		addUser: function addUser() {
+			var _this = this;
+
+			if (this.confirmedPassword && this.permissionsNotChecked == false) {
+				axios.post('/user/store', this.user).then(function (response) {
+					return _this.etat = response.data;
+				});
+			}
+		}
+	}
+});
 
 /***/ }),
 /* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('section', {
     staticClass: "section"
   }, [_c('div', {
-    staticClass: "container"
+    staticClass: "container columns"
   }, [_c('div', {
-    staticClass: "columns"
-  }, [_c('div', {
-    staticClass: "column is-one-quarter"
-  }, [_c('aside', {
-    staticClass: "menu"
-  }, [_c('p', {
-    staticClass: "menu-label"
-  }, [_vm._v("\n\t\t\t    Administration\n\t\t\t  ")]), _vm._v(" "), _c('ul', {
-    staticClass: "menu-list"
-  }, [_c('li', [_c('a', {
-    staticClass: "is-active"
-  }, [_vm._v("Paramètres des equipes")])]), _vm._v(" "), _c('li', [_c('a', [_vm._v("Gérer les agents")]), _vm._v(" "), _c('ul', [_c('li', [_c('a', [_vm._v("Liste des agents")])]), _vm._v(" "), _c('li', [_c('a', [_vm._v("Ajouter un agent")])])])])]), _vm._v(" "), _c('p', {
-    staticClass: "menu-label"
-  }, [_vm._v("\n\t\t\t    Transactions\n\t\t\t  ")]), _vm._v(" "), _c('ul', {
-    staticClass: "menu-list"
-  }, [_c('li', [_c('a', [_vm._v("Payments")])]), _vm._v(" "), _c('li', [_c('a', [_vm._v("Transfers")])]), _vm._v(" "), _c('li', [_c('a', [_vm._v("Balance")])])])])]), _vm._v(" "), _c('div', {
-    staticClass: "column"
-  }, [_c('div', {
-    staticClass: "columns"
-  }, [_c('div', {
-    staticClass: "card column is-half"
-  }, [_c('header', {
-    staticClass: "card-header"
-  }, [_c('p', {
-    staticClass: "card-header-title"
-  }, [_vm._v("\n\t\t\t\t      Equipe n°1\n\t\t\t\t    ")])]), _vm._v(" "), _c('div', {
-    staticClass: "card-content"
-  }), _vm._v(" "), _c('footer', {
-    staticClass: "card-footer"
-  }, [_c('p', {
-    staticClass: "card-footer-item"
-  }, [_c('span', [_vm._v("\n\t\t\t\t        View on "), _c('a', {
-    attrs: {
-      "href": "https://twitter.com/codinghorror/status/506010907021828096"
+    staticClass: "column is-offset-one-quarter is-half"
+  }, [_c('h2', {
+    staticClass: "title"
+  }, [_vm._v("Ajouter un utilisateur")]), _vm._v(" "), (_vm.etat == 'success') ? _c('div', {
+    staticClass: "notification is-success"
+  }, [_c('button', {
+    staticClass: "delete",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.etat = ''
+      }
     }
-  }, [_vm._v("Twitter")])])]), _vm._v(" "), _c('p', {
-    staticClass: "card-footer-item"
-  }, [_c('span', [_vm._v("\n\t\t\t\t        Share on "), _c('a', {
+  }), _vm._v("\n\t\t\t\t\tUtilisateur ajouter avec succès\n\t\t\t\t")]) : _vm._e(), _vm._v(" "), _c('form', {
     attrs: {
-      "href": "#"
+      "action": ""
+    },
+    on: {
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.addUser($event)
+      }
     }
-  }, [_vm._v("Facebook")])])])])])])])])])])])
+  }, [_c('div', {
+    staticClass: "field"
+  }, [_c('label', {
+    staticClass: "label"
+  }, [_vm._v("Nom")]), _vm._v(" "), _c('div', {
+    staticClass: "control has-icons-left"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.name),
+      expression: "user.name"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Nom et prénom",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.user.name)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.user.name = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _c('div', {
+    staticClass: "field"
+  }, [_c('label', {
+    staticClass: "label"
+  }, [_vm._v("E-mail")]), _vm._v(" "), _c('div', {
+    staticClass: "control has-icons-left"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.email),
+      expression: "user.email"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "email",
+      "placeholder": "Saisir l'e-mail",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.user.email)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.user.email = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c('div', {
+    staticClass: "field"
+  }, [_c('label', {
+    staticClass: "label"
+  }, [_vm._v("Mot de passe")]), _vm._v(" "), _c('div', {
+    staticClass: "control has-icons-left"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.password),
+      expression: "user.password"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "password",
+      "placeholder": "Saisir le mot de passe",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.user.password)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.user.password = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c('div', {
+    staticClass: "field"
+  }, [_c('label', {
+    staticClass: "label"
+  }, [_vm._v("Confirmer mot de passe")]), _vm._v(" "), _c('div', {
+    staticClass: "control has-icons-left has-icons-right"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.password_confirmation),
+      expression: "user.password_confirmation"
+    }],
+    class: {
+      'input': true, 'is-danger': _vm.confirmedPassword == false
+    },
+    attrs: {
+      "type": "password",
+      "placeholder": "Confirmer le mot de passe",
+      "required": ""
+    },
+    domProps: {
+      "value": (_vm.user.password_confirmation)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.user.password_confirmation = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _vm._m(3), _vm._v(" "), (_vm.confirmedPassword == false) ? _c('div', [_vm._m(4), _vm._v(" "), _c('p', {
+    staticClass: "help is-danger"
+  }, [_vm._v("Mots de passe différents")])]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "field"
+  }, [_c('label', {
+    staticClass: "label"
+  }, [_vm._v("Rôle")]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.role),
+      expression: "user.role"
+    }],
+    attrs: {
+      "required": ""
+    },
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.user.role = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', {
+    attrs: {
+      "disabled": ""
+    }
+  }, [_vm._v("Select role")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "admin"
+    }
+  }, [_vm._v("Admin")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "agent"
+    }
+  }, [_vm._v("Agent")])])])])]), _vm._v(" "), _c('div', {
+    staticClass: "field"
+  }, [_c('div', {
+    staticClass: "control"
+  }, [(_vm.user.role === 'agent') ? _c('label', {
+    staticClass: "checkbox"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.permissions),
+      expression: "user.permissions"
+    }],
+    attrs: {
+      "type": "checkbox",
+      "value": "1"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.user.permissions) ? _vm._i(_vm.user.permissions, "1") > -1 : (_vm.user.permissions)
+    },
+    on: {
+      "__c": function($event) {
+        var $$a = _vm.user.permissions,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = "1",
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.user.permissions = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.user.permissions = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.user.permissions = $$c
+        }
+      }
+    }
+  }), _vm._v("\n\t\t\t\t      Reception\n\t\t\t\t    ")]) : _vm._e(), _vm._v(" "), (_vm.user.role === 'agent') ? _c('label', {
+    staticClass: "checkbox"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.permissions),
+      expression: "user.permissions"
+    }],
+    attrs: {
+      "type": "checkbox",
+      "value": "2"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.user.permissions) ? _vm._i(_vm.user.permissions, "2") > -1 : (_vm.user.permissions)
+    },
+    on: {
+      "__c": function($event) {
+        var $$a = _vm.user.permissions,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = "2",
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.user.permissions = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.user.permissions = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.user.permissions = $$c
+        }
+      }
+    }
+  }), _vm._v("\n\t\t\t\t      Scan\n\t\t\t\t    ")]) : _vm._e(), _vm._v(" "), (_vm.user.role === 'agent') ? _c('label', {
+    staticClass: "checkbox"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.permissions),
+      expression: "user.permissions"
+    }],
+    attrs: {
+      "type": "checkbox",
+      "value": "3"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.user.permissions) ? _vm._i(_vm.user.permissions, "3") > -1 : (_vm.user.permissions)
+    },
+    on: {
+      "__c": function($event) {
+        var $$a = _vm.user.permissions,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = "3",
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.user.permissions = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.user.permissions = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.user.permissions = $$c
+        }
+      }
+    }
+  }), _vm._v("\n\t\t\t\t      Import\n\t\t\t\t    ")]) : _vm._e(), _vm._v(" "), (_vm.user.role === 'agent') ? _c('label', {
+    staticClass: "checkbox"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.permissions),
+      expression: "user.permissions"
+    }],
+    attrs: {
+      "type": "checkbox",
+      "value": "4"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.user.permissions) ? _vm._i(_vm.user.permissions, "4") > -1 : (_vm.user.permissions)
+    },
+    on: {
+      "__c": function($event) {
+        var $$a = _vm.user.permissions,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = "4",
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.user.permissions = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.user.permissions = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.user.permissions = $$c
+        }
+      }
+    }
+  }), _vm._v("\n\t\t\t\t      Clipping\n\t\t\t\t    ")]) : _vm._e(), _vm._v(" "), (_vm.user.role === 'agent') ? _c('label', {
+    staticClass: "checkbox"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.user.permissions),
+      expression: "user.permissions"
+    }],
+    attrs: {
+      "type": "checkbox",
+      "value": "5"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.user.permissions) ? _vm._i(_vm.user.permissions, "5") > -1 : (_vm.user.permissions)
+    },
+    on: {
+      "__c": function($event) {
+        var $$a = _vm.user.permissions,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = "5",
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.user.permissions = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.user.permissions = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.user.permissions = $$c
+        }
+      }
+    }
+  }), _vm._v("\n\t\t\t\t      Export\n\t\t\t\t    ")]) : _vm._e()]), _vm._v(" "), (_vm.permissionsNotChecked) ? _c('p', {
+    staticClass: "help is-danger"
+  }, [_vm._v("Vous devez choisir une permisison")]) : _vm._e()]), _vm._v(" "), _vm._m(5)])])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon is-small is-left"
+  }, [_c('i', {
+    staticClass: "fa fa-user"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon is-small is-left"
+  }, [_c('i', {
+    staticClass: "fa fa-envelope"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon is-small is-left"
+  }, [_c('i', {
+    staticClass: "fa fa-key"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon is-small is-left"
+  }, [_c('i', {
+    staticClass: "fa fa-key"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon is-small is-right"
+  }, [_c('i', {
+    staticClass: "fa fa-warning"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "field is-grouped"
+  }, [_c('div', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-primary"
+  }, [_vm._v("Ajouter")])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -19876,6 +20253,92 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
 
 /***/ })
 /******/ ]);
