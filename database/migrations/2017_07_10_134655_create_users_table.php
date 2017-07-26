@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
             $table->string('email');
             $table->string('password');
             $table->string('role')->default('agent');
-            $table->integer('team_id')->unsiged()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

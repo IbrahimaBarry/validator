@@ -28,7 +28,7 @@
         <p class="level-item"><a :class="{'is-active': filter == 'quotidien'}" @click.prevent="filter = 'quotidien'">Quotidiens</a></p>
         <p class="level-item"><a :class="{'is-active': filter=='hebdomadaire'}" @click.prevent="filter='hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'mensuel'}" @click.prevent="filter = 'mensuel'">Mensuels</a></p>
-        <p class="level-item"><a class="button is-primary" @click.prevent="showAddDoc = true">Ajouter un document</a></p>
+        <p class="level-item"><a class="button is-info is-outlined" @click.prevent="showAddDoc = true">Ajouter un document</a></p>
       </div>
     </nav>
     

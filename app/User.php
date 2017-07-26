@@ -36,8 +36,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class, 'permission_users');
     }
 
-    public function team()
+    public function horaires()
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsToMany(Horaire::class);
     }
 }

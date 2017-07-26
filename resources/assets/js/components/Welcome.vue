@@ -58,23 +58,6 @@
 </script>
 
 <style>
-	.tabs a.not-active {
-		opacity: 0.2;
-		pointer-events: none;
-   		cursor: default;
-	}
-
-	.hero.is-info .level-item a:not(.button) {
-	    color: #3273dc;
-	}
-
-	.hero.is-info .level-item a.is-active:not(.button) {
-	    color: rgba(0, 0, 0, 0.9);
-	}
-
-	.hero.is-info p.subtitle, .hero.is-info .subtitle strong {
-	    color: rgba(0, 0, 0, 0.9);
-	}
 
 	/*.fade-enter-active {
 	  animation: fade .5s;

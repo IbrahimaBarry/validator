@@ -16,7 +16,7 @@
         
         <div id="app">
 
-            <section class="hero is-info is-bold is-medium">
+            <section class="hero is-primary is-medium">
               <!-- Hero header: will stick at the top -->
               <div class="hero-head">
                 <header class="nav">
@@ -35,18 +35,18 @@
                     </span>
                     <div class="nav-right nav-menu">
                       <router-link to="/">
-                        <a class="nav-item">Accueil</a>
+                        <a class="nav-item is-active">Accueil</a>
                       </router-link>
                       @if (Auth::user()->role === 'admin')
                         <router-link to="/admin">
-                          <a class="nav-item">Espace d'administration</a>
+                          <a class="nav-item is-active">Espace d'administration</a>
                         </router-link>
                       @endif
                       <a class="nav-item">
                         {{ Auth::user()->name }}
                       </a>
                       <span class="nav-item">
-                        <a class="button is-small is-info is-inverted" href="{{ route('logout') }}"
+                        <a class="button is-small is-primary is-inverted" href="{{ route('logout') }}"
                                                         onclick="event.preventDefault();
                                                                  document.getElementById('logout-form').submit();">
                           <span class="icon">

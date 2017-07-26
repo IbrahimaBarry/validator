@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return User::with('permissions')->latest()->get();
     }
 
     /**

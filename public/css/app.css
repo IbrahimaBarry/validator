@@ -8632,3 +8632,13 @@ body {
   background: red;
 }
 
+.hero.is-primary .level-item a:not(.button),
+.hero.is-primary .level-item .subtitle strong,
+.hero.is-primary .level-item .subtitle {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.hero.is-primary .level-item a.is-active:not(.button) {
+  color: #00d1b2;
+}
+

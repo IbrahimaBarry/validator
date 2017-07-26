@@ -5,7 +5,7 @@
         <div class="level-left">
           <div class="level-item">
             <p class="subtitle is-5">
-              <strong>{{filteredDocuments.length}}</strong> Documents
+              <strong v-if="data.length != 0">{{filteredDocuments.length}}</strong> Documents
             </p>
           </div>
           <!-- <div class="level-item">

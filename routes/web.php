@@ -22,7 +22,14 @@ Route::get('/home', function () {
 Auth::routes();
 
 Route::get('/user', 'HomeController@index');
+
+//  USER
+Route::get('/users/all', 'UserController@index');
 Route::post('/user/store', 'UserController@store');
+
+// TEAM
+Route::get('/teams/all', 'TeamController@index');
+Route::post('teams/store', 'TeamController@store');
 
 // DOCUMENT
 Route::get('/documents/index', 'DocumentController@index');

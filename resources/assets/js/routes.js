@@ -7,44 +7,58 @@ let routes = [
 		children: [
 			{
 				path: '/documents',
-				component: require('./components/Documents')
+				component: require('./components/home/Documents')
 			},
 
 			{
 				path: '/documents/reception',
-				component: require('./components/Reception')
+				component: require('./components/home/Reception')
 			},
 
 			{
 				path: '/documents/scan',
-				component: require('./components/Scan')
+				component: require('./components/home/Scan')
 			},
 
 			{
 				path: '/documents/import',
-				component: require('./components/Import')
+				component: require('./components/home/Import')
 			},
 
 			{
 				path: '/documents/clipping',
-				component: require('./components/Clipping')
+				component: require('./components/home/Clipping')
 			},
 
 			{
 				path: '/documents/clipped',
-				component: require('./components/Clipped')
+				component: require('./components/home/Clipped')
 			},
 
 			{
 				path: '/documents/export',
-				component: require('./components/Export')
+				component: require('./components/home/Export')
 			}
 		]
 	},
 
 	{
 		path: '/admin',
-		component: require('./components/Admin')
+		component: require('./components/Admin'),
+		children: [
+			{
+				path: '/admin/addUser',
+				component: require('./components/admin/AddUser')
+			},
+			{
+				path: '/admin/listUser',
+				component: require('./components/admin/listUser')
+			},
+			{
+				path: '/admin/teams',
+				component: require('./components/admin/Teams')
+			},
+		]
 	}
 
 	
