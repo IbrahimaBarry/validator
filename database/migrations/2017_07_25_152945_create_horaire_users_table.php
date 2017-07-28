@@ -28,6 +28,6 @@ class CreateHoraireUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('horaire_users');
+        Schema::dropIfExists('horaire_user');
     }
 }

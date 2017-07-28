@@ -6,11 +6,6 @@ let routes = [
 		component: require('./components/Welcome'),
 		children: [
 			{
-				path: '/documents',
-				component: require('./components/home/Documents')
-			},
-
-			{
 				path: '/documents/reception',
 				component: require('./components/home/Reception')
 			},
@@ -26,13 +21,13 @@ let routes = [
 			},
 
 			{
-				path: '/documents/clipping',
-				component: require('./components/home/Clipping')
+				path: '/documents/affect',
+				component: require('./components/home/Affect')
 			},
 
 			{
-				path: '/documents/clipped',
-				component: require('./components/home/Clipped')
+				path: '/documents/clipping',
+				component: require('./components/home/Clipping')
 			},
 
 			{
@@ -46,6 +41,10 @@ let routes = [
 		path: '/admin',
 		component: require('./components/Admin'),
 		children: [
+			{
+				path: '/admin/documents',
+				component: require('./components/admin/Documents')
+			},
 			{
 				path: '/admin/addUser',
 				component: require('./components/admin/AddUser')

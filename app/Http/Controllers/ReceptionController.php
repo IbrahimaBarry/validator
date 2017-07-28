@@ -18,14 +18,11 @@ class ReceptionController extends Controller
      */
     public function index()
     {
-        return Reception::with(['user', 'document'])->latest()->get();
+        return Reception::with(['user', 'document'])
+                    ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
-    /**
-     *  Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // SCAN
     public function scan($id)
     {
         $reception = Reception::find($id);
@@ -36,19 +33,17 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['user', 'document'])->latest()->get();
+        return Reception::with(['user', 'document'])
+                    ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
-    public function getScan()
+    // IMPORT
+    public function getScanned()
     {
-        return Reception::with(['document'])->where('scanned', true)->latest()->get();
+        return Reception::with(['document'])->where('scanned', true)
+                    ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
-    /**
-     *  Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function import($id)
     {
         $reception = Reception::find($id);
@@ -59,10 +54,12 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['document'])->latest()->get();
+        return Reception::with(['document'])->where('scanned', true)
+                    ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
-    public function getImport()
+    // AFFECT
+    public function getImported()
     {
         $agents = [];
 
@@ -72,7 +69,9 @@ class ReceptionController extends Controller
                     array_push($agents, $user);
             }
         }
-        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->get(), 'agents' => $agents];
+        return ['imports' => Reception::with(['document'])->where('imported', true)
+                                ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get(),
+                                     'agents' => $agents];
     }
 
     public function addAgent($reception_id, $agent_id)
@@ -90,37 +89,67 @@ class ReceptionController extends Controller
             }
         }
 
-        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->get(), 'agents' => $agents];
+        return ['imports' => Reception::with(['document'])->where('imported', true)
+                                ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get(),
+                                     'agents' => $agents];
     }
 
+    // CLIPPING
     public function agentClipping()
     {
         if (Auth::user()->role === 'agent')
-            return Reception::with(['document'])->where('user_clipping', Auth::user()->name)->latest()->get();
+            return Reception::with(['document'])
+                        ->where('user_clipping', Auth::user()->name)
+                            ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
         else
-            return Reception::with(['document'])->where('user_clipping', '!=', null)->latest()->get();
+            return Reception::with(['document'])
+                        ->where('imported', true)
+                            ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
     public function clipping(Request $request ,$id)
     {
         $reception = Reception::find($id);
 
-        $reception->clipped = true;
+        $reception->user_clipping = Auth::user()->name;
         $reception->date_clipping = Carbon::now();
         $reception->nbrArtTotal = $request->nbrArtTotal;
         $reception->time = $request->time;
+        $reception->clipped = true;
 
         $reception->save();
 
         if (Auth::user()->role === 'agent')
-            return Reception::with(['document'])->where('user_clipping', Auth::user()->name)->latest()->get();
+            return Reception::with(['document'])
+                        ->where('user_clipping', Auth::user()->name)
+                            ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
         else
-            return Reception::with(['document'])->where('user_clipping', '!=', null)->latest()->get();
+            return Reception::with(['document'])
+                        ->where('imported', true)
+                            ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
-    public function getClipping()
+    // EXPORT
+    public function export($id)
     {
-        return Reception::with(['document'])->where('clipped', true)->latest()->get();
+        $reception = Reception::find($id);
+
+        $reception->user_export = Auth::user()->name;
+        $reception->date_export = Carbon::now();
+        $reception->exported = true;
+
+        $reception->save();
+
+        return Reception::with(['document'])
+                    ->where('clipped', true)
+                        ->whereDate('date_clipping', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
+    }
+
+    public function getClipped()
+    {
+        return Reception::with(['document'])
+                    ->where('clipped', true)
+                        ->whereDate('date_clipping', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
     public function deleteClipping($id) {
@@ -129,28 +158,10 @@ class ReceptionController extends Controller
         $reception->clipped = false;
         $reception->save();
 
-        return Reception::with(['document'])->where('clipped', true)->latest()->get();
+        return Reception::with(['document'])
+                    ->where('clipped', true)
+                        ->whereDate('date_clipping', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
-
-    public function export($id)
-    {
-        $reception = Reception::find($id);
-
-        $reception->exported = true;
-        $reception->user_export = Auth::user()->name;
-        $reception->date_export = Carbon::now();
-
-        $reception->save();
-
-        return Reception::with(['document'])->where('exported', true)->latest()->get();
-    }
-
-    public function getExport()
-    {
-        return Reception::with(['document'])->where('exported', true)->latest()->get();
-    }
-
-
 
 
     /**

@@ -9,6 +9,11 @@
 				  </p>
 				  <ul class="menu-list">
 				    <li><a>Tableau de bord</a></li>
+				    <li>
+				    	<router-link tag="a" to="/admin/documents" exact>
+				      		Documents
+				      	</router-link>
+					  </li>
 				  </ul>
 				  <p class="menu-label">
 				    Administration
@@ -57,7 +62,12 @@
 		color: black
 	}
 
-	.menu-list a.is-active {
+	.menu-list a.is-active, .menu-list a.is-active:hover {
+		background: #2196F3;
 		color: white;
+	}
+
+	.menu-list a:hover {
+		color: #2196F3;
 	}
 </style>

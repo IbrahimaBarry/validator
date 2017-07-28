@@ -29,13 +29,26 @@
 			</div>
 
 			<div class="field">
+			  <label class="label">Emplacement</label>
+			  <p class="control">
+			    <span class="select">
+			      <select v-model="document.location">
+			        <option disabled="">-- Choisir un emplacement --</option>
+			        <option value="National">National</option>
+			        <option value="International">International</option>
+			      </select>
+			    </span>
+			  </p>
+			</div>
+
+			<div class="field">
 			  <label class="label">Type</label>
 			  <p class="control">
 			    <span class="select">
 			      <select v-model="document.type">
 			        <option disabled="">-- Choisir un type --</option>
-			        <option value="journal">Journal</option>
-			        <option value="magasine">Magasine</option>
+			        <option value="Journal">Journal</option>
+			        <option value="Magasine">Magasine</option>
 			      </select>
 			    </span>
 			  </p>
@@ -47,8 +60,8 @@
 			    <span class="select">
 			      <select v-model="document.version">
 			        <option disabled="">-- Choisir une version --</option>
-			        <option value="papier">Papier</option>
-			        <option value="electronique">Electronique</option>
+			        <option value="Papier">Papier</option>
+			        <option value="Electronique">Electronique</option>
 			      </select>
 			    </span>
 			  </p>
@@ -60,9 +73,9 @@
 			    <span class="select">
 			      <select v-model="document.frequence">
 			        <option disabled="">-- Choisir une fréquence --</option>
-			        <option value="quotidien">Quotidien</option>
-			        <option value="hebdomadaire">Hebdomadaire</option>
-			        <option value="mensuel">Mensuel</option>
+			        <option value="Quotidien">Quotidien</option>
+			        <option value="Hebdomadaire">Hebdomadaire</option>
+			        <option value="Mensuel">Mensuel</option>
 			      </select>
 			    </span>
 			  </p>
@@ -74,9 +87,10 @@
 			    <span class="select">
 			      <select v-model="document.lang">
 			        <option disabled="">-- Choisir une langue --</option>
-			        <option value="arabe">Arabe</option>
-			        <option value="français">Français</option>
-			        <option value="anglais">Anglais</option>
+			        <option value="Arabe">Arabe</option>
+			        <option value="Anglais">Anglais</option>
+			        <option value="Français">Français</option>
+			        <option value="Tamazight">Tamazight</option>
 			      </select>
 			    </span>
 			  </p>
@@ -99,6 +113,7 @@
 					name: '',
 					source: '',
 					sourceName: '',
+					location:'',
 					type: '',
 					version: '',
 					frequence: '',

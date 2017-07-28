@@ -29,7 +29,16 @@
 			  </p>
 			</div>
 
-			<textarea class="textarea" placeholder="Preciser la cause du retard de la réception ici" v-model="document.message"></textarea>
+			<div class="field">
+			  <p class="control">
+			    <label class="checkbox">
+			      <input type="checkbox" v-model="retard">
+			      Document reçu avec retard
+			    </label>
+			  </p>
+			</div>
+
+			<textarea v-if="retard" class="textarea" placeholder="Preciser la cause du retard de la réception ici" v-model="document.message"></textarea>
 
 			<div class="field">
 			  <p class="control">
@@ -57,13 +66,17 @@
 
 		data() {
 			return {
+				documents: [],
+
 				document: {
 					sourceDate: '',
 					time: '',
 					nbrPage: 0,
 					document_id: 0,
 					message: ''
-				}
+				},
+
+				retard: false
 			}
 		},
 
@@ -81,7 +94,8 @@
 		},
 
 		mounted() {
-			
+			axios.get('documents/index')
+				.then(response => this.documents = response.data);
 		}
     }
 </script>

@@ -18,6 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->string('name');
             $table->string('source');
             $table->string('sourceName');
+            $table->string('location');
             $table->string('version');
             $table->string('type');
             $table->string('frequence');

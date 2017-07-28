@@ -1,41 +1,33 @@
 <template>
 	<div>
-		  <div class="hero-foot">
-		    <nav class="tabs is-boxed">
-		      <div class="container">
-		        <ul>
-		            <router-link tag="li" to="/documents" exact>
-					    <a>Documents</a>
-					</router-link>
+		<div class="tabs">
+		  <ul>
+		  	<router-link tag="li" to="/documents/reception" exact>
+		  		<a>Reception</a>
+	  		</router-link>
+		    <router-link tag="li" to="/documents/scan">
+		    	<a>Scanne</a>
+	    	</router-link>
+		    <router-link tag="li" to="/documents/import">
+		    	<a>Import</a>
+		    </router-link>
+		    <router-link tag="li" to="/documents/affect">
+			    <a>Affecter documents importés</a>
+			</router-link>
 
-					<router-link tag="li" to="/documents/reception">
-					    <a>Documents à scanner</a>
-					</router-link>
+			<router-link tag="li" to="/documents/clipping">
+			    <a>Clipping</a>
+			</router-link>
 
-					<router-link tag="li" to="/documents/scan">
-					    <a>Documents à impoter</a>
-					</router-link>
-
-					<router-link tag="li" to="/documents/import">
-					    <a>Affecter documents importés</a>
-					</router-link>
-
-					<router-link tag="li" to="/documents/clipping">
-					    <a>Documents à clipper</a>
-					</router-link>
-
-					<router-link tag="li" to="/documents/clipped">
-					    <a>Documents clippés</a>
-					</router-link>
-		        </ul>
-		      </div>
-		    </nav>
-		  </div>
-		</section>
+			<router-link tag="li" to="/documents/export">
+			    <a>Export</a>
+			</router-link>
+		  </ul>
+		</div>
 
 		<section class="section">
 		    <div class="container">
-				<transition name="fade" mode="out-in">
+				<transition name="slideOutLeft" mode="out-in">
 		        	<router-view></router-view>
 		        </transition>
 		    </div>
@@ -47,33 +39,42 @@
 	export default {
 		data() {
 			return {
-				user: {},
-				scan: '',
-				import: '',
-				clipping: '',
-				export: ''
+				
 			}
 		}
 	}
 </script>
 
-<style>
+<style scoped>
+	.tabs li.is-active a {
+	    border-bottom-color: #2962FF;
+	    color: #2962FF;
+	}
 
-	/*.fade-enter-active {
-	  animation: fade .5s;
+	.tabs:not(:last-child) {
+	    margin-bottom: 0;
 	}
-	.fade-leave-active {
-	  animation: fade .5s reverse;
+
+	.tabs ul {
+		margin-top: 10px;
 	}
-	@keyframes fade {
-	  0% {
-		opacity: 0
+
+	.slideOutLeft-enter-active {
+	  animation-name: slideOutLeft;
+	}
+
+	.slideOutLeft-leave-active {
+	  animation-name: slideOutLeft reverse;
+	}
+
+	@keyframes slideOutLeft {
+	  from {
+	    transform: translate3d(0, 0, 0);
 	  }
-	  50% {
-		opacity: 0.5
+
+	  to {
+	    visibility: hidden;
+	    transform: translate3d(-100%, 0, 0);
 	  }
-	  100% {
-		opacity: 1
-	  }
-	}*/
+	}
 </style>

@@ -25,9 +25,9 @@
         <!-- Right side -->
         <div class="level-right">
           <p class="level-item"><a :class="{'is-active': filter == 'all'}" @click.prevent="filter = 'all'">Tous</a></p>
-          <p class="level-item"><a :class="{'is-active': filter == 'quotidien'}" @click.prevent="filter = 'quotidien'">Quotidiens</a></p>
-          <p class="level-item"><a :class="{'is-active': filter=='hebdomadaire'}" @click.prevent="filter='hebdomadaire'">Hebdomadaires</a></p>
-          <p class="level-item"><a :class="{'is-active': filter == 'mensuel'}" @click.prevent="filter = 'mensuel'">Mensuels</a></p>
+          <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
+          <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
+          <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
         </div>
       </nav>
       
@@ -38,20 +38,22 @@
               <th><abbr title="nom">Nom du document</abbr></th>
               <th><abbr title="sourceDate">Date de publication</abbr></th>
               <th><abbr title="nbrPage">Nombre de page</abbr></th>
-              <th><abbr title="date">Date du scanne</abbr></th>
-              <th><abbr title="userName">Nom de l'agent</abbr></th>
+              <th><abbr title="date">Date de réception</abbr></th>
+              <th><abbr title="userName">Agent reception</abbr></th>
+              <th><abbr title="userName">Cause du retard</abbr></th>
               <th><abbr title="nbrPage"></abbr></th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="scan in filteredDocuments">
-              <td>{{ scan.document.type }}</td>
-              <td>{{ scan.document.name }}</td>
-              <td>{{ scan.sourceDate }}</td>
-              <td>{{ scan.nbrPage }}</td>
-              <td>{{ scan.date_scan }}</td>
-              <td>{{ scan.user_scan }}</td>
-              <td v-if="scan.imported == false"><a class="button is-small is-outlined is-info" @click.prevent="addImport(scan.id)">Valider l'import</a></td>
+            <tr v-for="reception in filteredDocuments">
+              <td>{{ reception.document.type }}</td>
+              <td>{{ reception.document.name }}</td>
+              <td>{{ reception.sourceDate }}</td>
+              <td>{{ reception.nbrPage }}</td>
+              <td>{{ reception.created_at }}</td>
+              <td>{{ reception.user.name }}</td>
+              <td>{{ reception.message }}</td>
+              <td v-if="reception.scanned == false"><a class="button is-small is-info is-outlined" @click.prevent="addScan(reception.id)">Valider le scanne</a></td>
               <td v-else>
                 <span class="icon">
                   <i class="fa fa-check success"></i>
@@ -67,7 +69,7 @@
     export default {
         beforeRouteEnter (to, from, next) {
           axios.get('/user').then(function(response) {
-            if (response.data.import)
+            if (response.data.scan)
               next();
             else
               next({path: from.path});
@@ -76,34 +78,36 @@
 
         data() {
             return {
-                scans: [],
+                showModal: false,
+
+                receptions: [],
 
                 filter: 'all'
             }
         },
 
         methods: {
-            addImport(id) {
-              axios.get('/receptions/import/'+id)
-                  .then(response => this.scans = response.data);
+            addScan(id) {
+              axios.get('/receptions/scan/'+id)
+                  .then(response => this.receptions = response.data);
             }
         },
 
         computed: {
             filteredDocuments() {
                 if (this.filter == 'all')
-                    return this.scans;
-                else if (this.filter == 'quotidien')
-                    return this.scans.filter(scan => scan.document.frequence == 'quotidien');
-                else if (this.filter == 'hebdomadaire')
-                    return this.scans.filter(scan => scan.document.frequence == 'hebdomadaire');
+                    return this.receptions;
+                else if (this.filter == 'Quotidien')
+                    return this.receptions.filter(reception => reception.document.frequence == 'Quotidien');
+                else if (this.filter == 'Hebdomadaire')
+                    return this.receptions.filter(reception => reception.document.frequence == 'Hebdomadaire');
                 else
-                    return this.scans.filter(scan => scan.document.frequence == 'mensuel');
+                    return this.receptions.filter(reception => reception.document.frequence == 'Mensuel');
             }
         },
 
         mounted() {
-            axios.get('/receptions/scan').then(response => this.scans = response.data);
+            axios.get('/receptions/index').then(response => this.receptions = response.data);
         }
     }
 </script>

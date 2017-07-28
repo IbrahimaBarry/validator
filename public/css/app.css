@@ -8609,8 +8609,8 @@ body {
   font-weight: 300;
 }
 
-#app > .hero > .hero-body {
-  padding: 0 0 17px;
+.hero.is-primary {
+  background: #2962FF;
 }
 
 .section {
@@ -8628,17 +8628,13 @@ body {
   font-weight: 300;
 }
 
-.danger {
-  background: red;
-}
-
-.hero.is-primary .level-item a:not(.button),
-.hero.is-primary .level-item .subtitle strong,
-.hero.is-primary .level-item .subtitle {
+.level-item a:not(.button),
+.level-item .subtitle strong,
+.level-item .subtitle {
   color: rgba(0, 0, 0, 0.8);
 }
 
-.hero.is-primary .level-item a.is-active:not(.button) {
-  color: #00d1b2;
+.level-item a.is-active:not(.button) {
+  color: #2962FF;
 }
 
