@@ -41,7 +41,7 @@ class ReceptionController extends Controller
     public function getScanned()
     {
         return Reception::with(['document'])->where('scanned', true)
-                    ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
+                    ->whereDate('date_scan', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
     public function import($id)
@@ -55,7 +55,7 @@ class ReceptionController extends Controller
         $reception->save();
 
         return Reception::with(['document'])->where('scanned', true)
-                    ->whereDate('date_import', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
+                    ->whereDate('date_scan', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
     // AFFECT
@@ -173,20 +173,15 @@ class ReceptionController extends Controller
     public function store(Request $request)
     {
         $reception = new Reception();
-
+        $reception->document_id = $request['document_id'];
+        $reception->sourceDate = $request['sourceDate'];
+        $reception->nbrPage = $request['nbrPage'];
+        $reception->message = $request['message'];
         $reception->user_id = Auth::user()->id;
-        $reception->sourceDate = $request->sourceDate.' '.$request->time;
-        $reception->nbrPage = $request->nbrPage;
-        $reception->document_id = $request->document_id;
-        $reception->message = $request->message;
-
         $reception->save();
 
-        $document = Document::find($request->document_id);
-        $document->last_reception = Carbon::now();
-        $document->save();
-
-        return Document::with(['receptions'])->latest()->get();
+       // return Reception::with(['user', 'document'])
+       //              ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
     /**

@@ -28,6 +28,9 @@
         <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
+        <p class="level-item">
+          <a class="button is-primary" @click.prevent="showRecepDoc = true">Reception</a>
+          </p>
       </div>
     </nav>
     
@@ -41,26 +44,22 @@
               <th><abbr title="date">Date de réception</abbr></th>
               <th><abbr title="userName">Agent reception</abbr></th>
               <th><abbr title="userName">Cause du retard</abbr></th>
-              <th><abbr title="nbrPage"></abbr></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="document in filteredDocuments" @mouseover.prevent="hoverId = document.id">
             <td>{{ document.document.type }}</td>
-              <td>{{ document.document.name }}</td>
-              <td>{{ document.sourceDate }}</td>
-              <td>{{ document.nbrPage }}</td>
-              <td>{{ document.created_at }}</td>
-              <td>{{ document.user.name }}</td>
-              <td>{{ document.message }}</td>
-            <td>
-              <a class="button is-info is-small is-outlined" @click.prevent="showRecepDoc = true">Valider la reception</a>
-            </td>
+            <td>{{ document.document.name }}</td>
+            <td>{{ document.sourceDate }}</td>
+            <td>{{ document.nbrPage }}</td>
+            <td>{{ document.created_at }}</td>
+            <td>{{ document.user.name }}</td>
+            <td>{{ document.message }}</td>
           </tr>
         </tbody>
       </table>
 
-    <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="updateDocuments($event)"></RecepDoc>
+    <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="reload()"></RecepDoc>
   </div>
 </template>
 
@@ -82,14 +81,15 @@ import RecepDoc from './RecepDoc';
                 documents: [],
                 filter: 'all',
                 hoverId: 0,
-                showRecepDoc: false
+                showRecepDoc: false,
+                search: ''
             }
         },
 
         methods: {
-            updateDocuments(event) {
+            reload() {
+              axios.get('/receptions/index').then(response => this.documents = response.data);
               this.showRecepDoc = false;
-              this.documents = event;
             }
         },
 
@@ -117,5 +117,7 @@ import RecepDoc from './RecepDoc';
 </script>
 
 <style scoped>
-
+  a.is-primary, a.is-primary:hover {
+    background: #2962FF;
+  }
 </style>

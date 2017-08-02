@@ -150,7 +150,7 @@
 
 <style scoped>
 	section, .container h2.title {
-		color: black
+		color: rgba(0, 0, 0, 0.8);
 	}
 
 	.checkbox {

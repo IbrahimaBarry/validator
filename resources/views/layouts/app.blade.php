@@ -101,7 +101,7 @@
             <section class="hero is-primary">
               <div class="hero-body">
                 <p class="title">
-                  Document management
+                  {{ config('app.name', 'Laravel') }}
                 </p>
                 <p class="subtitle">
                   Application de  <strong>gestion du processus</strong> de clipping

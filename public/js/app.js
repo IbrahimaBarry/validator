@@ -16242,7 +16242,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\na.is-primary[data-v-1d5a844e], a.is-primary[data-v-1d5a844e]:hover {\n  background: #2962FF;\n}\n", ""]);
 
 // exports
 
@@ -16255,7 +16255,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RecepDoc__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RecepDoc___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__RecepDoc__);
-//
 //
 //
 //
@@ -16335,15 +16334,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             documents: [],
             filter: 'all',
             hoverId: 0,
-            showRecepDoc: false
+            showRecepDoc: false,
+            search: ''
         };
     },
 
 
     methods: {
-        updateDocuments: function updateDocuments(event) {
+        reload: function reload() {
+            var _this = this;
+
+            axios.get('/receptions/index').then(function (response) {
+                return _this.documents = response.data;
+            });
             this.showRecepDoc = false;
-            this.documents = event;
         }
     },
 
@@ -16360,10 +16364,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     mounted: function mounted() {
-        var _this = this;
+        var _this2 = this;
 
         axios.get('/receptions/index').then(function (response) {
-            return _this.documents = response.data;
+            return _this2.documents = response.data;
         });
     },
 
@@ -16452,7 +16456,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\nlabel.checkbox[data-v-cc9ad03a] {\n\tcolor: black\n}\n", ""]);
+exports.push([module.i, "\nlabel.checkbox[data-v-cc9ad03a] {\n\tcolor: black\n}\n.modal-card[data-v-cc9ad03a] {\n\twidth: 95%\n}\n.modal-card-head[data-v-cc9ad03a] {\n\tbackground: white\n}\n#progressbar[data-v-cc9ad03a] {\n\t/*CSS counters to number the steps*/\n\tcounter-reset: step;\n\tfont-size: 15px;\n}\n#progressbar li[data-v-cc9ad03a] {\n\tlist-style-type: none;\n\tcolor: black;\n\twidth: 33.33%;\n\tfloat: left;\n\tposition: relative;\n}\n#progressbar li[data-v-cc9ad03a]:before {\n\tcontent: counter(step);\n\tcounter-increment: step;\n\twidth: 30px;\n\theight: 30px;\n\tline-height: 28px;\n\tborder: 1px solid #ddd;\n\tborder-radius: 50%;\n\tdisplay: block;\n\ttext-align: center;\n\tbackground: white;\n\tmargin: 0 auto 5px auto;\n}\n/*progressbar connectors*/\n/*#progressbar li:after {\n\tcontent: '';\n\tposition: absolute;\n\twidth: 100%;\n\theight: 1px;\n\tbackground: #ddd;\n\tleft: -50%;\n\ttop: 15px;\n}*/\n#progressbar li[data-v-cc9ad03a]:first-child:after {\n\t/*connector not needed before the first step*/\n\tcontent: none;\n}\n#progressbar li.active[data-v-cc9ad03a], #progressbar li.completed[data-v-cc9ad03a] {\n\tcolor: hsl(171, 100%, 41%)\n}\n#progressbar li.active[data-v-cc9ad03a]:before {\n\tborder-color: hsl(171, 100%, 41%)\n}\n#progressbar li.active + li[data-v-cc9ad03a]:after, #progressbar li.completed + li[data-v-cc9ad03a]:after{\n\tbackground: hsl(171, 100%, 41%);\n}\n#progressbar li.completed[data-v-cc9ad03a]:before{\n\tbackground: hsl(171, 100%, 41%);\n\tcolor: hsl(0, 0%, 100%)\n}\n.checkbox[data-v-cc9ad03a] {\n\twidth: 20px;\n\theight: 20px;\n\tbackground: #ddd;\n\tposition: relative;\n}\n.checkbox input[type=\"checkbox\"][data-v-cc9ad03a] {\n\tvisibility: hidden;\n}\n.checkbox label[data-v-cc9ad03a] {\n\twidth: 18px;\n\theight: 18px;\n\tposition: absolute;\n\ttop: 1px;\n\tleft: 1px;\n\tbackground: white;\n\tcursor: pointer;\n}\n.checkbox label[data-v-cc9ad03a]:before {\n\tcontent: '';\n\twidth: 9px;\n\theight: 5px;\n\tborder: 3px solid white;\n\tposition: absolute;\n\tborder-top: none;\n\tborder-right: none;\n\ttransform: rotate(-45deg);\n\ttop: 5px;\n\tleft: 5px;\n\topacity: 0\n}\n.checkbox input[type=\"checkbox\"]:checked + label[data-v-cc9ad03a]:before {\n\topacity: 1;\n}\n.checkbox input[type=\"checkbox\"]:checked + label[data-v-cc9ad03a] {\n\tbackground: hsl(171, 100%, 41%);\n}\n", ""]);
 
 // exports
 
@@ -16525,6 +16529,57 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['id'],
@@ -16533,15 +16588,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		return {
 			documents: [],
 
+			selected: [],
+
+			step: 1,
+
 			document: {
 				sourceDate: '',
-				time: '',
 				nbrPage: 0,
 				document_id: 0,
 				message: ''
-			},
-
-			retard: false
+			}
 		};
 	},
 
@@ -16551,21 +16607,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.$emit('hideRecepDoc');
 		},
 		addReception: function addReception() {
-			var _this = this;
-
-			if (this.document.document_id != 0) {
-				axios.post('/receptions/store', this.document).then(function (response) {
-					return _this.$emit('documentRecepted', response.data);
+			if (this.receptions.length > 0) {
+				this.receptions.forEach(function (el) {
+					axios.post('/receptions/store', el);
 				});
+				this.$emit('documentRecepted');
 			}
+		},
+		next: function next() {
+			if (this.step < 3) this.step += 1;
+		},
+		back: function back() {
+			if (this.step > 1) this.step -= 1;
+		},
+		update: function update(id, event) {
+			this.receptions.forEach(function (el) {
+				if (el.document_id == id) {
+					if (event.target.name == 'sourceDate') el.sourceDate = event.target.value;else if (event.target.name == 'nbrPage') el.nbrPage = event.target.value;else el.message = event.target.value;
+				}
+			});
+		}
+	},
+
+	computed: {
+		receptions: function receptions() {
+			var tab = [];
+			this.selected.forEach(function (el) {
+				tab.push({ sourceDate: '',
+					nbrPage: 0,
+					document_id: el.id,
+					message: '' });
+			});
+			return tab;
 		}
 	},
 
 	mounted: function mounted() {
-		var _this2 = this;
+		var _this = this;
 
 		axios.get('documents/index').then(function (response) {
-			return _this2.documents = response.data;
+			return _this.documents = response.data;
 		});
 	}
 });
@@ -16582,210 +16663,264 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }), _vm._v(" "), _c('div', {
     staticClass: "modal-card"
   }, [_c('header', {
-    staticClass: "modal-card-head"
+    staticClass: "modal-card-head has-text-centered"
   }, [_c('p', {
     staticClass: "modal-card-title"
-  }, [_vm._v("Valider réception du document")]), _vm._v(" "), _c('button', {
+  }, [_c('ul', {
+    attrs: {
+      "id": "progressbar"
+    }
+  }, [_c('li', {
+    class: {
+      'active': _vm.step == 1, 'completed': _vm.step > 1
+    }
+  }, [_vm._v("Documents à receptionner")]), _vm._v(" "), _c('li', {
+    class: {
+      'active': _vm.step == 2, 'completed': _vm.step > 2
+    }
+  }, [_vm._v("Saisie des informations")]), _vm._v(" "), _c('li', {
+    class: {
+      'active': _vm.step == 3, 'completed': _vm.step > 3
+    }
+  }, [_vm._v("Terminer")])])]), _vm._v(" "), _c('button', {
     staticClass: "delete",
     on: {
       "click": _vm.hideModal
     }
   })]), _vm._v(" "), _c('section', {
     staticClass: "modal-card-body"
-  }, [_c('div', {
-    staticClass: "field"
-  }, [_c('label', {
-    staticClass: "label"
-  }, [_vm._v("Jour de publication")]), _vm._v(" "), _c('p', {
-    staticClass: "control"
-  }, [_c('input', {
+  }, [_c('table', {
     directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.document.sourceDate),
-      expression: "document.sourceDate"
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.step == 1),
+      expression: "step == 1"
     }],
-    staticClass: "input",
-    attrs: {
-      "type": "date"
-    },
-    domProps: {
-      "value": (_vm.document.sourceDate)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.document.sourceDate = $event.target.value
-      }
-    }
-  })])]), _vm._v(" "), _c('div', {
-    staticClass: "field"
-  }, [_c('label', {
-    staticClass: "label"
-  }, [_vm._v("Heure de publication")]), _vm._v(" "), _c('p', {
-    staticClass: "control"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.document.time),
-      expression: "document.time"
-    }],
-    staticClass: "input",
-    attrs: {
-      "type": "time"
-    },
-    domProps: {
-      "value": (_vm.document.time)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.document.time = $event.target.value
-      }
-    }
-  })])]), _vm._v(" "), _c('div', {
-    staticClass: "field"
-  }, [_c('label', {
-    staticClass: "label"
-  }, [_vm._v("Nombre de page")]), _vm._v(" "), _c('p', {
-    staticClass: "control"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.document.nbrPage),
-      expression: "document.nbrPage"
-    }],
-    staticClass: "input",
-    attrs: {
-      "type": "number",
-      "placeholder": "Text input"
-    },
-    domProps: {
-      "value": (_vm.document.nbrPage)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.document.nbrPage = $event.target.value
-      }
-    }
-  })])]), _vm._v(" "), _c('div', {
-    staticClass: "field"
-  }, [_c('p', {
-    staticClass: "control"
-  }, [_c('label', {
-    staticClass: "checkbox"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.retard),
-      expression: "retard"
-    }],
-    attrs: {
-      "type": "checkbox"
-    },
-    domProps: {
-      "checked": Array.isArray(_vm.retard) ? _vm._i(_vm.retard, null) > -1 : (_vm.retard)
-    },
-    on: {
-      "__c": function($event) {
-        var $$a = _vm.retard,
-          $$el = $event.target,
-          $$c = $$el.checked ? (true) : (false);
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$c) {
-            $$i < 0 && (_vm.retard = $$a.concat($$v))
-          } else {
-            $$i > -1 && (_vm.retard = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-          }
-        } else {
-          _vm.retard = $$c
+    staticClass: "table is-striped"
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.documents), function(document) {
+    return _c('tr', {
+      on: {
+        "mouseover": function($event) {
+          $event.preventDefault();
+          _vm.hoverId = document.id
         }
       }
-    }
-  }), _vm._v("\n\t\t\t      Document reçu avec retard\n\t\t\t    ")])])]), _vm._v(" "), (_vm.retard) ? _c('textarea', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.document.message),
-      expression: "document.message"
-    }],
-    staticClass: "textarea",
-    attrs: {
-      "placeholder": "Preciser la cause du retard de la réception ici"
-    },
-    domProps: {
-      "value": (_vm.document.message)
-    },
-    on: {
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.document.message = $event.target.value
-      }
-    }
-  }) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "field"
-  }, [_c('p', {
-    staticClass: "control"
-  }, [_c('label', {
-    staticClass: "checkbox"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.document.document_id),
-      expression: "document.document_id"
-    }],
-    attrs: {
-      "type": "checkbox",
-      "true-value": _vm.id,
-      "false-value": 0
-    },
-    domProps: {
-      "checked": Array.isArray(_vm.document.document_id) ? _vm._i(_vm.document.document_id, null) > -1 : _vm._q(_vm.document.document_id, _vm.id)
-    },
-    on: {
-      "__c": function($event) {
-        var $$a = _vm.document.document_id,
-          $$el = $event.target,
-          $$c = $$el.checked ? (_vm.id) : (0);
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$c) {
-            $$i < 0 && (_vm.document.document_id = $$a.concat($$v))
+    }, [_c('td', [_c('div', {
+      staticClass: "field"
+    }, [_c('p', {
+      staticClass: "control checkbox"
+    }, [_c('input', {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: (_vm.selected),
+        expression: "selected"
+      }],
+      attrs: {
+        "type": "checkbox",
+        "id": document.id
+      },
+      domProps: {
+        "value": document,
+        "checked": Array.isArray(_vm.selected) ? _vm._i(_vm.selected, document) > -1 : (_vm.selected)
+      },
+      on: {
+        "__c": function($event) {
+          var $$a = _vm.selected,
+            $$el = $event.target,
+            $$c = $$el.checked ? (true) : (false);
+          if (Array.isArray($$a)) {
+            var $$v = document,
+              $$i = _vm._i($$a, $$v);
+            if ($$c) {
+              $$i < 0 && (_vm.selected = $$a.concat($$v))
+            } else {
+              $$i > -1 && (_vm.selected = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+            }
           } else {
-            $$i > -1 && (_vm.document.document_id = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+            _vm.selected = $$c
           }
-        } else {
-          _vm.document.document_id = $$c
         }
       }
+    }), _vm._v(" "), _c('label', {
+      attrs: {
+        "for": document.id
+      }
+    })])])]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.source))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceName))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.lang))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.version))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.frequence))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.location))])])
+  }))]), _vm._v(" "), _c('table', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.step == 2),
+      expression: "step == 2"
+    }],
+    staticClass: "table is-striped",
+    attrs: {
+      "id": "table"
     }
-  }), _vm._v("\n\t\t\t      Je confirme la reception du document\n\t\t\t    ")])]), (_vm.document.document_id == 0) ? _c('div', [_c('p', {
-    staticClass: "help is-danger"
-  }, [_vm._v("Veilllez confirmer la reception du document avant de valider")])]) : _vm._e(), _vm._v(" "), _c('p')])]), _vm._v(" "), _c('footer', {
+  }, [_vm._m(1), _vm._v(" "), _c('tbody', _vm._l((_vm.selected), function(document) {
+    return _c('tr', {
+      on: {
+        "mouseover": function($event) {
+          $event.preventDefault();
+          _vm.hoverId = document.id
+        }
+      }
+    }, [_c('td', [_vm._v(_vm._s(document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.source))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceName))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.lang))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.version))]), _vm._v(" "), _c('td', [_c('div', {
+      staticClass: "control"
+    }, [_c('input', {
+      staticClass: "input",
+      attrs: {
+        "name": "sourceDate",
+        "type": "date"
+      },
+      on: {
+        "input": function($event) {
+          _vm.update(document.id, $event)
+        }
+      }
+    })])]), _vm._v(" "), _c('td', [_c('div', {
+      staticClass: "control"
+    }, [_c('input', {
+      staticClass: "input",
+      attrs: {
+        "name": "nbrPage",
+        "type": "number"
+      },
+      on: {
+        "blur": function($event) {
+          _vm.update(document.id, $event)
+        }
+      }
+    })])]), _vm._v(" "), _c('td', [_c('div', {
+      staticClass: "field"
+    }, [_c('div', {
+      staticClass: "control"
+    }, [_c('div', {
+      staticClass: "select"
+    }, [_c('select', {
+      attrs: {
+        "name": "message"
+      },
+      on: {
+        "change": function($event) {
+          _vm.update(document.id, $event)
+        }
+      }
+    }, [_c('option', {
+      attrs: {
+        "disabled": ""
+      }
+    }, [_vm._v("Select cause du retard")]), _vm._v(" "), _c('option', [_vm._v("Aucune")]), _vm._v(" "), _c('option', [_vm._v("Autre")])])])])])])])
+  }))])]), _vm._v(" "), _c('footer', {
     staticClass: "modal-card-foot"
-  }, [_c('a', {
-    staticClass: "button is-success",
+  }, [(_vm.step != 1) ? _c('a', {
+    staticClass: "button",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.back($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-angle-double-left"
+  })]) : _vm._e(), _vm._v(" "), (_vm.step < 3) ? _c('a', {
+    staticClass: "button",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.next($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-angle-double-right"
+  })]) : _c('a', {
+    staticClass: "button is-primary",
     on: {
       "click": function($event) {
         $event.preventDefault();
         _vm.addReception($event)
       }
     }
-  }, [_vm._v("Valider")]), _vm._v(" "), _c('a', {
+  }, [_vm._v("Terminer")]), _vm._v(" "), _c('a', {
     staticClass: "button",
     on: {
       "click": _vm.hideModal
     }
-  }, [_vm._v("Fermer")])])])])
-},staticRenderFns: []}
+  }, [_vm._v("Annuler")])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', [_c('abbr', [_vm._v("#")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "type"
+    }
+  }, [_vm._v("Type")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "nom"
+    }
+  }, [_vm._v("Nom")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "source"
+    }
+  }, [_vm._v("Source")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "source name"
+    }
+  }, [_vm._v("Source name")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "langue"
+    }
+  }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "version"
+    }
+  }, [_vm._v("Version")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "frequence"
+    }
+  }, [_vm._v("Fréquence")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "emplacement"
+    }
+  }, [_vm._v("Emplacement")])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
+    attrs: {
+      "title": "type"
+    }
+  }, [_vm._v("Type")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "nom"
+    }
+  }, [_vm._v("Nom")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "source"
+    }
+  }, [_vm._v("Source")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "source name"
+    }
+  }, [_vm._v("Source name")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "lang"
+    }
+  }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "version"
+    }
+  }, [_vm._v("Version")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "sourceDate"
+    }
+  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "nbrPage"
+    }
+  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "version"
+    }
+  }, [_vm._v("Cause du retard")])])])])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -16857,7 +16992,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    staticClass: "button is-primary",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.showRecepDoc = true
+      }
+    }
+  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
   }, [_vm._m(1), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(document) {
     return _c('tr', {
@@ -16867,15 +17012,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.hoverId = document.id
         }
       }
-    }, [_c('td', [_vm._v(_vm._s(document.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.message))]), _vm._v(" "), _c('td', [_c('a', {
-      staticClass: "button is-info is-small is-outlined",
-      on: {
-        "click": function($event) {
-          $event.preventDefault();
-          _vm.showRecepDoc = true
-        }
-      }
-    }, [_vm._v("Valider la reception")])])])
+    }, [_c('td', [_vm._v(_vm._s(document.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.message))])])
   }))]), _vm._v(" "), (_vm.showRecepDoc) ? _c('RecepDoc', {
     attrs: {
       "id": _vm.hoverId
@@ -16885,7 +17022,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.showRecepDoc = false
       },
       "documentRecepted": function($event) {
-        _vm.updateDocuments($event)
+        _vm.reload()
       }
     }
   }) : _vm._e()], 1)
@@ -16936,11 +17073,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "title": "userName"
     }
-  }, [_vm._v("Cause du retard")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  })])])])
+  }, [_vm._v("Cause du retard")])])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -20336,7 +20469,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\nsection[data-v-01591042], .container h2.title[data-v-01591042] {\n\tcolor: black\n}\n.checkbox[data-v-01591042] {\n\tmargin-right: 7px;\n}\n", ""]);
+exports.push([module.i, "\nsection[data-v-01591042], .container h2.title[data-v-01591042] {\n\tcolor: rgba(0, 0, 0, 0.8);\n}\n.checkbox[data-v-01591042] {\n\tmargin-right: 7px;\n}\n", ""]);
 
 // exports
 
