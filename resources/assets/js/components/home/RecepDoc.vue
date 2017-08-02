@@ -14,7 +14,63 @@
 	    </header>
 	    <section class="modal-card-body">
 	        <!-- Step 1 -->
-	      	<table v-show="step == 1" class="table is-striped">
+	        <div v-show="step == 1">
+	        <nav class="level">
+		      <!-- Left side -->
+		      <div class="level-left">
+		        <div class="level-item">
+		          <p class="subtitle is-5">
+		            <strong>{{sortedDocuments.length}}</strong> Documents
+		          </p>
+		        </div>
+		        <div class="level-item">
+		          <div class="field has-addons">
+		            <p class="control">
+		              <input class="input" type="text" placeholder="Rechercher..." @keyup.enter="search = $event.target.value">
+		            </p>
+		            <div class="control">
+		              <div class="select">
+		                <select v-model="type">
+		                  <option>Type</option>
+		                  <option value="Magasine">Magasine</option>
+		                  <option value="Journal">Journal</option>
+		                </select>
+		              </div>
+		            </div>
+		            <div class="control">
+		              <div class="select">
+		                <select v-model="lang">
+		                  <option>Langue</option>
+		                  <option value="Anglais">Anglais</option>
+		                  <option value="Arabe">Arabe</option>
+		                  <option value="Français">Français</option>
+		                  <option value="Tamazight">Tamazight</option>
+		                </select>
+		              </div>
+		            </div>
+		            <div class="control">
+		              <div class="select">
+		                <select v-model="version">
+		                  <option>Version</option>
+		                  <option value="Papier">Papier</option>
+		                  <option value="Electronique">Electronique</option>
+		                </select>
+		              </div>
+		            </div>
+		            <p class="control"><button class="button is-info is-inverted" @click.prevent="reload"><i class="fa fa-refresh" aria-hidden="true"></i></button></p>
+		          </div>
+		        </div>
+		      </div>
+
+		      <!-- Right side -->
+		      <div class="level-right">
+		        <p class="level-item"><a :class="{'is-active': filter == 'all'}" @click.prevent="filter = 'all'">Tous</a></p>
+		        <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
+		        <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
+		        <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
+		      </div>
+		    </nav>
+	      	<table class="table is-striped">
 		        <thead>
 		          <tr>
 		          	<th><abbr>#</abbr></th>
@@ -29,7 +85,7 @@
 		          </tr>
 		        </thead>
 		        <tbody>
-		          <tr v-for="document in documents" @mouseover.prevent="hoverId = document.id">
+		          <tr v-for="document in sortedDocuments">
 		          	<td>
 		          		<div class="field">
 						  <p class="control checkbox">
@@ -49,6 +105,7 @@
 		          </tr>
 		        </tbody>
 		    </table>
+		    </div>
 
 		    <!-- Step 2 -->
 	      	<table v-show="step == 2" id="table" class="table is-striped">
@@ -59,7 +116,6 @@
 		            <th><abbr title="source">Source</abbr></th>
 		            <th><abbr title="source name">Source name</abbr></th>
 		            <th><abbr title="lang">Langue</abbr></th>
-		            <th><abbr title="version">Version</abbr></th>
 		            <th><abbr title="sourceDate">Date de publication</abbr></th>
 		            <th><abbr title="nbrPage">Nombre de page</abbr></th>
 		            <th><abbr title="version">Cause du retard</abbr></th>
@@ -72,7 +128,6 @@
 		            <td>{{ document.source }}</td>
 		            <td>{{ document.sourceName }}</td>
 		            <td>{{ document.lang }}</td>
-		            <td>{{ document.version }}</td>
 		            <td>
 		            	<div class="control">
 						  <input class="input" name="sourceDate" type="date" @input="update(document.id, $event)">
@@ -90,6 +145,9 @@
 						      <select name="message" @change="update(document.id, $event)">
 						        <option disabled>Select cause du retard</option>
 						        <option>Aucune</option>
+						        <option value="Retard reception">Retard reception</option>
+						        <option value="Retard publication">Retard publication</option>
+						        <option value="Perte document">Perte document</option>
 						        <option>Autre</option>
 						      </select>
 						    </div>
@@ -104,7 +162,7 @@
 	    <footer class="modal-card-foot">
 	      <a v-if="step != 1" class="button" @click.prevent="back"><i class="fa fa-angle-double-left"></i></a>
 	      <a v-if="step < 3" class="button" @click.prevent="next"><i class="fa fa-angle-double-right"></i></a>
-	      <a v-else class="button is-primary" @click.prevent="addReception">Terminer</a>
+	      <a v-else class="button is-info" @click.prevent="addReception">Terminer</a>
 	      <a class="button" @click="hideModal">Annuler</a>
 	    </footer>
 	  </div>
@@ -113,22 +171,16 @@
 
 <script>
 	export default {
-		props: ['id'],
-
 		data() {
 			return {
 				documents: [],
-
 				selected: [],
-
 				step: 1,
-
-				document: {
-					sourceDate: '',
-					nbrPage: 0,
-					document_id: 0,
-					message: ''
-				}
+				filter: 'all',
+				search: '',
+                type: 'Type',
+                lang: 'Langue',
+                version: 'Version'
 			}
 		},
 
@@ -168,10 +220,42 @@
         			}
         				
         		})
-        	}
+        	},
+
+        	reload() {
+              this.search = ''; this.type = 'Type'; this.lang = 'Langue'; this.version = 'Version';
+            }
 		},
 
 		computed: {
+			filteredDocuments() {
+                if (this.filter == 'all')
+                    return this.documents;
+                else if (this.filter == 'Quotidien')
+                    return this.documents.filter(document => document.frequence == 'Quotidien');
+                else if (this.filter == 'Hebdomadaire')
+                    return this.documents.filter(document => document.frequence == 'Hebdomadaire');
+                else
+                    return this.documents.filter(document => document.frequence == 'Mensuel');
+            },
+
+            sortedDocuments() {
+              var temp;
+                if (this.search == '')
+                  temp = this.filteredDocuments;
+                else
+                  temp = this.filteredDocuments.filter(document => document.name == this.search);
+
+                if (this.type != 'Type')
+                  temp = temp.filter(document => document.type == this.type);
+                if (this.lang != 'Langue')
+                  temp = temp.filter(document => document.lang == this.lang);
+                if (this.version != 'Version')
+                  temp = temp.filter(document => document.version == this.version);
+
+                return temp;
+            },
+
 			receptions() {
 				var tab = [];
 				this.selected.forEach(function(el) {
@@ -245,16 +329,16 @@
 		content: none; 
 	}
 	#progressbar li.active, #progressbar li.completed {
-		color: hsl(171, 100%, 41%)
+		color: hsl(217, 71%, 53%)
 	}
 	#progressbar li.active:before {
-		border-color: hsl(171, 100%, 41%)
+		border-color: hsl(217, 71%, 53%)
 	}
 	#progressbar li.active + li:after, #progressbar li.completed + li:after{
-		background: hsl(171, 100%, 41%);
+		background: hsl(217, 71%, 53%);
 	}
 	#progressbar li.completed:before{
-		background: hsl(171, 100%, 41%);
+		background: hsl(217, 71%, 53%);
 		color: hsl(0, 0%, 100%)
 	}
 
@@ -293,6 +377,6 @@
 		opacity: 1;
 	}
 	.checkbox input[type="checkbox"]:checked + label {
-		background: hsl(171, 100%, 41%);
+		background: hsl(217, 71%, 53%);
 	}
 </style>

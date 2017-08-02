@@ -28,7 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $reception = Gate::allows('reception', Reception::class);
+        $reception = Gate::allows('reception', Document::class);
         $scan = Gate::allows('scan', Reception::class);
         $import = Gate::allows('import', Reception::class);
         $clipping = Gate::allows('clipping', Reception::class);

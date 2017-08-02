@@ -8609,10 +8609,6 @@ body {
   font-weight: 300;
 }
 
-.hero.is-primary {
-  background: #2962FF;
-}
-
 .section {
   padding: 2rem 1.5rem;
 }
@@ -8635,6 +8631,6 @@ body {
 }
 
 .level-item a.is-active:not(.button) {
-  color: #2962FF;
+  color: #3273dc;
 }
 

@@ -5,19 +5,44 @@
       <div class="level-left">
         <div class="level-item">
           <p class="subtitle is-5">
-            <strong>{{filteredDocuments.length}}</strong> Documents
+            <strong>{{sortedDocuments.length}}</strong> Documents
           </p>
         </div>
         <div class="level-item">
           <div class="field has-addons">
             <p class="control">
-              <input class="input" type="text" placeholder="Rechercher...">
+              <input class="input" type="text" placeholder="Rechercher..." @keyup.enter="search = $event.target.value">
             </p>
-            <p class="control">
-              <button class="button">
-                Recherche
-              </button>
-            </p>
+            <div class="control">
+              <div class="select">
+                <select v-model="type">
+                  <option>Type</option>
+                  <option value="Magasine">Magasine</option>
+                  <option value="Journal">Journal</option>
+                </select>
+              </div>
+            </div>
+            <div class="control">
+              <div class="select">
+                <select v-model="lang">
+                  <option>Langue</option>
+                  <option value="Anglais">Anglais</option>
+                  <option value="Arabe">Arabe</option>
+                  <option value="Français">Français</option>
+                  <option value="Tamazight">Tamazight</option>
+                </select>
+              </div>
+            </div>
+            <div class="control">
+              <div class="select">
+                <select v-model="version">
+                  <option>Version</option>
+                  <option value="Papier">Papier</option>
+                  <option value="Electronique">Electronique</option>
+                </select>
+              </div>
+            </div>
+            <p class="control"><button class="button is-info is-inverted" @click.prevent="reload"><i class="fa fa-refresh" aria-hidden="true"></i></button></p>
           </div>
         </div>
       </div>
@@ -29,7 +54,7 @@
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
         <p class="level-item">
-          <a class="button is-primary" @click.prevent="showRecepDoc = true">Reception</a>
+          <a class="button is-info is-outlined" @click.prevent="showRecepDoc = true">Reception</a>
           </p>
       </div>
     </nav>
@@ -47,7 +72,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="document in filteredDocuments" @mouseover.prevent="hoverId = document.id">
+          <tr v-for="document in sortedDocuments" @mouseover.prevent="hoverId = document.id">
             <td>{{ document.document.type }}</td>
             <td>{{ document.document.name }}</td>
             <td>{{ document.sourceDate }}</td>
@@ -59,7 +84,7 @@
         </tbody>
       </table>
 
-    <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="reload()"></RecepDoc>
+    <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="refresh()"></RecepDoc>
   </div>
 </template>
 
@@ -82,14 +107,21 @@ import RecepDoc from './RecepDoc';
                 filter: 'all',
                 hoverId: 0,
                 showRecepDoc: false,
-                search: ''
+                search: '',
+                type: 'Type',
+                lang: 'Langue',
+                version: 'Version'
             }
         },
 
         methods: {
-            reload() {
+            refresh() {
               axios.get('/receptions/index').then(response => this.documents = response.data);
               this.showRecepDoc = false;
+            },
+
+            reload() {
+              this.search = ''; this.type = 'Type'; this.lang = 'Langue'; this.version = 'Version';
             }
         },
 
@@ -98,12 +130,29 @@ import RecepDoc from './RecepDoc';
                 if (this.filter == 'all')
                     return this.documents;
                 else if (this.filter == 'Quotidien')
-                    return this.documents.filter(document => document.frequence == 'Quotidien');
+                    return this.documents.filter(document => document.document.frequence == 'Quotidien');
                 else if (this.filter == 'Hebdomadaire')
-                    return this.documents.filter(document => document.frequence == 'Hebdomadaire');
+                    return this.documents.filter(document => document.document.frequence == 'Hebdomadaire');
                 else
-                    return this.documents.filter(document => document.frequence == 'Mensuel');
-            }
+                    return this.documents.filter(document => document.document.frequence == 'Mensuel');
+            },
+
+            sortedDocuments() {
+              var temp;
+                if (this.search == '')
+                  temp = this.filteredDocuments;
+                else
+                  temp = this.filteredDocuments.filter(document => document.document.name == this.search);
+
+                if (this.type != 'Type')
+                  temp = temp.filter(document => document.document.type == this.type);
+                if (this.lang != 'Langue')
+                  temp = temp.filter(document => document.document.lang == this.lang);
+                if (this.version != 'Version')
+                  temp = temp.filter(document => document.document.version == this.version);
+
+                return temp;
+              }
         },
 
         mounted() {
@@ -117,7 +166,5 @@ import RecepDoc from './RecepDoc';
 </script>
 
 <style scoped>
-  a.is-primary, a.is-primary:hover {
-    background: #2962FF;
-  }
+  
 </style>

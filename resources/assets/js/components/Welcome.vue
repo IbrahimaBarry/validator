@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="tabs">
+		<div class="tabs container">
 		  <ul>
 		  	<router-link tag="li" to="/documents/reception" exact>
 		  		<a>Reception</a>
@@ -47,8 +47,8 @@
 
 <style scoped>
 	.tabs li.is-active a {
-	    border-bottom-color: #2962FF;
-	    color: #2962FF;
+	    border-bottom-color: hsl(217, 71%, 53%);
+	    color: hsl(217, 71%, 53%);
 	}
 
 	.tabs:not(:last-child) {

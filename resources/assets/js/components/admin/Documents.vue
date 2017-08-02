@@ -95,7 +95,8 @@
         },
 
         computed: {
-            filteredDocuments() {
+            filteredDocuments: {
+              get() {
                 if (this.filter == 'all')
                     return this.documents;
                 else if (this.filter == 'Quotidien')
@@ -104,6 +105,11 @@
                     return this.documents.filter(document => document.frequence == 'Hebdomadaire');
                 else
                     return this.documents.filter(document => document.frequence == 'Mensuel');
+                }, 
+              
+              set() {
+                
+              }
             }
         },
 

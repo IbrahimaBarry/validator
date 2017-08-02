@@ -3747,6 +3747,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+window.sort = function () {
+    console.log('sor function');
+};
+
 new Vue({
     el: '#app',
 
@@ -16018,7 +16022,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.tabs li.is-active a[data-v-177bc5d8] {\n    border-bottom-color: #2962FF;\n    color: #2962FF;\n}\n.tabs[data-v-177bc5d8]:not(:last-child) {\n    margin-bottom: 0;\n}\n.tabs ul[data-v-177bc5d8] {\n\tmargin-top: 10px;\n}\n.slideOutLeft-enter-active[data-v-177bc5d8] {\n  animation-name: slideOutLeft-data-v-177bc5d8;\n}\n.slideOutLeft-leave-active[data-v-177bc5d8] {\n  animation-name: slideOutLeft reverse;\n}\n@keyframes slideOutLeft-data-v-177bc5d8 {\nfrom {\n    transform: translate3d(0, 0, 0);\n}\nto {\n    visibility: hidden;\n    transform: translate3d(-100%, 0, 0);\n}\n}\n", ""]);
+exports.push([module.i, "\n.tabs li.is-active a[data-v-177bc5d8] {\n    border-bottom-color: hsl(217, 71%, 53%);\n    color: hsl(217, 71%, 53%);\n}\n.tabs[data-v-177bc5d8]:not(:last-child) {\n    margin-bottom: 0;\n}\n.tabs ul[data-v-177bc5d8] {\n\tmargin-top: 10px;\n}\n.slideOutLeft-enter-active[data-v-177bc5d8] {\n  animation-name: slideOutLeft-data-v-177bc5d8;\n}\n.slideOutLeft-leave-active[data-v-177bc5d8] {\n  animation-name: slideOutLeft reverse;\n}\n@keyframes slideOutLeft-data-v-177bc5d8 {\nfrom {\n    transform: translate3d(0, 0, 0);\n}\nto {\n    visibility: hidden;\n    transform: translate3d(-100%, 0, 0);\n}\n}\n", ""]);
 
 // exports
 
@@ -16112,7 +16116,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('div', {
-    staticClass: "tabs"
+    staticClass: "tabs container"
   }, [_c('ul', [_c('router-link', {
     attrs: {
       "tag": "li",
@@ -16242,7 +16246,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\na.is-primary[data-v-1d5a844e], a.is-primary[data-v-1d5a844e]:hover {\n  background: #2962FF;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -16255,6 +16259,31 @@ exports.push([module.i, "\na.is-primary[data-v-1d5a844e], a.is-primary[data-v-1d
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RecepDoc__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RecepDoc___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__RecepDoc__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -16335,39 +16364,65 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             filter: 'all',
             hoverId: 0,
             showRecepDoc: false,
-            search: ''
+            search: '',
+            type: 'Type',
+            lang: 'Langue',
+            version: 'Version'
         };
     },
 
 
     methods: {
-        reload: function reload() {
+        refresh: function refresh() {
             var _this = this;
 
             axios.get('/receptions/index').then(function (response) {
                 return _this.documents = response.data;
             });
             this.showRecepDoc = false;
+        },
+        reload: function reload() {
+            this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
         }
     },
 
     computed: {
         filteredDocuments: function filteredDocuments() {
             if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
-                return document.frequence == 'Quotidien';
+                return document.document.frequence == 'Quotidien';
             });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
-                return document.frequence == 'Hebdomadaire';
+                return document.document.frequence == 'Hebdomadaire';
             });else return this.documents.filter(function (document) {
-                return document.frequence == 'Mensuel';
+                return document.document.frequence == 'Mensuel';
             });
+        },
+        sortedDocuments: function sortedDocuments() {
+            var _this2 = this;
+
+            var temp;
+            if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+                return document.document.name == _this2.search;
+            });
+
+            if (this.type != 'Type') temp = temp.filter(function (document) {
+                return document.document.type == _this2.type;
+            });
+            if (this.lang != 'Langue') temp = temp.filter(function (document) {
+                return document.document.lang == _this2.lang;
+            });
+            if (this.version != 'Version') temp = temp.filter(function (document) {
+                return document.document.version == _this2.version;
+            });
+
+            return temp;
         }
     },
 
     mounted: function mounted() {
-        var _this2 = this;
+        var _this3 = this;
 
         axios.get('/receptions/index').then(function (response) {
-            return _this2.documents = response.data;
+            return _this3.documents = response.data;
         });
     },
 
@@ -16456,7 +16511,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\nlabel.checkbox[data-v-cc9ad03a] {\n\tcolor: black\n}\n.modal-card[data-v-cc9ad03a] {\n\twidth: 95%\n}\n.modal-card-head[data-v-cc9ad03a] {\n\tbackground: white\n}\n#progressbar[data-v-cc9ad03a] {\n\t/*CSS counters to number the steps*/\n\tcounter-reset: step;\n\tfont-size: 15px;\n}\n#progressbar li[data-v-cc9ad03a] {\n\tlist-style-type: none;\n\tcolor: black;\n\twidth: 33.33%;\n\tfloat: left;\n\tposition: relative;\n}\n#progressbar li[data-v-cc9ad03a]:before {\n\tcontent: counter(step);\n\tcounter-increment: step;\n\twidth: 30px;\n\theight: 30px;\n\tline-height: 28px;\n\tborder: 1px solid #ddd;\n\tborder-radius: 50%;\n\tdisplay: block;\n\ttext-align: center;\n\tbackground: white;\n\tmargin: 0 auto 5px auto;\n}\n/*progressbar connectors*/\n/*#progressbar li:after {\n\tcontent: '';\n\tposition: absolute;\n\twidth: 100%;\n\theight: 1px;\n\tbackground: #ddd;\n\tleft: -50%;\n\ttop: 15px;\n}*/\n#progressbar li[data-v-cc9ad03a]:first-child:after {\n\t/*connector not needed before the first step*/\n\tcontent: none;\n}\n#progressbar li.active[data-v-cc9ad03a], #progressbar li.completed[data-v-cc9ad03a] {\n\tcolor: hsl(171, 100%, 41%)\n}\n#progressbar li.active[data-v-cc9ad03a]:before {\n\tborder-color: hsl(171, 100%, 41%)\n}\n#progressbar li.active + li[data-v-cc9ad03a]:after, #progressbar li.completed + li[data-v-cc9ad03a]:after{\n\tbackground: hsl(171, 100%, 41%);\n}\n#progressbar li.completed[data-v-cc9ad03a]:before{\n\tbackground: hsl(171, 100%, 41%);\n\tcolor: hsl(0, 0%, 100%)\n}\n.checkbox[data-v-cc9ad03a] {\n\twidth: 20px;\n\theight: 20px;\n\tbackground: #ddd;\n\tposition: relative;\n}\n.checkbox input[type=\"checkbox\"][data-v-cc9ad03a] {\n\tvisibility: hidden;\n}\n.checkbox label[data-v-cc9ad03a] {\n\twidth: 18px;\n\theight: 18px;\n\tposition: absolute;\n\ttop: 1px;\n\tleft: 1px;\n\tbackground: white;\n\tcursor: pointer;\n}\n.checkbox label[data-v-cc9ad03a]:before {\n\tcontent: '';\n\twidth: 9px;\n\theight: 5px;\n\tborder: 3px solid white;\n\tposition: absolute;\n\tborder-top: none;\n\tborder-right: none;\n\ttransform: rotate(-45deg);\n\ttop: 5px;\n\tleft: 5px;\n\topacity: 0\n}\n.checkbox input[type=\"checkbox\"]:checked + label[data-v-cc9ad03a]:before {\n\topacity: 1;\n}\n.checkbox input[type=\"checkbox\"]:checked + label[data-v-cc9ad03a] {\n\tbackground: hsl(171, 100%, 41%);\n}\n", ""]);
+exports.push([module.i, "\nlabel.checkbox[data-v-cc9ad03a] {\n\tcolor: black\n}\n.modal-card[data-v-cc9ad03a] {\n\twidth: 95%\n}\n.modal-card-head[data-v-cc9ad03a] {\n\tbackground: white\n}\n#progressbar[data-v-cc9ad03a] {\n\t/*CSS counters to number the steps*/\n\tcounter-reset: step;\n\tfont-size: 15px;\n}\n#progressbar li[data-v-cc9ad03a] {\n\tlist-style-type: none;\n\tcolor: black;\n\twidth: 33.33%;\n\tfloat: left;\n\tposition: relative;\n}\n#progressbar li[data-v-cc9ad03a]:before {\n\tcontent: counter(step);\n\tcounter-increment: step;\n\twidth: 30px;\n\theight: 30px;\n\tline-height: 28px;\n\tborder: 1px solid #ddd;\n\tborder-radius: 50%;\n\tdisplay: block;\n\ttext-align: center;\n\tbackground: white;\n\tmargin: 0 auto 5px auto;\n}\n/*progressbar connectors*/\n/*#progressbar li:after {\n\tcontent: '';\n\tposition: absolute;\n\twidth: 100%;\n\theight: 1px;\n\tbackground: #ddd;\n\tleft: -50%;\n\ttop: 15px;\n}*/\n#progressbar li[data-v-cc9ad03a]:first-child:after {\n\t/*connector not needed before the first step*/\n\tcontent: none;\n}\n#progressbar li.active[data-v-cc9ad03a], #progressbar li.completed[data-v-cc9ad03a] {\n\tcolor: hsl(217, 71%, 53%)\n}\n#progressbar li.active[data-v-cc9ad03a]:before {\n\tborder-color: hsl(217, 71%, 53%)\n}\n#progressbar li.active + li[data-v-cc9ad03a]:after, #progressbar li.completed + li[data-v-cc9ad03a]:after{\n\tbackground: hsl(217, 71%, 53%);\n}\n#progressbar li.completed[data-v-cc9ad03a]:before{\n\tbackground: hsl(217, 71%, 53%);\n\tcolor: hsl(0, 0%, 100%)\n}\n.checkbox[data-v-cc9ad03a] {\n\twidth: 20px;\n\theight: 20px;\n\tbackground: #ddd;\n\tposition: relative;\n}\n.checkbox input[type=\"checkbox\"][data-v-cc9ad03a] {\n\tvisibility: hidden;\n}\n.checkbox label[data-v-cc9ad03a] {\n\twidth: 18px;\n\theight: 18px;\n\tposition: absolute;\n\ttop: 1px;\n\tleft: 1px;\n\tbackground: white;\n\tcursor: pointer;\n}\n.checkbox label[data-v-cc9ad03a]:before {\n\tcontent: '';\n\twidth: 9px;\n\theight: 5px;\n\tborder: 3px solid white;\n\tposition: absolute;\n\tborder-top: none;\n\tborder-right: none;\n\ttransform: rotate(-45deg);\n\ttop: 5px;\n\tleft: 5px;\n\topacity: 0\n}\n.checkbox input[type=\"checkbox\"]:checked + label[data-v-cc9ad03a]:before {\n\topacity: 1;\n}\n.checkbox input[type=\"checkbox\"]:checked + label[data-v-cc9ad03a] {\n\tbackground: hsl(217, 71%, 53%);\n}\n", ""]);
 
 // exports
 
@@ -16580,75 +16635,159 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['id'],
-
-	data: function data() {
-		return {
-			documents: [],
-
-			selected: [],
-
-			step: 1,
-
-			document: {
-				sourceDate: '',
-				nbrPage: 0,
-				document_id: 0,
-				message: ''
-			}
-		};
-	},
+  data: function data() {
+    return {
+      documents: [],
+      selected: [],
+      step: 1,
+      filter: 'all',
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version'
+    };
+  },
 
 
-	methods: {
-		hideModal: function hideModal() {
-			this.$emit('hideRecepDoc');
-		},
-		addReception: function addReception() {
-			if (this.receptions.length > 0) {
-				this.receptions.forEach(function (el) {
-					axios.post('/receptions/store', el);
-				});
-				this.$emit('documentRecepted');
-			}
-		},
-		next: function next() {
-			if (this.step < 3) this.step += 1;
-		},
-		back: function back() {
-			if (this.step > 1) this.step -= 1;
-		},
-		update: function update(id, event) {
-			this.receptions.forEach(function (el) {
-				if (el.document_id == id) {
-					if (event.target.name == 'sourceDate') el.sourceDate = event.target.value;else if (event.target.name == 'nbrPage') el.nbrPage = event.target.value;else el.message = event.target.value;
-				}
-			});
-		}
-	},
+  methods: {
+    hideModal: function hideModal() {
+      this.$emit('hideRecepDoc');
+    },
+    addReception: function addReception() {
+      if (this.receptions.length > 0) {
+        this.receptions.forEach(function (el) {
+          axios.post('/receptions/store', el);
+        });
+        this.$emit('documentRecepted');
+      }
+    },
+    next: function next() {
+      if (this.step < 3) this.step += 1;
+    },
+    back: function back() {
+      if (this.step > 1) this.step -= 1;
+    },
+    update: function update(id, event) {
+      this.receptions.forEach(function (el) {
+        if (el.document_id == id) {
+          if (event.target.name == 'sourceDate') el.sourceDate = event.target.value;else if (event.target.name == 'nbrPage') el.nbrPage = event.target.value;else el.message = event.target.value;
+        }
+      });
+    },
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
+    }
+  },
 
-	computed: {
-		receptions: function receptions() {
-			var tab = [];
-			this.selected.forEach(function (el) {
-				tab.push({ sourceDate: '',
-					nbrPage: 0,
-					document_id: el.id,
-					message: '' });
-			});
-			return tab;
-		}
-	},
+  computed: {
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
+        return document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
+        return document.frequence == 'Hebdomadaire';
+      });else return this.documents.filter(function (document) {
+        return document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this = this;
 
-	mounted: function mounted() {
-		var _this = this;
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.name == _this.search;
+      });
 
-		axios.get('documents/index').then(function (response) {
-			return _this.documents = response.data;
-		});
-	}
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.type == _this.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.lang == _this.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.version == _this.version;
+      });
+
+      return temp;
+    },
+    receptions: function receptions() {
+      var tab = [];
+      this.selected.forEach(function (el) {
+        tab.push({ sourceDate: '',
+          nbrPage: 0,
+          document_id: el.id,
+          message: '' });
+      });
+      return tab;
+    }
+  },
+
+  mounted: function mounted() {
+    var _this2 = this;
+
+    axios.get('documents/index').then(function (response) {
+      return _this2.documents = response.data;
+    });
+  }
 });
 
 /***/ }),
@@ -16689,23 +16828,206 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })]), _vm._v(" "), _c('section', {
     staticClass: "modal-card-body"
-  }, [_c('table', {
+  }, [_c('div', {
     directives: [{
       name: "show",
       rawName: "v-show",
       value: (_vm.step == 1),
       expression: "step == 1"
-    }],
-    staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.documents), function(document) {
-    return _c('tr', {
-      on: {
-        "mouseover": function($event) {
-          $event.preventDefault();
-          _vm.hoverId = document.id
-        }
+    }]
+  }, [_c('nav', {
+    staticClass: "level"
+  }, [_c('div', {
+    staticClass: "level-left"
+  }, [_c('div', {
+    staticClass: "level-item"
+  }, [_c('p', {
+    staticClass: "subtitle is-5"
+  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n\t          ")])]), _vm._v(" "), _c('div', {
+    staticClass: "level-item"
+  }, [_c('div', {
+    staticClass: "field has-addons"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Rechercher..."
+    },
+    on: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.search = $event.target.value
       }
-    }, [_c('td', [_c('div', {
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.type),
+      expression: "type"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Magasine"
+    }
+  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Journal"
+    }
+  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.lang),
+      expression: "lang"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Anglais"
+    }
+  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Arabe"
+    }
+  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Français"
+    }
+  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Tamazight"
+    }
+  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.version),
+      expression: "version"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Papier"
+    }
+  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Electronique"
+    }
+  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-info is-inverted",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.reload($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c('div', {
+    staticClass: "level-right"
+  }, [_c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    class: {
+      'is-active': _vm.filter == 'all'
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.filter = 'all'
+      }
+    }
+  }, [_vm._v("Tous")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    class: {
+      'is-active': _vm.filter == 'Quotidien'
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.filter = 'Quotidien'
+      }
+    }
+  }, [_vm._v("Quotidiens")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    class: {
+      'is-active': _vm.filter == 'Hebdomadaire'
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.filter = 'Hebdomadaire'
+      }
+    }
+  }, [_vm._v("Hebdomadaires")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    class: {
+      'is-active': _vm.filter == 'Mensuel'
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.filter = 'Mensuel'
+      }
+    }
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
+    staticClass: "table is-striped"
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(document) {
+    return _c('tr', [_c('td', [_c('div', {
       staticClass: "field"
     }, [_c('p', {
       staticClass: "control checkbox"
@@ -16747,7 +17069,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "for": document.id
       }
     })])])]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.source))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceName))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.lang))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.version))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.frequence))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.location))])])
-  }))]), _vm._v(" "), _c('table', {
+  }))])]), _vm._v(" "), _c('table', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -16766,7 +17088,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.hoverId = document.id
         }
       }
-    }, [_c('td', [_vm._v(_vm._s(document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.source))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceName))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.lang))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.version))]), _vm._v(" "), _c('td', [_c('div', {
+    }, [_c('td', [_vm._v(_vm._s(document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.source))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceName))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.lang))]), _vm._v(" "), _c('td', [_c('div', {
       staticClass: "control"
     }, [_c('input', {
       staticClass: "input",
@@ -16811,7 +17133,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "disabled": ""
       }
-    }, [_vm._v("Select cause du retard")]), _vm._v(" "), _c('option', [_vm._v("Aucune")]), _vm._v(" "), _c('option', [_vm._v("Autre")])])])])])])])
+    }, [_vm._v("Select cause du retard")]), _vm._v(" "), _c('option', [_vm._v("Aucune")]), _vm._v(" "), _c('option', {
+      attrs: {
+        "value": "Retard reception"
+      }
+    }, [_vm._v("Retard reception")]), _vm._v(" "), _c('option', {
+      attrs: {
+        "value": "Retard publication"
+      }
+    }, [_vm._v("Retard publication")]), _vm._v(" "), _c('option', {
+      attrs: {
+        "value": "Perte document"
+      }
+    }, [_vm._v("Perte document")]), _vm._v(" "), _c('option', [_vm._v("Autre")])])])])])])])
   }))])]), _vm._v(" "), _c('footer', {
     staticClass: "modal-card-foot"
   }, [(_vm.step != 1) ? _c('a', {
@@ -16835,7 +17169,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "fa fa-angle-double-right"
   })]) : _c('a', {
-    staticClass: "button is-primary",
+    staticClass: "button is-info",
     on: {
       "click": function($event) {
         $event.preventDefault();
@@ -16905,10 +17239,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
     attrs: {
-      "title": "version"
-    }
-  }, [_vm._v("Version")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
       "title": "sourceDate"
     }
   }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
@@ -16942,7 +17272,138 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-item"
   }, [_c('p', {
     staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.filteredDocuments.length))]), _vm._v(" Documents\n        ")])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n        ")])]), _vm._v(" "), _c('div', {
+    staticClass: "level-item"
+  }, [_c('div', {
+    staticClass: "field has-addons"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Rechercher..."
+    },
+    on: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.search = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.type),
+      expression: "type"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Magasine"
+    }
+  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Journal"
+    }
+  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.lang),
+      expression: "lang"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Anglais"
+    }
+  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Arabe"
+    }
+  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Français"
+    }
+  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Tamazight"
+    }
+  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.version),
+      expression: "version"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Papier"
+    }
+  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Electronique"
+    }
+  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-info is-inverted",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.reload($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c('div', {
     staticClass: "level-right"
   }, [_c('p', {
     staticClass: "level-item"
@@ -16995,7 +17456,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
     staticClass: "level-item"
   }, [_c('a', {
-    staticClass: "button is-primary",
+    staticClass: "button is-info is-outlined",
     on: {
       "click": function($event) {
         $event.preventDefault();
@@ -17004,7 +17465,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(1), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(document) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(document) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -17022,29 +17483,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.showRecepDoc = false
       },
       "documentRecepted": function($event) {
-        _vm.reload()
+        _vm.refresh()
       }
     }
   }) : _vm._e()], 1)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "level-item"
-  }, [_c('div', {
-    staticClass: "field has-addons"
-  }, [_c('p', {
-    staticClass: "control"
-  }, [_c('input', {
-    staticClass: "input",
-    attrs: {
-      "type": "text",
-      "placeholder": "Rechercher..."
-    }
-  })]), _vm._v(" "), _c('p', {
-    staticClass: "control"
-  }, [_c('button', {
-    staticClass: "button"
-  }, [_vm._v("\n              Recherche\n            ")])])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
       "title": "type"
@@ -17162,7 +17605,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -17240,53 +17683,106 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-        axios.get('/user').then(function (response) {
-            if (response.data.scan) next();else next({ path: from.path });
-        });
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    axios.get('/user').then(function (response) {
+      if (response.data.scan) next();else next({ path: from.path });
+    });
+  },
+  data: function data() {
+    return {
+      showModal: false,
+      receptions: [],
+      filter: 'all',
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version'
+    };
+  },
+
+
+  methods: {
+    addScan: function addScan(id) {
+      var _this = this;
+
+      axios.get('/receptions/scan/' + id).then(function (response) {
+        return _this.receptions = response.data;
+      });
     },
-    data: function data() {
-        return {
-            showModal: false,
-
-            receptions: [],
-
-            filter: 'all'
-        };
-    },
-
-
-    methods: {
-        addScan: function addScan(id) {
-            var _this = this;
-
-            axios.get('/receptions/scan/' + id).then(function (response) {
-                return _this.receptions = response.data;
-            });
-        }
-    },
-
-    computed: {
-        filteredDocuments: function filteredDocuments() {
-            if (this.filter == 'all') return this.receptions;else if (this.filter == 'Quotidien') return this.receptions.filter(function (reception) {
-                return reception.document.frequence == 'Quotidien';
-            });else if (this.filter == 'Hebdomadaire') return this.receptions.filter(function (reception) {
-                return reception.document.frequence == 'Hebdomadaire';
-            });else return this.receptions.filter(function (reception) {
-                return reception.document.frequence == 'Mensuel';
-            });
-        }
-    },
-
-    mounted: function mounted() {
-        var _this2 = this;
-
-        axios.get('/receptions/index').then(function (response) {
-            return _this2.receptions = response.data;
-        });
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
     }
+  },
+
+  computed: {
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.receptions;else if (this.filter == 'Quotidien') return this.receptions.filter(function (reception) {
+        return reception.document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.receptions.filter(function (reception) {
+        return reception.document.frequence == 'Hebdomadaire';
+      });else return this.receptions.filter(function (reception) {
+        return reception.document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this2 = this;
+
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.document.name == _this2.search;
+      });
+
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.document.type == _this2.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.document.lang == _this2.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.document.version == _this2.version;
+      });
+
+      return temp;
+    }
+  },
+
+  mounted: function mounted() {
+    var _this3 = this;
+
+    axios.get('/receptions/index').then(function (response) {
+      return _this3.receptions = response.data;
+    });
+  }
 });
 
 /***/ }),
@@ -17302,7 +17798,138 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-item"
   }, [_c('p', {
     staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.filteredDocuments.length))]), _vm._v(" Documents\n        ")])])]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
+    staticClass: "level-item"
+  }, [_c('div', {
+    staticClass: "field has-addons"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Rechercher..."
+    },
+    on: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.search = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.type),
+      expression: "type"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Magasine"
+    }
+  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Journal"
+    }
+  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.lang),
+      expression: "lang"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Anglais"
+    }
+  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Arabe"
+    }
+  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Français"
+    }
+  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Tamazight"
+    }
+  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.version),
+      expression: "version"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Papier"
+    }
+  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Electronique"
+    }
+  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-info is-inverted",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.reload($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c('div', {
     staticClass: "level-right"
   }, [_c('p', {
     staticClass: "level-item"
@@ -17352,9 +17979,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    staticClass: "button is-info is-outlined",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.showRecepDoc = true
+      }
+    }
+  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(reception) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(reception) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.message))]), _vm._v(" "), (reception.scanned == false) ? _c('td', [_c('a', {
       staticClass: "button is-small is-info is-outlined",
       on: {
@@ -17493,7 +18130,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -17569,51 +18206,105 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-        axios.get('/user').then(function (response) {
-            if (response.data.import) next();else next({ path: from.path });
-        });
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    axios.get('/user').then(function (response) {
+      if (response.data.import) next();else next({ path: from.path });
+    });
+  },
+  data: function data() {
+    return {
+      scans: [],
+      filter: 'all',
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version'
+    };
+  },
+
+
+  methods: {
+    addImport: function addImport(id) {
+      var _this = this;
+
+      axios.get('/receptions/import/' + id).then(function (response) {
+        return _this.scans = response.data;
+      });
     },
-    data: function data() {
-        return {
-            scans: [],
-
-            filter: 'all'
-        };
-    },
-
-
-    methods: {
-        addImport: function addImport(id) {
-            var _this = this;
-
-            axios.get('/receptions/import/' + id).then(function (response) {
-                return _this.scans = response.data;
-            });
-        }
-    },
-
-    computed: {
-        filteredDocuments: function filteredDocuments() {
-            if (this.filter == 'all') return this.scans;else if (this.filter == 'Quotidien') return this.scans.filter(function (scan) {
-                return scan.document.frequence == 'Quotidien';
-            });else if (this.filter == 'Hebdomadaire') return this.scans.filter(function (scan) {
-                return scan.document.frequence == 'Hebdomadaire';
-            });else return this.scans.filter(function (scan) {
-                return scan.document.frequence == 'Mensuel';
-            });
-        }
-    },
-
-    mounted: function mounted() {
-        var _this2 = this;
-
-        axios.get('/receptions/getScanned').then(function (response) {
-            return _this2.scans = response.data;
-        });
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
     }
+  },
+
+  computed: {
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.scans;else if (this.filter == 'Quotidien') return this.scans.filter(function (scan) {
+        return scan.document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.scans.filter(function (scan) {
+        return scan.document.frequence == 'Hebdomadaire';
+      });else return this.scans.filter(function (scan) {
+        return scan.document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this2 = this;
+
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.document.name == _this2.search;
+      });
+
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.document.type == _this2.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.document.lang == _this2.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.document.version == _this2.version;
+      });
+
+      return temp;
+    }
+  },
+
+  mounted: function mounted() {
+    var _this3 = this;
+
+    axios.get('/receptions/getScanned').then(function (response) {
+      return _this3.scans = response.data;
+    });
+  }
 });
 
 /***/ }),
@@ -17629,7 +18320,138 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-item"
   }, [_c('p', {
     staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.filteredDocuments.length))]), _vm._v(" Documents\n        ")])])]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
+    staticClass: "level-item"
+  }, [_c('div', {
+    staticClass: "field has-addons"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Rechercher..."
+    },
+    on: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.search = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.type),
+      expression: "type"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Magasine"
+    }
+  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Journal"
+    }
+  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.lang),
+      expression: "lang"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Anglais"
+    }
+  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Arabe"
+    }
+  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Français"
+    }
+  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Tamazight"
+    }
+  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.version),
+      expression: "version"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Papier"
+    }
+  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Electronique"
+    }
+  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-info is-inverted",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.reload($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c('div', {
     staticClass: "level-right"
   }, [_c('p', {
     staticClass: "level-item"
@@ -17679,9 +18501,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    staticClass: "button is-info is-outlined",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.showRecepDoc = true
+      }
+    }
+  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(scan) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(scan) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(scan.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.date_scan))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.user_scan))]), _vm._v(" "), (scan.imported == false) ? _c('td', [_c('a', {
       staticClass: "button is-small is-outlined is-info",
       on: {
@@ -17907,58 +18739,109 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-        axios.get('/user').then(function (response) {
-            if (response.data.affect) next();else next({ path: from.path });
-        });
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    axios.get('/user').then(function (response) {
+      if (response.data.affect) next();else next({ path: from.path });
+    });
+  },
+  data: function data() {
+    return {
+      data: [],
+      filter: 'all',
+      showModal: false,
+      hoverId: 0,
+      hovered: 0,
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version'
+    };
+  },
+
+
+  methods: {
+    addAgent: function addAgent(receptionId, agentId) {
+      var _this = this;
+
+      axios.get('/receptions/clipping/' + receptionId + '/' + agentId).then(function (response) {
+        return _this.data = response.data;
+      });
+      this.showModal = false;
     },
-    data: function data() {
-        return {
-            data: [],
-
-            filter: 'all',
-
-            showModal: false,
-
-            hoverId: 0,
-
-            hovered: 0
-        };
-    },
-
-
-    methods: {
-        addAgent: function addAgent(receptionId, agentId) {
-            var _this = this;
-
-            axios.get('/receptions/clipping/' + receptionId + '/' + agentId).then(function (response) {
-                return _this.data = response.data;
-            });
-            this.showModal = false;
-        }
-    },
-
-    computed: {
-        filteredDocuments: function filteredDocuments() {
-            if (this.filter == 'all') return this.data.imports;else if (this.filter == 'Quotidien') return this.data.imports.filter(function (doc) {
-                return doc.document.frequence == 'Quotidien';
-            });else if (this.filter == 'Hebdomadaire') return this.data.imports.filter(function (doc) {
-                return doc.document.frequence == 'Hebdomadaire';
-            });else return this.data.imports.filter(function (doc) {
-                return doc.document.frequence == 'Mensuel';
-            });
-        }
-    },
-
-    mounted: function mounted() {
-        var _this2 = this;
-
-        axios.get('/receptions/getImported').then(function (response) {
-            return _this2.data = response.data;
-        });
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
     }
+  },
+
+  computed: {
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.data.imports;else if (this.filter == 'Quotidien') return this.data.imports.filter(function (doc) {
+        return doc.document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.data.imports.filter(function (doc) {
+        return doc.document.frequence == 'Hebdomadaire';
+      });else return this.data.imports.filter(function (doc) {
+        return doc.document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this2 = this;
+
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.document.name == _this2.search;
+      });
+
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.document.type == _this2.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.document.lang == _this2.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.document.version == _this2.version;
+      });
+
+      return temp;
+    }
+  },
+
+  mounted: function mounted() {
+    var _this3 = this;
+
+    axios.get('/receptions/getImported').then(function (response) {
+      return _this3.data = response.data;
+    });
+  }
 });
 
 /***/ }),
@@ -17974,7 +18857,138 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-item"
   }, [_c('p', {
     staticClass: "subtitle is-5"
-  }, [(_vm.data.length != 0) ? _c('strong', [_vm._v(_vm._s(_vm.filteredDocuments.length))]) : _vm._e(), _vm._v(" Documents\n        ")])])]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
+    staticClass: "level-item"
+  }, [_c('div', {
+    staticClass: "field has-addons"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Rechercher..."
+    },
+    on: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.search = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.type),
+      expression: "type"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Magasine"
+    }
+  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Journal"
+    }
+  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.lang),
+      expression: "lang"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Anglais"
+    }
+  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Arabe"
+    }
+  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Français"
+    }
+  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Tamazight"
+    }
+  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.version),
+      expression: "version"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Papier"
+    }
+  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Electronique"
+    }
+  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-info is-inverted",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.reload($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c('div', {
     staticClass: "level-right"
   }, [_c('p', {
     staticClass: "level-item"
@@ -18024,9 +19038,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    staticClass: "button is-info is-outlined",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.showRecepDoc = true
+      }
+    }
+  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(imported) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(imported) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -18372,82 +19396,131 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-        axios.get('/user').then(function (response) {
-            if (response.data.clipping) next();else next({ path: from.path });
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    axios.get('/user').then(function (response) {
+      if (response.data.clipping) next();else next({ path: from.path });
+    });
+  },
+
+
+  components: {
+    Chrono: __WEBPACK_IMPORTED_MODULE_0__Chrono___default.a
+  },
+
+  data: function data() {
+    return {
+      documents: [],
+      clipping: {
+        nbrArtTotal: '',
+        time: ''
+      },
+      hoverId: 0,
+      showAddModal: false,
+      showModal: false,
+      detail: {},
+      filter: 'all',
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version'
+    };
+  },
+
+
+  methods: {
+    addClipping: function addClipping(id) {
+      var _this = this;
+
+      if (this.hoverId != 0) {
+        axios.post('/receptions/clipping/' + id, this.clipping).then(function (response) {
+          return _this.documents = response.data;
         });
+        this.showAddModal = false;
+      }
     },
-
-
-    components: {
-        Chrono: __WEBPACK_IMPORTED_MODULE_0__Chrono___default.a
+    affect: function affect(doc) {
+      this.detail = doc;
+      this.hoverId = doc.id;
     },
-
-    data: function data() {
-        return {
-            documents: [],
-
-            clipping: {
-                nbrArtTotal: '',
-                time: ''
-            },
-
-            hoverId: 0,
-
-            showAddModal: false,
-
-            showModal: false,
-
-            detail: {},
-
-            filter: 'all'
-        };
+    endClipping: function endClipping(event) {
+      this.showAddModal = true;
+      this.clipping.time = event.mn + 'mn:' + event.s + 's:' + event.ms + 'ms';
     },
-
-
-    methods: {
-        addClipping: function addClipping(id) {
-            var _this = this;
-
-            if (this.hoverId != 0) {
-                axios.post('/receptions/clipping/' + id, this.clipping).then(function (response) {
-                    return _this.documents = response.data;
-                });
-                this.showAddModal = false;
-            }
-        },
-        affect: function affect(doc) {
-            this.detail = doc;
-            this.hoverId = doc.id;
-        },
-        endClipping: function endClipping(event) {
-            this.showAddModal = true;
-            this.clipping.time = event.mn + 'mn:' + event.s + 's:' + event.ms + 'ms';
-        }
-    },
-
-    computed: {
-        filteredDocuments: function filteredDocuments() {
-            if (this.filter == 'all') return this.documents;else if (this.filter == 'quotidien') return this.documents.filter(function (doc) {
-                return doc.document.frequence == 'quotidien';
-            });else if (this.filter == 'hebdomadaire') return this.documents.filter(function (doc) {
-                return doc.document.frequence == 'hebdomadaire';
-            });else return this.documents.filter(function (doc) {
-                return doc.document.frequence == 'mensuel';
-            });
-        }
-    },
-
-    mounted: function mounted() {
-        var _this2 = this;
-
-        axios.get('/receptions/clipping/agent').then(function (response) {
-            return _this2.documents = response.data;
-        });
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
     }
+  },
+
+  computed: {
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (doc) {
+        return doc.document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (doc) {
+        return doc.document.frequence == 'Hebdomadaire';
+      });else return this.documents.filter(function (doc) {
+        return doc.document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this2 = this;
+
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.document.name == _this2.search;
+      });
+
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.document.type == _this2.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.document.lang == _this2.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.document.version == _this2.version;
+      });
+
+      return temp;
+    }
+  },
+
+  mounted: function mounted() {
+    var _this3 = this;
+
+    axios.get('/receptions/clipping/agent').then(function (response) {
+      return _this3.documents = response.data;
+    });
+  }
 });
 
 /***/ }),
@@ -18691,7 +19764,138 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-item"
   }, [_c('p', {
     staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.filteredDocuments.length))]), _vm._v(" Documents\n        ")])])]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
+    staticClass: "level-item"
+  }, [_c('div', {
+    staticClass: "field has-addons"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Rechercher..."
+    },
+    on: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.search = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.type),
+      expression: "type"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Magasine"
+    }
+  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Journal"
+    }
+  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.lang),
+      expression: "lang"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Anglais"
+    }
+  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Arabe"
+    }
+  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Français"
+    }
+  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Tamazight"
+    }
+  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.version),
+      expression: "version"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Papier"
+    }
+  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Electronique"
+    }
+  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-info is-inverted",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.reload($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c('div', {
     staticClass: "level-right"
   }, [_c('p', {
     staticClass: "level-item"
@@ -18709,41 +19913,51 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-item"
   }, [_c('a', {
     class: {
-      'is-active': _vm.filter == 'quotidien'
+      'is-active': _vm.filter == 'Quotidien'
     },
     on: {
       "click": function($event) {
         $event.preventDefault();
-        _vm.filter = 'quotidien'
+        _vm.filter = 'Quotidien'
       }
     }
   }, [_vm._v("Quotidiens")])]), _vm._v(" "), _c('p', {
     staticClass: "level-item"
   }, [_c('a', {
     class: {
-      'is-active': _vm.filter == 'hebdomadaire'
+      'is-active': _vm.filter == 'Hebdomadaire'
     },
     on: {
       "click": function($event) {
         $event.preventDefault();
-        _vm.filter = 'hebdomadaire'
+        _vm.filter = 'Hebdomadaire'
       }
     }
   }, [_vm._v("Hebdomadaires")])]), _vm._v(" "), _c('p', {
     staticClass: "level-item"
   }, [_c('a', {
     class: {
-      'is-active': _vm.filter == 'mensuel'
+      'is-active': _vm.filter == 'Mensuel'
     },
     on: {
       "click": function($event) {
         $event.preventDefault();
-        _vm.filter = 'mensuel'
+        _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    staticClass: "button is-info is-outlined",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.showRecepDoc = true
+      }
+    }
+  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(doc) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(doc) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -19136,62 +20350,114 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-        axios.get('/user').then(function (response) {
-            if (response.data.export) next();else next({ path: from.path });
-        });
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    axios.get('/user').then(function (response) {
+      if (response.data.export) next();else next({ path: from.path });
+    });
+  },
+  data: function data() {
+    return {
+      documents: [],
+      filter: 'all',
+      showModal: false,
+      detail: {},
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version'
+    };
+  },
+
+
+  methods: {
+    addExport: function addExport(id) {
+      var _this = this;
+
+      axios.get('/receptions/export/' + id).then(function (response) {
+        return _this.documents = response.data;
+      });
     },
-    data: function data() {
-        return {
-            documents: [],
+    deleteClipped: function deleteClipped(id) {
+      var _this2 = this;
 
-            filter: 'all',
-
-            showModal: false,
-
-            detail: {}
-        };
+      axios.get('/receptions/deleteClipping/' + id).then(function (response) {
+        return _this2.documents = response.data;
+      });
     },
-
-
-    methods: {
-        addExport: function addExport(id) {
-            var _this = this;
-
-            axios.get('/receptions/export/' + id).then(function (response) {
-                return _this.documents = response.data;
-            });
-        },
-        deleteClipped: function deleteClipped(id) {
-            var _this2 = this;
-
-            axios.get('/receptions/deleteClipping/' + id).then(function (response) {
-                return _this2.documents = response.data;
-            });
-        }
-    },
-
-    computed: {
-        filteredDocuments: function filteredDocuments() {
-            if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (doc) {
-                return doc.document.frequence == 'Quotidien';
-            });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (doc) {
-                return doc.document.frequence == 'Hebdomadaire';
-            });else return this.documents.filter(function (doc) {
-                return doc.document.frequence == 'Mensuel';
-            });
-        }
-    },
-
-    mounted: function mounted() {
-        var _this3 = this;
-
-        axios.get('/receptions/getClipped').then(function (response) {
-            return _this3.documents = response.data;
-        });
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
     }
+  },
+
+  computed: {
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (doc) {
+        return doc.document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (doc) {
+        return doc.document.frequence == 'Hebdomadaire';
+      });else return this.documents.filter(function (doc) {
+        return doc.document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this3 = this;
+
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.document.name == _this3.search;
+      });
+
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.document.type == _this3.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.document.lang == _this3.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.document.version == _this3.version;
+      });
+
+      return temp;
+    }
+  },
+
+  mounted: function mounted() {
+    var _this4 = this;
+
+    axios.get('/receptions/getClipped').then(function (response) {
+      return _this4.documents = response.data;
+    });
+  }
 });
 
 /***/ }),
@@ -19207,7 +20473,138 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-item"
   }, [_c('p', {
     staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.filteredDocuments.length))]), _vm._v(" Documents\n        ")])])]), _vm._v(" "), _c('div', {
+  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
+    staticClass: "level-item"
+  }, [_c('div', {
+    staticClass: "field has-addons"
+  }, [_c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    staticClass: "input",
+    attrs: {
+      "type": "text",
+      "placeholder": "Rechercher..."
+    },
+    on: {
+      "keyup": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+        _vm.search = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.type),
+      expression: "type"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Magasine"
+    }
+  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Journal"
+    }
+  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.lang),
+      expression: "lang"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Anglais"
+    }
+  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Arabe"
+    }
+  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Français"
+    }
+  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Tamazight"
+    }
+  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
+    staticClass: "control"
+  }, [_c('div', {
+    staticClass: "select"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.version),
+      expression: "version"
+    }],
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Papier"
+    }
+  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "Electronique"
+    }
+  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('button', {
+    staticClass: "button is-info is-inverted",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.reload($event)
+      }
+    }
+  }, [_c('i', {
+    staticClass: "fa fa-refresh",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })])])])])]), _vm._v(" "), _c('div', {
     staticClass: "level-right"
   }, [_c('p', {
     staticClass: "level-item"
@@ -19257,9 +20654,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
+    staticClass: "level-item"
+  }, [_c('a', {
+    staticClass: "button is-info is-outlined",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.showRecepDoc = true
+      }
+    }
+  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(doc) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(doc) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -19606,7 +21013,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -19713,14 +21120,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
-        filteredDocuments: function filteredDocuments() {
-            if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
-                return document.frequence == 'Quotidien';
-            });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
-                return document.frequence == 'Hebdomadaire';
-            });else return this.documents.filter(function (document) {
-                return document.frequence == 'Mensuel';
-            });
+        filteredDocuments: {
+            get: function get() {
+                if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
+                    return document.frequence == 'Quotidien';
+                });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
+                    return document.frequence == 'Hebdomadaire';
+                });else return this.documents.filter(function (document) {
+                    return document.frequence == 'Mensuel';
+                });
+            },
+            set: function set() {}
         }
     },
 
