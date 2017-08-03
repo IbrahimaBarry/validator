@@ -53,9 +53,6 @@
         <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
-        <p class="level-item">
-          <a class="button is-info is-outlined" @click.prevent="showRecepDoc = true">Reception</a>
-          </p>
       </div>
     </nav>
       
@@ -85,6 +82,23 @@
         </tbody>
       </table>
 
+      <!-- PAGINATION -->
+      <nav class="pagination" v-if="pagination.last_page > 1">
+        <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
+        :disabled="!pagination.prev_page_url">Precedent</a>
+        <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
+        :disabled="!pagination.next_page_url">Page suivant</a>
+        <ul class="pagination-list">
+          <li>
+            <span class="pagination-ellipsis">Page</span>
+            <a class="pagination-link is-current">{{ pagination.current_page }}</a>
+          </li>
+          <li><span class="pagination-ellipsis">sur</span></li>
+          <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
+        </ul>
+      </nav>
+
+      <!-- MODAL -->
       <div class="modal is-active" v-if="showModal" @blur.prevent="showModal = false">
         <div class="modal-background"></div>
         <div class="modal-content box">
@@ -95,7 +109,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="agent in data.agents" @mouseover="hovered = agent.id" @mouseout="hovered = 0" :class="{'is-selected': hovered === agent.id}" @click.prevent="addAgent(hoverId, agent.id)">
+              <tr v-for="agent in agents" @mouseover="hovered = agent.id" @mouseout="hovered = 0" :class="{'is-selected': hovered === agent.id}" @click.prevent="addAgent(hoverId, agent.id)">
                 <td>{{ agent.name }}</td>
               </tr>
             </tbody>
@@ -120,6 +134,14 @@
         data() {
             return {
                 data: [],
+                agents: [],
+                pagination: {
+                  current_page: '',
+                  last_page: '',
+                  next_page_url: '',
+                  prev_page_url: '',
+                },
+
                 filter: 'all',
                 showModal: false,
                 hoverId: 0,
@@ -133,25 +155,45 @@
 
         methods: {
             addAgent(receptionId,agentId) {
-              axios.get('/receptions/clipping/'+receptionId+'/'+agentId).then(response => this.data = response.data);
+              var self = this;
+              axios.get('/receptions/clipping/'+receptionId+'/'+agentId).then(function (response) {
+                self.data = response.data.imports.data;
+                self.agents = response.data.agents;
+                self.pagination.current_page = response.data.imports.current_page;
+                self.pagination.last_page = response.data.imports.last_page;
+                self.pagination.next_page_url = response.data.imports.next_page_url;
+                self.pagination.prev_page_url = response.data.imports.prev_page_url;
+              });
               this.showModal = false;
             },
 
             reload() {
               this.search = ''; this.type = 'Type'; this.lang = 'Langue'; this.version = 'Version';
+            },
+
+            fetch(page) {
+              var self = this;
+              axios.get(page).then(function (response) {
+                self.data = response.data.imports.data;
+                self.agents = response.data.agents;
+                self.pagination.current_page = response.data.imports.current_page;
+                self.pagination.last_page = response.data.imports.last_page;
+                self.pagination.next_page_url = response.data.imports.next_page_url;
+                self.pagination.prev_page_url = response.data.imports.prev_page_url;
+              });
             }
         },
 
         computed: {
             filteredDocuments() {
                 if (this.filter == 'all')
-                    return this.data.imports;
+                    return this.data;
                 else if (this.filter == 'Quotidien')
-                    return this.data.imports.filter(doc => doc.document.frequence == 'Quotidien');
+                    return this.data.filter(doc => doc.document.frequence == 'Quotidien');
                 else if (this.filter == 'Hebdomadaire')
-                    return this.data.imports.filter(doc => doc.document.frequence == 'Hebdomadaire');
+                    return this.data.filter(doc => doc.document.frequence == 'Hebdomadaire');
                 else
-                    return this.data.imports.filter(doc => doc.document.frequence == 'Mensuel');
+                    return this.data.filter(doc => doc.document.frequence == 'Mensuel');
             },
 
             sortedDocuments() {
@@ -173,7 +215,15 @@
         },
 
         mounted() {
-            axios.get('/receptions/getImported').then(response => this.data = response.data);
+            var self = this;
+            axios.get('/receptions/getImported').then(function (response) {
+              self.data = response.data.imports.data;
+              self.agents = response.data.agents;
+              self.pagination.current_page = response.data.imports.current_page;
+              self.pagination.last_page = response.data.imports.last_page;
+              self.pagination.next_page_url = response.data.imports.next_page_url;
+              self.pagination.prev_page_url = response.data.imports.prev_page_url;
+            });
         }
     }
 </script>

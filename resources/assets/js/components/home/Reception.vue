@@ -82,7 +82,23 @@
             <td>{{ document.message }}</td>
           </tr>
         </tbody>
-      </table>
+    </table>
+
+      <!-- PAGINATION -->
+      <nav class="pagination" v-if="pagination.last_page > 1">
+        <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
+        :disabled="!pagination.prev_page_url">Precedent</a>
+        <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
+        :disabled="!pagination.next_page_url">Page suivant</a>
+        <ul class="pagination-list">
+          <li>
+            <span class="pagination-ellipsis">Page</span>
+            <a class="pagination-link is-current">{{ pagination.current_page }}</a>
+          </li>
+          <li><span class="pagination-ellipsis">sur</span></li>
+          <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
+        </ul>
+      </nav>
 
     <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="refresh()"></RecepDoc>
   </div>
@@ -104,6 +120,13 @@ import RecepDoc from './RecepDoc';
         data() {
             return {
                 documents: [],
+                pagination: {
+                  current_page: '',
+                  last_page: '',
+                  next_page_url: '',
+                  prev_page_url: '',
+                },
+
                 filter: 'all',
                 hoverId: 0,
                 showRecepDoc: false,
@@ -116,12 +139,30 @@ import RecepDoc from './RecepDoc';
 
         methods: {
             refresh() {
-              axios.get('/receptions/index').then(response => this.documents = response.data);
+              var self = this;
+              axios.get('/receptions/index').then(function (response) {
+                self.documents = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
               this.showRecepDoc = false;
             },
 
             reload() {
               this.search = ''; this.type = 'Type'; this.lang = 'Langue'; this.version = 'Version';
+            },
+
+            fetch(page) {
+              var self = this;
+              axios.get(page).then(function (response) {
+                self.documents = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
             }
         },
 
@@ -156,7 +197,14 @@ import RecepDoc from './RecepDoc';
         },
 
         mounted() {
-            axios.get('/receptions/index').then(response => this.documents = response.data);
+            var self = this;
+            axios.get('/receptions/index').then(function(response) {
+              self.documents = response.data.data;
+              self.pagination.current_page = response.data.current_page;
+              self.pagination.last_page = response.data.last_page;
+              self.pagination.next_page_url = response.data.next_page_url;
+              self.pagination.prev_page_url = response.data.prev_page_url;
+            });
         },
 
         components: {

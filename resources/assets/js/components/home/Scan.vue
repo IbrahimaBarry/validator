@@ -53,9 +53,6 @@
         <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
-        <p class="level-item">
-          <a class="button is-info is-outlined" @click.prevent="showRecepDoc = true">Reception</a>
-          </p>
       </div>
     </nav>
       
@@ -90,6 +87,22 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- PAGINATION -->
+        <nav class="pagination" v-if="pagination.last_page > 1">
+          <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
+          :disabled="!pagination.prev_page_url">Precedent</a>
+          <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
+          :disabled="!pagination.next_page_url">Page suivant</a>
+          <ul class="pagination-list">
+            <li>
+              <span class="pagination-ellipsis">Page</span>
+              <a class="pagination-link is-current">{{ pagination.current_page }}</a>
+            </li>
+            <li><span class="pagination-ellipsis">sur</span></li>
+            <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
+          </ul>
+        </nav>
     </div>
 </template>
 
@@ -108,6 +121,13 @@
             return {
                 showModal: false,
                 receptions: [],
+                pagination: {
+                  current_page: '',
+                  last_page: '',
+                  next_page_url: '',
+                  prev_page_url: '',
+                },
+
                 filter: 'all',
                 search: '',
                 type: 'Type',
@@ -118,12 +138,29 @@
 
         methods: {
             addScan(id) {
-              axios.get('/receptions/scan/'+id)
-                  .then(response => this.receptions = response.data);
+              var self = this;
+              axios.get('/receptions/scan/'+id).then(function (response) {
+                self.receptions = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
             },
 
             reload() {
               this.search = ''; this.type = 'Type'; this.lang = 'Langue'; this.version = 'Version';
+            },
+
+            fetch(page) {
+              var self = this;
+              axios.get(page).then(function (response) {
+                self.receptions = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
             }
         },
 
@@ -158,11 +195,18 @@
         },
 
         mounted() {
-            axios.get('/receptions/index').then(response => this.receptions = response.data);
+            var self = this;
+            axios.get('/receptions/index').then(function (response) {
+              self.receptions = response.data.data;
+              self.pagination.current_page = response.data.current_page;
+              self.pagination.last_page = response.data.last_page;
+              self.pagination.next_page_url = response.data.next_page_url;
+              self.pagination.prev_page_url = response.data.prev_page_url;
+            });
         }
     }
 </script>
 
 <style scoped>
-
+  
 </style>

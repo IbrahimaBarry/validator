@@ -53,9 +53,6 @@
         <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
-        <p class="level-item">
-          <a class="button is-info is-outlined" @click.prevent="showRecepDoc = true">Reception</a>
-          </p>
       </div>
     </nav>
       
@@ -95,6 +92,18 @@
             </div>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <th><abbr title="nom">Nom</abbr></th>
+            <th><abbr title="source">Source</abbr></th>
+            <th><abbr title="source name">Source name</abbr></th>
+            <th><abbr title="type">Type</abbr></th>
+            <th><abbr title="page">Nombre de page</abbr></th>
+            <th><abbr title="langue">Langue</abbr></th>
+            <th><abbr title="action">Date de publication</abbr></th>
+            <th><abbr title="action"></abbr></th>
+          </tr>
+        </tfoot>
       </table>
 
       <div class="modal is-active" v-if="showAddModal === true">

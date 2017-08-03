@@ -3729,7 +3729,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(14);
-module.exports = __webpack_require__(110);
+module.exports = __webpack_require__(112);
 
 
 /***/ }),
@@ -15931,7 +15931,7 @@ var routes = [{
 		component: __webpack_require__(102)
 	}, {
 		path: '/admin/teams',
-		component: __webpack_require__(105)
+		component: __webpack_require__(107)
 	}]
 }];
 
@@ -16246,7 +16246,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -16349,87 +16349,126 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-        axios.get('/user').then(function (response) {
-            if (response.data.reception) next();else next({ path: from.path });
-        });
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    axios.get('/user').then(function (response) {
+      if (response.data.reception) next();else next({ path: from.path });
+    });
+  },
+  data: function data() {
+    return {
+      documents: [],
+      pagination: {
+        current_page: '',
+        last_page: '',
+        next_page_url: '',
+        prev_page_url: ''
+      },
+
+      filter: 'all',
+      hoverId: 0,
+      showRecepDoc: false,
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version'
+    };
+  },
+
+
+  methods: {
+    refresh: function refresh() {
+      var self = this;
+      axios.get('/receptions/index').then(function (response) {
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
+      this.showRecepDoc = false;
     },
-    data: function data() {
-        return {
-            documents: [],
-            filter: 'all',
-            hoverId: 0,
-            showRecepDoc: false,
-            search: '',
-            type: 'Type',
-            lang: 'Langue',
-            version: 'Version'
-        };
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
     },
-
-
-    methods: {
-        refresh: function refresh() {
-            var _this = this;
-
-            axios.get('/receptions/index').then(function (response) {
-                return _this.documents = response.data;
-            });
-            this.showRecepDoc = false;
-        },
-        reload: function reload() {
-            this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-        }
-    },
-
-    computed: {
-        filteredDocuments: function filteredDocuments() {
-            if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
-                return document.document.frequence == 'Quotidien';
-            });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
-                return document.document.frequence == 'Hebdomadaire';
-            });else return this.documents.filter(function (document) {
-                return document.document.frequence == 'Mensuel';
-            });
-        },
-        sortedDocuments: function sortedDocuments() {
-            var _this2 = this;
-
-            var temp;
-            if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-                return document.document.name == _this2.search;
-            });
-
-            if (this.type != 'Type') temp = temp.filter(function (document) {
-                return document.document.type == _this2.type;
-            });
-            if (this.lang != 'Langue') temp = temp.filter(function (document) {
-                return document.document.lang == _this2.lang;
-            });
-            if (this.version != 'Version') temp = temp.filter(function (document) {
-                return document.document.version == _this2.version;
-            });
-
-            return temp;
-        }
-    },
-
-    mounted: function mounted() {
-        var _this3 = this;
-
-        axios.get('/receptions/index').then(function (response) {
-            return _this3.documents = response.data;
-        });
-    },
-
-
-    components: {
-        RecepDoc: __WEBPACK_IMPORTED_MODULE_0__RecepDoc___default.a
+    fetch: function fetch(page) {
+      var self = this;
+      axios.get(page).then(function (response) {
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
     }
+  },
+
+  computed: {
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
+        return document.document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
+        return document.document.frequence == 'Hebdomadaire';
+      });else return this.documents.filter(function (document) {
+        return document.document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this = this;
+
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.document.name == _this.search;
+      });
+
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.document.type == _this.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.document.lang == _this.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.document.version == _this.version;
+      });
+
+      return temp;
+    }
+  },
+
+  mounted: function mounted() {
+    var self = this;
+    axios.get('/receptions/index').then(function (response) {
+      self.documents = response.data.data;
+      self.pagination.current_page = response.data.current_page;
+      self.pagination.last_page = response.data.last_page;
+      self.pagination.next_page_url = response.data.next_page_url;
+      self.pagination.prev_page_url = response.data.prev_page_url;
+    });
+  },
+
+
+  components: {
+    RecepDoc: __WEBPACK_IMPORTED_MODULE_0__RecepDoc___default.a
+  }
 });
 
 /***/ }),
@@ -17474,7 +17513,40 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_c('td', [_vm._v(_vm._s(document.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.message))])])
-  }))]), _vm._v(" "), (_vm.showRecepDoc) ? _c('RecepDoc', {
+  }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
+    staticClass: "pagination"
+  }, [_c('a', {
+    staticClass: "pagination-previous",
+    attrs: {
+      "title": "This is the first page",
+      "disabled": !_vm.pagination.prev_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.prev_page_url)
+      }
+    }
+  }, [_vm._v("Precedent")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-next",
+    attrs: {
+      "disabled": !_vm.pagination.next_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.next_page_url)
+      }
+    }
+  }, [_vm._v("Page suivant")]), _vm._v(" "), _c('ul', {
+    staticClass: "pagination-list"
+  }, [_c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-link is-current"
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('li', [_c('a', {
+    staticClass: "pagination-link"
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e(), _vm._v(" "), (_vm.showRecepDoc) ? _c('RecepDoc', {
     attrs: {
       "id": _vm.hoverId
     },
@@ -17517,6 +17589,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "title": "userName"
     }
   }, [_vm._v("Cause du retard")])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -17605,7 +17681,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -17616,6 +17692,19 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -17722,6 +17811,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       showModal: false,
       receptions: [],
+      pagination: {
+        current_page: '',
+        last_page: '',
+        next_page_url: '',
+        prev_page_url: ''
+      },
+
       filter: 'all',
       search: '',
       type: 'Type',
@@ -17733,14 +17829,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     addScan: function addScan(id) {
-      var _this = this;
-
+      var self = this;
       axios.get('/receptions/scan/' + id).then(function (response) {
-        return _this.receptions = response.data;
+        self.receptions = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
       });
     },
     reload: function reload() {
       this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
+    },
+    fetch: function fetch(page) {
+      var self = this;
+      axios.get(page).then(function (response) {
+        self.receptions = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
     }
   },
 
@@ -17755,21 +17864,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     sortedDocuments: function sortedDocuments() {
-      var _this2 = this;
+      var _this = this;
 
       var temp;
       if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this2.search;
+        return document.document.name == _this.search;
       });
 
       if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this2.type;
+        return document.document.type == _this.type;
       });
       if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this2.lang;
+        return document.document.lang == _this.lang;
       });
       if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this2.version;
+        return document.document.version == _this.version;
       });
 
       return temp;
@@ -17777,10 +17886,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   mounted: function mounted() {
-    var _this3 = this;
-
+    var self = this;
     axios.get('/receptions/index').then(function (response) {
-      return _this3.receptions = response.data;
+      self.receptions = response.data.data;
+      self.pagination.current_page = response.data.current_page;
+      self.pagination.last_page = response.data.last_page;
+      self.pagination.next_page_url = response.data.next_page_url;
+      self.pagination.prev_page_url = response.data.prev_page_url;
     });
   }
 });
@@ -17979,17 +18091,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    staticClass: "button is-info is-outlined",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.showRecepDoc = true
-      }
-    }
-  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(reception) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.message))]), _vm._v(" "), (reception.scanned == false) ? _c('td', [_c('a', {
@@ -18001,7 +18103,40 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("Valider le scanne")])]) : _c('td', [_vm._m(1, true)])])
-  }))])])
+  }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
+    staticClass: "pagination"
+  }, [_c('a', {
+    staticClass: "pagination-previous",
+    attrs: {
+      "title": "This is the first page",
+      "disabled": !_vm.pagination.prev_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.prev_page_url)
+      }
+    }
+  }, [_vm._v("Precedent")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-next",
+    attrs: {
+      "disabled": !_vm.pagination.next_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.next_page_url)
+      }
+    }
+  }, [_vm._v("Page suivant")]), _vm._v(" "), _c('ul', {
+    staticClass: "pagination-list"
+  }, [_c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-link is-current"
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _c('li', [_c('a', {
+    staticClass: "pagination-link"
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -18042,6 +18177,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "fa fa-check success"
   })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -18130,7 +18269,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -18234,6 +18373,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -18244,6 +18396,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       scans: [],
+      pagination: {
+        current_page: '',
+        last_page: '',
+        next_page_url: '',
+        prev_page_url: ''
+      },
+
       filter: 'all',
       search: '',
       type: 'Type',
@@ -18255,14 +18414,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     addImport: function addImport(id) {
-      var _this = this;
-
+      var self = this;
       axios.get('/receptions/import/' + id).then(function (response) {
-        return _this.scans = response.data;
+        self.scans = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
       });
     },
     reload: function reload() {
       this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
+    },
+    fetch: function fetch(page) {
+      var self = this;
+      axios.get(page).then(function (response) {
+        self.scans = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
     }
   },
 
@@ -18277,21 +18449,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     sortedDocuments: function sortedDocuments() {
-      var _this2 = this;
+      var _this = this;
 
       var temp;
       if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this2.search;
+        return document.document.name == _this.search;
       });
 
       if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this2.type;
+        return document.document.type == _this.type;
       });
       if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this2.lang;
+        return document.document.lang == _this.lang;
       });
       if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this2.version;
+        return document.document.version == _this.version;
       });
 
       return temp;
@@ -18299,10 +18471,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   mounted: function mounted() {
-    var _this3 = this;
-
+    var self = this;
     axios.get('/receptions/getScanned').then(function (response) {
-      return _this3.scans = response.data;
+      self.scans = response.data.data;
+      self.pagination.current_page = response.data.current_page;
+      self.pagination.last_page = response.data.last_page;
+      self.pagination.next_page_url = response.data.next_page_url;
+      self.pagination.prev_page_url = response.data.prev_page_url;
     });
   }
 });
@@ -18501,17 +18676,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    staticClass: "button is-info is-outlined",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.showRecepDoc = true
-      }
-    }
-  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(scan) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(scan.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.date_scan))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.user_scan))]), _vm._v(" "), (scan.imported == false) ? _c('td', [_c('a', {
@@ -18523,7 +18688,40 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("Valider l'import")])]) : _c('td', [_vm._m(1, true)])])
-  }))])])
+  }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
+    staticClass: "pagination"
+  }, [_c('a', {
+    staticClass: "pagination-previous",
+    attrs: {
+      "title": "This is the first page",
+      "disabled": !_vm.pagination.prev_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.prev_page_url)
+      }
+    }
+  }, [_vm._v("Precedent")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-next",
+    attrs: {
+      "disabled": !_vm.pagination.next_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.next_page_url)
+      }
+    }
+  }, [_vm._v("Page suivant")]), _vm._v(" "), _c('ul', {
+    staticClass: "pagination-list"
+  }, [_c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-link is-current"
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _c('li', [_c('a', {
+    staticClass: "pagination-link"
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -18560,6 +18758,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "fa fa-check success"
   })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -18767,6 +18969,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -18777,6 +18993,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       data: [],
+      agents: [],
+      pagination: {
+        current_page: '',
+        last_page: '',
+        next_page_url: '',
+        prev_page_url: ''
+      },
+
       filter: 'all',
       showModal: false,
       hoverId: 0,
@@ -18791,44 +19015,59 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     addAgent: function addAgent(receptionId, agentId) {
-      var _this = this;
-
+      var self = this;
       axios.get('/receptions/clipping/' + receptionId + '/' + agentId).then(function (response) {
-        return _this.data = response.data;
+        self.data = response.data.imports.data;
+        self.agents = response.data.agents;
+        self.pagination.current_page = response.data.imports.current_page;
+        self.pagination.last_page = response.data.imports.last_page;
+        self.pagination.next_page_url = response.data.imports.next_page_url;
+        self.pagination.prev_page_url = response.data.imports.prev_page_url;
       });
       this.showModal = false;
     },
     reload: function reload() {
       this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
+    },
+    fetch: function fetch(page) {
+      var self = this;
+      axios.get(page).then(function (response) {
+        self.data = response.data.imports.data;
+        self.agents = response.data.agents;
+        self.pagination.current_page = response.data.imports.current_page;
+        self.pagination.last_page = response.data.imports.last_page;
+        self.pagination.next_page_url = response.data.imports.next_page_url;
+        self.pagination.prev_page_url = response.data.imports.prev_page_url;
+      });
     }
   },
 
   computed: {
     filteredDocuments: function filteredDocuments() {
-      if (this.filter == 'all') return this.data.imports;else if (this.filter == 'Quotidien') return this.data.imports.filter(function (doc) {
+      if (this.filter == 'all') return this.data;else if (this.filter == 'Quotidien') return this.data.filter(function (doc) {
         return doc.document.frequence == 'Quotidien';
-      });else if (this.filter == 'Hebdomadaire') return this.data.imports.filter(function (doc) {
+      });else if (this.filter == 'Hebdomadaire') return this.data.filter(function (doc) {
         return doc.document.frequence == 'Hebdomadaire';
-      });else return this.data.imports.filter(function (doc) {
+      });else return this.data.filter(function (doc) {
         return doc.document.frequence == 'Mensuel';
       });
     },
     sortedDocuments: function sortedDocuments() {
-      var _this2 = this;
+      var _this = this;
 
       var temp;
       if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this2.search;
+        return document.document.name == _this.search;
       });
 
       if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this2.type;
+        return document.document.type == _this.type;
       });
       if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this2.lang;
+        return document.document.lang == _this.lang;
       });
       if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this2.version;
+        return document.document.version == _this.version;
       });
 
       return temp;
@@ -18836,10 +19075,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   mounted: function mounted() {
-    var _this3 = this;
-
+    var self = this;
     axios.get('/receptions/getImported').then(function (response) {
-      return _this3.data = response.data;
+      self.data = response.data.imports.data;
+      self.agents = response.data.agents;
+      self.pagination.current_page = response.data.imports.current_page;
+      self.pagination.last_page = response.data.imports.last_page;
+      self.pagination.next_page_url = response.data.imports.next_page_url;
+      self.pagination.prev_page_url = response.data.imports.prev_page_url;
     });
   }
 });
@@ -19038,17 +19281,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    staticClass: "button is-info is-outlined",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.showRecepDoc = true
-      }
-    }
-  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(imported) {
     return _c('tr', {
@@ -19066,7 +19299,40 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("Affecter à un agent de clipping")])]) : _c('td', [_vm._v(_vm._s(imported.user_clipping))])])
-  }))]), _vm._v(" "), (_vm.showModal) ? _c('div', {
+  }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
+    staticClass: "pagination"
+  }, [_c('a', {
+    staticClass: "pagination-previous",
+    attrs: {
+      "title": "This is the first page",
+      "disabled": !_vm.pagination.prev_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.prev_page_url)
+      }
+    }
+  }, [_vm._v("Precedent")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-next",
+    attrs: {
+      "disabled": !_vm.pagination.next_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.next_page_url)
+      }
+    }
+  }, [_vm._v("Page suivant")]), _vm._v(" "), _c('ul', {
+    staticClass: "pagination-list"
+  }, [_c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-link is-current"
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('li', [_c('a', {
+    staticClass: "pagination-link"
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e(), _vm._v(" "), (_vm.showModal) ? _c('div', {
     staticClass: "modal is-active",
     on: {
       "blur": function($event) {
@@ -19080,7 +19346,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-content box"
   }, [_c('table', {
     staticClass: "table"
-  }, [_vm._m(1), _vm._v(" "), _c('tbody', _vm._l((_vm.data.agents), function(agent) {
+  }, [_vm._m(2), _vm._v(" "), _c('tbody', _vm._l((_vm.agents), function(agent) {
     return _c('tr', {
       class: {
         'is-selected': _vm.hovered === agent.id
@@ -19137,6 +19403,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "title": "nbrPage"
     }
   }, [_vm._v("Charger du clipping")])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -19244,6 +19514,15 @@ exports.push([module.i, "\n.chrono[data-v-160367b0] {\n  width: 130px\n}\n", ""]
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Chrono__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Chrono___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Chrono__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -19945,17 +20224,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    staticClass: "button is-info is-outlined",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.showRecepDoc = true
-      }
-    }
-  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(doc) {
     return _c('tr', {
@@ -19979,7 +20248,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("Détails")])])])])
-  }))]), _vm._v(" "), (_vm.showAddModal === true) ? _c('div', {
+  })), _vm._v(" "), _vm._m(2)]), _vm._v(" "), (_vm.showAddModal === true) ? _c('div', {
     staticClass: "modal is-active"
   }, [_c('div', {
     staticClass: "modal-background"
@@ -20077,7 +20346,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-content box"
   }, [_c('table', {
     staticClass: "table"
-  }, [_vm._m(2), _vm._v(" "), _c('tbody', [_c('tr', [_c('td', [_vm._v("Type du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.type))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.name))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date de publication")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.sourceDate))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nbr. de page")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrPage))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.date_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du clippeur")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.user_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nombre de d'articles total")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrArtTotal))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Durée totale du clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.time))])])])])]), _vm._v(" "), _c('button', {
+  }, [_vm._m(3), _vm._v(" "), _c('tbody', [_c('tr', [_c('td', [_vm._v("Type du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.type))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.name))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date de publication")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.sourceDate))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nbr. de page")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrPage))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.date_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du clippeur")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.user_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nombre de d'articles total")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrArtTotal))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Durée totale du clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.time))])])])])]), _vm._v(" "), _c('button', {
     staticClass: "modal-close is-large",
     on: {
       "click": function($event) {
@@ -20126,6 +20395,40 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "fa fa-check success"
   })])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tfoot', [_c('tr', [_c('th', [_c('abbr', {
+    attrs: {
+      "title": "nom"
+    }
+  }, [_vm._v("Nom")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "source"
+    }
+  }, [_vm._v("Source")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "source name"
+    }
+  }, [_vm._v("Source name")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "type"
+    }
+  }, [_vm._v("Type")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "page"
+    }
+  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "langue"
+    }
+  }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "action"
+    }
+  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
+    attrs: {
+      "title": "action"
+    }
+  })])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -20220,7 +20523,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.danger[data-v-7c12b59a] {\n  background: red;\n}\n", ""]);
+exports.push([module.i, "\n.danger[data-v-7c12b59a] {\n  background: red;\n}\n.fa-warning[data-v-7c12b59a] {\n  padding: 14px;\n  color: hsl(48, 100%, 67%);\n  margin-bottom: 20px;\n}\n", ""]);
 
 // exports
 
@@ -20378,6 +20681,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -20388,8 +20718,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       documents: [],
+      pagination: {
+        current_page: '',
+        last_page: '',
+        next_page_url: '',
+        prev_page_url: ''
+      },
+
       filter: 'all',
-      showModal: false,
+      showDetail: false,
+      showDelete: false,
       detail: {},
       search: '',
       type: 'Type',
@@ -20401,21 +20739,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     addExport: function addExport(id) {
-      var _this = this;
-
+      var self = this;
       axios.get('/receptions/export/' + id).then(function (response) {
-        return _this.documents = response.data;
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
       });
     },
     deleteClipped: function deleteClipped(id) {
-      var _this2 = this;
-
+      var self = this;
       axios.get('/receptions/deleteClipping/' + id).then(function (response) {
-        return _this2.documents = response.data;
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
       });
+      this.showDelete = false;
     },
     reload: function reload() {
       this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
+    },
+    fetch: function fetch(page) {
+      var self = this;
+      axios.get(page).then(function (response) {
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
     }
   },
 
@@ -20430,21 +20785,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     sortedDocuments: function sortedDocuments() {
-      var _this3 = this;
+      var _this = this;
 
       var temp;
       if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this3.search;
+        return document.document.name == _this.search;
       });
 
       if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this3.type;
+        return document.document.type == _this.type;
       });
       if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this3.lang;
+        return document.document.lang == _this.lang;
       });
       if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this3.version;
+        return document.document.version == _this.version;
       });
 
       return temp;
@@ -20452,10 +20807,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   mounted: function mounted() {
-    var _this4 = this;
-
+    var self = this;
     axios.get('/receptions/getClipped').then(function (response) {
-      return _this4.documents = response.data;
+      self.documents = response.data.data;
+      self.pagination.current_page = response.data.current_page;
+      self.pagination.last_page = response.data.last_page;
+      self.pagination.next_page_url = response.data.next_page_url;
+      self.pagination.prev_page_url = response.data.prev_page_url;
     });
   }
 });
@@ -20654,17 +21012,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    staticClass: "button is-info is-outlined",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.showRecepDoc = true
-      }
-    }
-  }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(doc) {
     return _c('tr', {
@@ -20686,7 +21034,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       on: {
         "click": function($event) {
           $event.preventDefault();
-          _vm.deleteClipped(doc.id)
+          _vm.showDelete = true
         }
       }
     })])]) : _c('td', [_vm._m(1, true)]), _vm._v(" "), _c('td', [_c('a', {
@@ -20694,11 +21042,44 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       on: {
         "click": function($event) {
           $event.preventDefault();
-          _vm.showModal = true
+          _vm.showDetail = true
         }
       }
     }, [_vm._v("Détails")])])])
-  }))]), _vm._v(" "), (_vm.showModal) ? _c('div', {
+  }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
+    staticClass: "pagination"
+  }, [_c('a', {
+    staticClass: "pagination-previous",
+    attrs: {
+      "title": "This is the first page",
+      "disabled": !_vm.pagination.prev_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.prev_page_url)
+      }
+    }
+  }, [_vm._v("Precedent")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-next",
+    attrs: {
+      "disabled": !_vm.pagination.next_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.next_page_url)
+      }
+    }
+  }, [_vm._v("Page suivant")]), _vm._v(" "), _c('ul', {
+    staticClass: "pagination-list"
+  }, [_c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-link is-current"
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _c('li', [_c('a', {
+    staticClass: "pagination-link"
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e(), _vm._v(" "), (_vm.showDetail) ? _c('div', {
     staticClass: "modal is-active"
   }, [_c('div', {
     staticClass: "modal-background"
@@ -20706,15 +21087,39 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-content box"
   }, [_c('table', {
     staticClass: "table"
-  }, [_vm._m(2), _vm._v(" "), _c('tbody', [_c('tr', [_c('td', [_vm._v("Type du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.type))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.name))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date de publication")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.sourceDate))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nbr. de page")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrPage))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.date_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du clippeur")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.user_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nombre de d'articles total")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrArtTotal))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Durée totale du clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.time))])])])])]), _vm._v(" "), _c('button', {
+  }, [_vm._m(3), _vm._v(" "), _c('tbody', [_c('tr', [_c('td', [_vm._v("Type du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.type))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.name))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date de publication")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.sourceDate))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nbr. de page")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrPage))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.date_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du clippeur")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.user_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nombre de d'articles total")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrArtTotal))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Durée totale du clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.time))])])])])]), _vm._v(" "), _c('button', {
     staticClass: "modal-close is-large",
     on: {
       "click": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "pervent")) { return null; }
-        _vm.showModal = false
+        _vm.showDetail = false
       }
     }
-  })]) : _vm._e()])
+  })]) : _vm._e(), _vm._v(" "), (_vm.showDelete) ? _c('div', {
+    staticClass: "modal is-active"
+  }, [_c('div', {
+    staticClass: "modal-background"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "modal-content box has-text-centered"
+  }, [_vm._m(4), _vm._v(" "), _c('h4', {
+    staticClass: "title is-4"
+  }, [_vm._v("Êtes vous sûr de vouloir supprimer cet objet?")]), _vm._v(" "), _c('a', {
+    staticClass: "button is-small is-primary",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.deleteClipped(_vm.detail.id)
+      }
+    }
+  }, [_vm._v("OUI")]), _vm._v(" "), _c('a', {
+    staticClass: "button is-small",
+    on: {
+      "click": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "pervent")) { return null; }
+        _vm.showDelete = false
+      }
+    }
+  }, [_vm._v("NON")])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -20760,11 +21165,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "fa fa-check success"
   })])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
       "title": "type"
     }
   }, [_vm._v("Détails du clipping")])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon is-large"
+  }, [_c('i', {
+    staticClass: "fa fa-warning"
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -22452,15 +22867,19 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(103)
+}
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(103),
+  __webpack_require__(105),
   /* template */
-  __webpack_require__(104),
+  __webpack_require__(106),
   /* styles */
-  null,
+  injectStyle,
   /* scopeId */
-  null,
+  "data-v-4750d3a3",
   /* moduleIdentifier (server only) */
   null
 )
@@ -22489,6 +22908,46 @@ module.exports = Component.exports
 
 /***/ }),
 /* 103 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(104);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("ece68f84", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4750d3a3\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./listUser.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4750d3a3\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./listUser.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 104 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.pagination a[data-v-4750d3a3] {\n\tcolor: hsl(217, 71%, 53%)\n}\n.pagination-link.is-current[data-v-4750d3a3] {\n    background-color: hsl(217, 71%, 53%);\n    border-color: hsl(217, 71%, 53%);\n    color: hsl(0, 0%, 100%)\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 105 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22520,34 +22979,109 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			users: {}
+			users: {},
+
+			pagination: {
+				current_page: '',
+				last_page: '',
+				next_page_url: '',
+				prev_page_url: ''
+			}
 		};
 	},
-	mounted: function mounted() {
-		var _this = this;
 
+
+	methods: {
+		fetch: function fetch(page) {
+			var self = this;
+			axios.get(page).then(function (response) {
+				self.users = response.data.data;
+				self.pagination.current_page = response.data.current_page;
+				self.pagination.last_page = response.data.last_page;
+				self.pagination.next_page_url = response.data.next_page_url;
+				self.pagination.prev_page_url = response.data.prev_page_url;
+			});
+		}
+	},
+
+	mounted: function mounted() {
+		var self = this;
 		axios.get('/users/all').then(function (response) {
-			return _this.users = response.data;
+			self.users = response.data.data;
+			self.pagination.current_page = response.data.current_page;
+			self.pagination.last_page = response.data.last_page;
+			self.pagination.next_page_url = response.data.next_page_url;
+			self.pagination.prev_page_url = response.data.prev_page_url;
 		});
 	}
 });
 
 /***/ }),
-/* 104 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('table', {
+  return _c('div', [_c('table', {
     staticClass: "table is-striped"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.users), function(user) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(user.email))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(user.role))]), _vm._v(" "), _c('td', _vm._l((user.permissions), function(permission) {
-      return (user.role == 'agent') ? _c('span', [_vm._v("\n        \t\t" + _vm._s(permission.name) + ", \n        \t")]) : _vm._e()
+      return (user.role == 'agent') ? _c('span', [_vm._v("\n\t        \t\t" + _vm._s(permission.name) + ", \n\t        \t")]) : _vm._e()
     })), _vm._v(" "), _c('td')])
-  }))])
+  }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
+    staticClass: "pagination"
+  }, [_c('a', {
+    staticClass: "pagination-previous",
+    attrs: {
+      "title": "This is the first page",
+      "disabled": !_vm.pagination.prev_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.prev_page_url)
+      }
+    }
+  }, [_vm._v("Precedent")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-next",
+    attrs: {
+      "disabled": !_vm.pagination.next_page_url
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.fetch(_vm.pagination.next_page_url)
+      }
+    }
+  }, [_vm._v("Page suivant")]), _vm._v(" "), _c('ul', {
+    staticClass: "pagination-list"
+  }, [_c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
+    staticClass: "pagination-link is-current"
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('li', [_c('a', {
+    staticClass: "pagination-link"
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -22570,6 +23104,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "title": "version"
     }
   }, [_vm._v("Team")])])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -22580,19 +23118,19 @@ if (false) {
 }
 
 /***/ }),
-/* 105 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(106)
+  __webpack_require__(108)
 }
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(108),
+  __webpack_require__(110),
   /* template */
-  __webpack_require__(109),
+  __webpack_require__(111),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -22624,13 +23162,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 106 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(107);
+var content = __webpack_require__(109);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -22650,7 +23188,7 @@ if(false) {
 }
 
 /***/ }),
-/* 107 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -22664,7 +23202,7 @@ exports.push([module.i, "\n.title {\n\tcolor: black;\n}\n", ""]);
 
 
 /***/ }),
-/* 108 */
+/* 110 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22723,7 +23261,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 109 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -22763,7 +23301,7 @@ if (false) {
 }
 
 /***/ }),
-/* 110 */
+/* 112 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

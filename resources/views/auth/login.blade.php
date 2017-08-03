@@ -13,7 +13,6 @@
 
         <style>
             body, html {
-                background: #f5f5f5;
                 height: 100%;
             }
 
@@ -87,7 +86,7 @@
 
               </div>
               <footer class="card-footer column is-half is-offset-one-quarter">
-                <button type="submit" class="button is-primary column is-12">Connexion</button>
+                <button type="submit" class="button is-info column is-12">Connexion</button>
               </footer>
             </div>
         </form>

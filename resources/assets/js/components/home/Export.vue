@@ -53,9 +53,6 @@
         <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
-        <p class="level-item">
-          <a class="button is-info is-outlined" @click.prevent="showRecepDoc = true">Reception</a>
-          </p>
       </div>
     </nav>
       
@@ -83,19 +80,36 @@
             <td>{{ doc.user_clipping }}</td>
             <div v-if="doc.exported == false">
               <td><a class="button is-small is-outlined is-info" @click.prevent="addExport(doc.id)">Valider l'export</a></td>
-              <td><a class="delete is-medium danger" @click.prevent="deleteClipped(doc.id)"></a></td>
+              <td><a class="delete is-medium danger" @click.prevent="showDelete = true"></a></td>
             </div>
             <td v-else>
               <span class="icon">
                 <i class="fa fa-check success"></i>
               </span>
             </td>
-            <td><a class="button is-small is-info" @click.prevent="showModal = true">Détails</a></td>
+            <td><a class="button is-small is-info" @click.prevent="showDetail = true">Détails</a></td>
           </tr>
         </tbody>
       </table>
 
-      <div class="modal is-active" v-if="showModal">
+      <!-- PAGINATION -->
+      <nav class="pagination" v-if="pagination.last_page > 1">
+        <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
+        :disabled="!pagination.prev_page_url">Precedent</a>
+        <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
+        :disabled="!pagination.next_page_url">Page suivant</a>
+        <ul class="pagination-list">
+          <li>
+            <span class="pagination-ellipsis">Page</span>
+            <a class="pagination-link is-current">{{ pagination.current_page }}</a>
+          </li>
+          <li><span class="pagination-ellipsis">sur</span></li>
+          <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
+        </ul>
+      </nav>
+      
+      <!-- DETAIL -->
+      <div class="modal is-active" v-if="showDetail">
         <div class="modal-background"></div>
         <div class="modal-content box">
           <table class="table">
@@ -140,7 +154,20 @@
             </tbody>
           </table>
         </div>
-        <button class="modal-close is-large" @click.pervent="showModal = false"></button>
+        <button class="modal-close is-large" @click.pervent="showDetail = false"></button>
+      </div>
+
+      <!-- DELETE -->
+      <div class="modal is-active" v-if="showDelete">
+        <div class="modal-background"></div>
+        <div class="modal-content box has-text-centered">
+          <span class="icon is-large">
+            <i class="fa fa-warning"></i>
+          </span>
+          <h4 class="title is-4">Êtes vous sûr de vouloir supprimer cet objet?</h4>
+          <a class="button is-small is-primary" @click.prevent="deleteClipped(detail.id)">OUI</a>
+          <a class="button is-small" @click.pervent="showDelete = false">NON</a>
+        </div>
       </div>
     </div>
 </template>
@@ -159,8 +186,16 @@
         data() {
             return {
                 documents: [],
+                pagination: {
+                  current_page: '',
+                  last_page: '',
+                  next_page_url: '',
+                  prev_page_url: '',
+                },
+
                 filter: 'all',
-                showModal: false,
+                showDetail: false,
+                showDelete: false,
                 detail: {},
                 search: '',
                 type: 'Type',
@@ -171,17 +206,41 @@
 
         methods: {
             addExport(id) {
-              axios.get('/receptions/export/'+id)
-                  .then(response => this.documents = response.data);
+              var self = this;
+              axios.get('/receptions/export/'+id).then(function (response) {
+                self.documents = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
             },
 
             deleteClipped(id) {
-              axios.get('/receptions/deleteClipping/'+id)
-                  .then(response => this.documents = response.data);
+              var self = this;
+              axios.get('/receptions/deleteClipping/'+id).then(function (response) {
+                self.documents = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
+              this.showDelete = false;
             },
 
             reload() {
               this.search = ''; this.type = 'Type'; this.lang = 'Langue'; this.version = 'Version';
+            },
+
+            fetch(page) {
+              var self = this;
+              axios.get(page).then(function (response) {
+                self.documents = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
             }
         },
 
@@ -216,7 +275,14 @@
         },
 
         mounted() {
-            axios.get('/receptions/getClipped').then(response => this.documents = response.data);
+            var self = this;
+            axios.get('/receptions/getClipped').then(function (response) {
+              self.documents = response.data.data;
+              self.pagination.current_page = response.data.current_page;
+              self.pagination.last_page = response.data.last_page;
+              self.pagination.next_page_url = response.data.next_page_url;
+              self.pagination.prev_page_url = response.data.prev_page_url;
+            });
         }
     }
 </script>
@@ -224,5 +290,11 @@
 <style scoped>
   .danger {
     background: red;
+  }
+
+  .fa-warning {
+    padding: 14px;
+    color: hsl(48, 100%, 67%);
+    margin-bottom: 20px;
   }
 </style>

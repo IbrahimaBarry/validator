@@ -32,3 +32,12 @@ body {
 .level-item a.is-active:not(.button) {
 	color: hsl(217, 71%, 53%);
 }
+
+.pagination a {
+	color: hsl(217, 71%, 53%)
+}
+.pagination-link.is-current {
+	background-color: hsl(217, 71%, 53%);
+	border-color: hsl(217, 71%, 53%);
+	color: hsl(0, 0%, 100%)
+}
