@@ -27,7 +27,7 @@
 
 		<section class="section">
 		    <div class="container">
-				<transition name="slideOutLeft" mode="out-in">
+				<transition name="fade">
 		        	<router-view></router-view>
 		        </transition>
 		    </div>
@@ -59,22 +59,11 @@
 		margin-top: 10px;
 	}
 
-	.slideOutLeft-enter-active {
-	  animation-name: slideOutLeft;
+	.fade-enter-active, .fade-leave-active {
+	  transition: opacity .5s
+	}
+	.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+	  opacity: 0
 	}
 
-	.slideOutLeft-leave-active {
-	  animation-name: slideOutLeft reverse;
-	}
-
-	@keyframes slideOutLeft {
-	  from {
-	    transform: translate3d(0, 0, 0);
-	  }
-
-	  to {
-	    visibility: hidden;
-	    transform: translate3d(-100%, 0, 0);
-	  }
-	}
 </style>

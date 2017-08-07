@@ -18,7 +18,7 @@ class ReceptionController extends Controller
      */
     public function index()
     {
-        return Reception::with(['user', 'document'])->latest()->paginate(9);
+        return Reception::with(['user', 'document'])->latest()->paginate(10);
                     // ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
@@ -33,13 +33,13 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['user', 'document'])->latest()->paginate(9);
+        return Reception::with(['user', 'document'])->latest()->paginate(10);
     }
 
     // IMPORT
     public function getScanned()
     {
-        return Reception::with(['document'])->where('scanned', true)->latest()->paginate(9);
+        return Reception::with(['document'])->where('scanned', true)->latest()->paginate(10);
     }
 
     public function import($id)
@@ -52,7 +52,7 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['document'])->where('scanned', true)->latest()->paginate(9);
+        return Reception::with(['document'])->where('scanned', true)->latest()->paginate(10);
     }
 
     // AFFECT
@@ -66,7 +66,7 @@ class ReceptionController extends Controller
                     array_push($agents, $user);
             }
         }
-        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->paginate(9),
+        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->paginate(10),
                                      'agents' => $agents];
     }
 
@@ -85,7 +85,7 @@ class ReceptionController extends Controller
             }
         }
 
-        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->paginate(9),
+        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->paginate(10),
                                      'agents' => $agents];
     }
 
@@ -131,12 +131,12 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(9);
+        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(10);
     }
 
     public function getClipped()
     {
-        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(9);
+        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(10);
     }
 
     public function deleteClipping($id) {
@@ -145,7 +145,7 @@ class ReceptionController extends Controller
         $reception->clipped = false;
         $reception->save();
 
-        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(9);
+        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(10);
     }
 
 

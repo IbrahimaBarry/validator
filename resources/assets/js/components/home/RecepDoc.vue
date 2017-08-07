@@ -130,7 +130,7 @@
 		            <td>{{ document.lang }}</td>
 		            <td>
 		            	<div class="control">
-						  <input class="input" name="sourceDate" type="date" @input="update(document.id, $event)">
+						  <input class="input" name="sourceDate" type="date" :value="today" @input="update(document.id, $event)">
 						</div>
 		            </td>
 		            <td>
@@ -180,7 +180,9 @@
 				search: '',
                 type: 'Type',
                 lang: 'Langue',
-                version: 'Version'
+                version: 'Version',
+
+                today: ''
 			}
 		},
 
@@ -259,7 +261,7 @@
 			receptions() {
 				var tab = [];
 				this.selected.forEach(function(el) {
-					tab.push({sourceDate: '',
+					tab.push({sourceDate: today(),
 									nbrPage: 0,
 										document_id: el.id,
 											message: ''});
@@ -270,8 +272,12 @@
 		},
 
 		mounted() {
+			var self = this;
 			axios.get('documents/index')
-				.then(response => this.documents = response.data);
+				.then(function (response){
+					self.documents = response.data;
+					self.today = today();
+				});
 		}
     }
 </script>

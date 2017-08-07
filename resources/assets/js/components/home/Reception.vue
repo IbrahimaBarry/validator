@@ -138,6 +138,17 @@ import RecepDoc from './RecepDoc';
         },
 
         methods: {
+            sort(column, event) {
+              var self = this;
+              axios.get('/sort/receptions/'+column+'/'+event.target.value).then(function (response) {
+                self.documents = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
+            },
+
             refresh() {
               var self = this;
               axios.get('/receptions/index').then(function (response) {

@@ -64,4 +64,5 @@ Route::get('/receptions/deleteClipping/{id}', 'ReceptionController@deleteClippin
 Route::get('/receptions/export/{id}', 'ReceptionController@export');
 Route::get('/receptions/getClipped', 'ReceptionController@getClipped'); 
 
-// ADMIN
+// SORT
+

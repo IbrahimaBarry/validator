@@ -3747,8 +3747,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-window.sort = function () {
-    console.log('sor function');
+window.today = function () {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    if (day < 10) day = "0" + day;
+    if (month < 10) month = "0" + month;
+    return year + "-" + month + "-" + day;
 };
 
 new Vue({
@@ -16022,7 +16028,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.tabs li.is-active a[data-v-177bc5d8] {\n    border-bottom-color: hsl(217, 71%, 53%);\n    color: hsl(217, 71%, 53%);\n}\n.tabs[data-v-177bc5d8]:not(:last-child) {\n    margin-bottom: 0;\n}\n.tabs ul[data-v-177bc5d8] {\n\tmargin-top: 10px;\n}\n.slideOutLeft-enter-active[data-v-177bc5d8] {\n  animation-name: slideOutLeft-data-v-177bc5d8;\n}\n.slideOutLeft-leave-active[data-v-177bc5d8] {\n  animation-name: slideOutLeft reverse;\n}\n@keyframes slideOutLeft-data-v-177bc5d8 {\nfrom {\n    transform: translate3d(0, 0, 0);\n}\nto {\n    visibility: hidden;\n    transform: translate3d(-100%, 0, 0);\n}\n}\n", ""]);
+exports.push([module.i, "\n.tabs li.is-active a[data-v-177bc5d8] {\n    border-bottom-color: hsl(217, 71%, 53%);\n    color: hsl(217, 71%, 53%);\n}\n.tabs[data-v-177bc5d8]:not(:last-child) {\n    margin-bottom: 0;\n}\n.tabs ul[data-v-177bc5d8] {\n\tmargin-top: 10px;\n}\n.fade-enter-active[data-v-177bc5d8], .fade-leave-active[data-v-177bc5d8] {\n  transition: opacity .5s\n}\n.fade-enter[data-v-177bc5d8], .fade-leave-to[data-v-177bc5d8] /* .fade-leave-active below version 2.1.8 */ {\n  opacity: 0\n}\n\n", ""]);
 
 // exports
 
@@ -16154,8 +16160,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "container"
   }, [_c('transition', {
     attrs: {
-      "name": "slideOutLeft",
-      "mode": "out-in"
+      "name": "fade"
     }
   }, [_c('router-view')], 1)], 1)])])
 },staticRenderFns: []}
@@ -16246,7 +16251,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -16396,6 +16401,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
+    sort: function sort(column, event) {
+      var self = this;
+      axios.get('/sort/receptions/' + column + '/' + event.target.value).then(function (response) {
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
+    },
     refresh: function refresh() {
       var self = this;
       axios.get('/receptions/index').then(function (response) {
@@ -16743,7 +16758,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       search: '',
       type: 'Type',
       lang: 'Langue',
-      version: 'Version'
+      version: 'Version',
+
+      today: ''
     };
   },
 
@@ -16811,7 +16828,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     receptions: function receptions() {
       var tab = [];
       this.selected.forEach(function (el) {
-        tab.push({ sourceDate: '',
+        tab.push({ sourceDate: today(),
           nbrPage: 0,
           document_id: el.id,
           message: '' });
@@ -16821,10 +16838,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
 
   mounted: function mounted() {
-    var _this2 = this;
-
+    var self = this;
     axios.get('documents/index').then(function (response) {
-      return _this2.documents = response.data;
+      self.documents = response.data;
+      self.today = today();
     });
   }
 });
@@ -17134,6 +17151,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "name": "sourceDate",
         "type": "date"
+      },
+      domProps: {
+        "value": _vm.today
       },
       on: {
         "input": function($event) {
