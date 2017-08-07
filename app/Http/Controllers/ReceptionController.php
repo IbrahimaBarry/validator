@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Document;
 use Carbon\Carbon;
 use App\User;
+use App\Helpers\Sort;
 
 class ReceptionController extends Controller
 {
@@ -18,7 +19,7 @@ class ReceptionController extends Controller
      */
     public function index()
     {
-        return Reception::with(['user', 'document'])->latest()->paginate(10);
+        return Reception::with(['user', 'document'])->latest()->paginate();
                     // ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
@@ -33,13 +34,13 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['user', 'document'])->latest()->paginate(10);
+        return Reception::with(['user', 'document'])->latest()->paginate();
     }
 
     // IMPORT
     public function getScanned()
     {
-        return Reception::with(['document'])->where('scanned', true)->latest()->paginate(10);
+        return Reception::with('document')->where('scanned', true)->latest()->paginate();
     }
 
     public function import($id)
@@ -52,7 +53,7 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['document'])->where('scanned', true)->latest()->paginate(10);
+        return Reception::with('document')->where('scanned', true)->latest()->paginate();
     }
 
     // AFFECT
@@ -66,7 +67,7 @@ class ReceptionController extends Controller
                     array_push($agents, $user);
             }
         }
-        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->paginate(10),
+        return ['imports' => Reception::with('document')->where('imported', true)->latest()->paginate(),
                                      'agents' => $agents];
     }
 
@@ -85,7 +86,7 @@ class ReceptionController extends Controller
             }
         }
 
-        return ['imports' => Reception::with(['document'])->where('imported', true)->latest()->paginate(10),
+        return ['imports' => Reception::with('document')->where('imported', true)->latest()->paginate(),
                                      'agents' => $agents];
     }
 
@@ -93,10 +94,10 @@ class ReceptionController extends Controller
     public function agentClipping()
     {
         if (Auth::user()->role === 'agent')
-            return Reception::with(['document'])
+            return Reception::with('document')
                         ->where([['user_clipping', Auth::user()->name], ['clipped', false]])->latest()->get();
         else
-            return Reception::with(['document'])
+            return Reception::with('document')
                         ->where([['imported', true], ['clipped', false]])->latest()->get();
     }
 
@@ -113,10 +114,10 @@ class ReceptionController extends Controller
         $reception->save();
 
         if (Auth::user()->role === 'agent')
-            return Reception::with(['document'])
+            return Reception::with('document')
                         ->where([['user_clipping', Auth::user()->name], ['clipped', false]])->latest()->get();
         else
-            return Reception::with(['document'])
+            return Reception::with('document')
                         ->where([['imported', true], ['clipped', false]])->latest()->get();
     }
 
@@ -131,12 +132,12 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(10);
+        return Reception::with('document')->where('clipped', true)->latest()->paginate();
     }
 
     public function getClipped()
     {
-        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(10);
+        return Reception::with('document')->where('clipped', true)->latest()->paginate();
     }
 
     public function deleteClipping($id) {
@@ -145,7 +146,7 @@ class ReceptionController extends Controller
         $reception->clipped = false;
         $reception->save();
 
-        return Reception::with(['document'])->where('clipped', true)->latest()->paginate(10);
+        return Reception::with('document')->where('clipped', true)->latest()->paginate();
     }
 
 
@@ -169,37 +170,22 @@ class ReceptionController extends Controller
        //              ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reception  $reception
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reception $reception)
+    public function sort($model, Request $request)
     {
-        //
+        if ($model == 'affect') {
+            $agents = [];
+
+            foreach (User::where('role', 'agent')->get() as $user) {
+                foreach ($user->permissions as $permission) {
+                    if ($permission->name === 'clipping')
+                        array_push($agents, $user);
+                }
+            }
+
+            return ['imports' => (new Sort())->index($model, $request), 'agents' => $agents];
+        }
+        else
+            return (new Sort())->index($model, $request);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Reception  $reception
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Reception $reception)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Reception  $reception
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Reception $reception)
-    {
-        //
-    }
 }

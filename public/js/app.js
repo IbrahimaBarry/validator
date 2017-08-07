@@ -16251,7 +16251,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -16264,8 +16264,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RecepDoc__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RecepDoc___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__RecepDoc__);
-//
-//
 //
 //
 //
@@ -16388,29 +16386,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         next_page_url: '',
         prev_page_url: ''
       },
+      sorted: false,
 
       filter: 'all',
       hoverId: 0,
       showRecepDoc: false,
-      search: '',
-      type: 'Type',
-      lang: 'Langue',
-      version: 'Version'
+      sorts: {
+        search: '',
+        type: 'Type',
+        lang: 'Langue',
+        version: 'Version',
+        date: ''
+      }
     };
   },
 
 
   methods: {
-    sort: function sort(column, event) {
-      var self = this;
-      axios.get('/sort/receptions/' + column + '/' + event.target.value).then(function (response) {
-        self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
-      });
-    },
     refresh: function refresh() {
       var self = this;
       axios.get('/receptions/index').then(function (response) {
@@ -16423,17 +16415,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.showRecepDoc = false;
     },
     reload: function reload() {
-      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-    },
-    fetch: function fetch(page) {
+      this.sorted = false;
+      this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get(page).then(function (response) {
+      axios.get('/receptions/index').then(function (response) {
         self.documents = response.data.data;
         self.pagination.current_page = response.data.current_page;
         self.pagination.last_page = response.data.last_page;
         self.pagination.next_page_url = response.data.next_page_url;
         self.pagination.prev_page_url = response.data.prev_page_url;
       });
+    },
+    sort: function sort() {
+      this.sorted = true;
+      var self = this;
+      axios.post('/sort/reception', this.sorts).then(function (response) {
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
+    },
+    fetch: function fetch(page) {
+      if (this.sorted) {
+        var self = this;
+        axios.post(page, this.sorts).then(function (response) {
+          self.documents = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      } else {
+        var self = this;
+        axios.get(page).then(function (response) {
+          self.documents = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      }
     }
   },
 
@@ -16446,26 +16469,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });else return this.documents.filter(function (document) {
         return document.document.frequence == 'Mensuel';
       });
-    },
-    sortedDocuments: function sortedDocuments() {
-      var _this = this;
-
-      var temp;
-      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this.search;
-      });
-
-      if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this.type;
-      });
-      if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this.lang;
-      });
-      if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this.version;
-      });
-
-      return temp;
     }
   },
 
@@ -17329,24 +17332,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-left"
   }, [_c('div', {
     staticClass: "level-item"
-  }, [_c('p', {
-    staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n        ")])]), _vm._v(" "), _c('div', {
-    staticClass: "level-item"
   }, [_c('div', {
     staticClass: "field has-addons"
   }, [_c('p', {
     staticClass: "control"
   }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.search),
+      expression: "sorts.search"
+    }],
     staticClass: "input",
     attrs: {
       "type": "text",
       "placeholder": "Rechercher..."
     },
+    domProps: {
+      "value": (_vm.sorts.search)
+    },
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
-        _vm.search = $event.target.value
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.search = $event.target.value
       }
     }
   })]), _vm._v(" "), _c('div', {
@@ -17357,19 +17369,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.type),
-      expression: "type"
+      value: (_vm.sorts.type),
+      expression: "sorts.type"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -17387,19 +17402,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.lang),
-      expression: "lang"
+      value: (_vm.sorts.lang),
+      expression: "sorts.lang"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -17425,19 +17443,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.version),
-      expression: "version"
+      value: (_vm.sorts.version),
+      expression: "sorts.version"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -17448,6 +17469,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": "Electronique"
     }
   }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.date),
+      expression: "sorts.date"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "date"
+    },
+    domProps: {
+      "value": (_vm.sorts.date)
+    },
+    on: {
+      "change": function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.date = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('p', {
     staticClass: "control"
   }, [_c('button', {
     staticClass: "button is-info is-inverted",
@@ -17524,7 +17571,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Reception")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(document) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(document) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -17701,7 +17748,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -17712,8 +17759,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
 //
 //
 //
@@ -17837,12 +17882,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         next_page_url: '',
         prev_page_url: ''
       },
+      sorted: false,
 
       filter: 'all',
-      search: '',
-      type: 'Type',
-      lang: 'Langue',
-      version: 'Version'
+      sorts: {
+        search: '',
+        type: 'Type',
+        lang: 'Langue',
+        version: 'Version',
+        date: ''
+      }
     };
   },
 
@@ -17859,17 +17908,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     reload: function reload() {
-      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-    },
-    fetch: function fetch(page) {
+      this.sorted = false;
+      this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get(page).then(function (response) {
+      axios.get('/receptions/index').then(function (response) {
         self.receptions = response.data.data;
         self.pagination.current_page = response.data.current_page;
         self.pagination.last_page = response.data.last_page;
         self.pagination.next_page_url = response.data.next_page_url;
         self.pagination.prev_page_url = response.data.prev_page_url;
       });
+    },
+    sort: function sort() {
+      this.sorted = true;
+      var self = this;
+      axios.post('/sort/reception', this.sorts).then(function (response) {
+        self.receptions = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
+    },
+    fetch: function fetch(page) {
+      if (this.sorted) {
+        var self = this;
+        axios.post(page, this.sorts).then(function (response) {
+          self.receptions = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      } else {
+        var self = this;
+        axios.get(page).then(function (response) {
+          self.receptions = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      }
     }
   },
 
@@ -17882,26 +17962,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });else return this.receptions.filter(function (reception) {
         return reception.document.frequence == 'Mensuel';
       });
-    },
-    sortedDocuments: function sortedDocuments() {
-      var _this = this;
-
-      var temp;
-      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this.search;
-      });
-
-      if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this.type;
-      });
-      if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this.lang;
-      });
-      if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this.version;
-      });
-
-      return temp;
     }
   },
 
@@ -17928,24 +17988,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-left"
   }, [_c('div', {
     staticClass: "level-item"
-  }, [_c('p', {
-    staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
-    staticClass: "level-item"
   }, [_c('div', {
     staticClass: "field has-addons"
   }, [_c('p', {
     staticClass: "control"
   }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.search),
+      expression: "sorts.search"
+    }],
     staticClass: "input",
     attrs: {
       "type": "text",
       "placeholder": "Rechercher..."
     },
+    domProps: {
+      "value": (_vm.sorts.search)
+    },
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
-        _vm.search = $event.target.value
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.search = $event.target.value
       }
     }
   })]), _vm._v(" "), _c('div', {
@@ -17956,19 +18025,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.type),
-      expression: "type"
+      value: (_vm.sorts.type),
+      expression: "sorts.type"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -17986,19 +18058,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.lang),
-      expression: "lang"
+      value: (_vm.sorts.lang),
+      expression: "sorts.lang"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -18024,19 +18099,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.version),
-      expression: "version"
+      value: (_vm.sorts.version),
+      expression: "sorts.version"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -18047,6 +18125,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": "Electronique"
     }
   }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.date),
+      expression: "sorts.date"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "date"
+    },
+    domProps: {
+      "value": (_vm.sorts.date)
+    },
+    on: {
+      "change": function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.date = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('p', {
     staticClass: "control"
   }, [_c('button', {
     staticClass: "button is-info is-inverted",
@@ -18113,7 +18217,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(reception) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(reception) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.message))]), _vm._v(" "), (reception.scanned == false) ? _c('td', [_c('a', {
       staticClass: "button is-small is-info is-outlined",
       on: {
@@ -18289,7 +18393,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -18300,8 +18404,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
 //
 //
 //
@@ -18422,12 +18524,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         next_page_url: '',
         prev_page_url: ''
       },
+      sorted: false,
 
       filter: 'all',
-      search: '',
-      type: 'Type',
-      lang: 'Langue',
-      version: 'Version'
+      sorts: {
+        search: '',
+        type: 'Type',
+        lang: 'Langue',
+        version: 'Version',
+        date: ''
+      }
     };
   },
 
@@ -18444,17 +18550,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     reload: function reload() {
-      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-    },
-    fetch: function fetch(page) {
+      this.sorted = false;
+      this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get(page).then(function (response) {
+      axios.get('/receptions/getScanned').then(function (response) {
         self.scans = response.data.data;
         self.pagination.current_page = response.data.current_page;
         self.pagination.last_page = response.data.last_page;
         self.pagination.next_page_url = response.data.next_page_url;
         self.pagination.prev_page_url = response.data.prev_page_url;
       });
+    },
+    sort: function sort() {
+      this.sorted = true;
+      var self = this;
+      axios.post('/sort/import', this.sorts).then(function (response) {
+        self.scans = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
+    },
+    fetch: function fetch(page) {
+      if (this.sorted) {
+        var self = this;
+        axios.post(page, this.sorts).then(function (response) {
+          self.scans = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      } else {
+        var self = this;
+        axios.get(page).then(function (response) {
+          self.scans = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      }
     }
   },
 
@@ -18467,26 +18604,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });else return this.scans.filter(function (scan) {
         return scan.document.frequence == 'Mensuel';
       });
-    },
-    sortedDocuments: function sortedDocuments() {
-      var _this = this;
-
-      var temp;
-      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this.search;
-      });
-
-      if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this.type;
-      });
-      if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this.lang;
-      });
-      if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this.version;
-      });
-
-      return temp;
     }
   },
 
@@ -18513,24 +18630,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-left"
   }, [_c('div', {
     staticClass: "level-item"
-  }, [_c('p', {
-    staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
-    staticClass: "level-item"
   }, [_c('div', {
     staticClass: "field has-addons"
   }, [_c('p', {
     staticClass: "control"
   }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.search),
+      expression: "sorts.search"
+    }],
     staticClass: "input",
     attrs: {
       "type": "text",
       "placeholder": "Rechercher..."
     },
+    domProps: {
+      "value": (_vm.sorts.search)
+    },
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
-        _vm.search = $event.target.value
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.search = $event.target.value
       }
     }
   })]), _vm._v(" "), _c('div', {
@@ -18541,19 +18667,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.type),
-      expression: "type"
+      value: (_vm.sorts.type),
+      expression: "sorts.type"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -18571,19 +18700,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.lang),
-      expression: "lang"
+      value: (_vm.sorts.lang),
+      expression: "sorts.lang"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -18609,19 +18741,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.version),
-      expression: "version"
+      value: (_vm.sorts.version),
+      expression: "sorts.version"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -18632,6 +18767,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": "Electronique"
     }
   }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.date),
+      expression: "sorts.date"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "date"
+    },
+    domProps: {
+      "value": (_vm.sorts.date)
+    },
+    on: {
+      "change": function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.date = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('p', {
     staticClass: "control"
   }, [_c('button', {
     staticClass: "button is-info is-inverted",
@@ -18698,7 +18859,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(scan) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(scan) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(scan.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.date_scan))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.user_scan))]), _vm._v(" "), (scan.imported == false) ? _c('td', [_c('a', {
       staticClass: "button is-small is-outlined is-info",
       on: {
@@ -19001,8 +19162,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -19020,15 +19179,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         next_page_url: '',
         prev_page_url: ''
       },
+      sorted: false,
 
       filter: 'all',
       showModal: false,
       hoverId: 0,
       hovered: 0,
-      search: '',
-      type: 'Type',
-      lang: 'Langue',
-      version: 'Version'
+      sorts: {
+        search: '',
+        type: 'Type',
+        lang: 'Langue',
+        version: 'Version',
+        date: ''
+      }
     };
   },
 
@@ -19047,11 +19210,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.showModal = false;
     },
     reload: function reload() {
-      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-    },
-    fetch: function fetch(page) {
+      this.sorted = false;
+      this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get(page).then(function (response) {
+      axios.get('/receptions/getImported').then(function (response) {
         self.data = response.data.imports.data;
         self.agents = response.data.agents;
         self.pagination.current_page = response.data.imports.current_page;
@@ -19059,6 +19221,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         self.pagination.next_page_url = response.data.imports.next_page_url;
         self.pagination.prev_page_url = response.data.imports.prev_page_url;
       });
+    },
+    sort: function sort() {
+      this.sorted = true;
+      var self = this;
+      axios.post('/sort/affect', this.sorts).then(function (response) {
+        self.data = response.data.imports.data;
+        self.agents = response.data.agents;
+        self.pagination.current_page = response.data.imports.current_page;
+        self.pagination.last_page = response.data.imports.last_page;
+        self.pagination.next_page_url = response.data.imports.next_page_url;
+        self.pagination.prev_page_url = response.data.imports.prev_page_url;
+      });
+    },
+    fetch: function fetch(page) {
+      if (this.sorted) {
+        var self = this;
+        axios.post(page, this.sorts).then(function (response) {
+          self.data = response.data.imports.data;
+          self.agents = response.data.agents;
+          self.pagination.current_page = response.data.imports.current_page;
+          self.pagination.last_page = response.data.imports.last_page;
+          self.pagination.next_page_url = response.data.imports.next_page_url;
+          self.pagination.prev_page_url = response.data.imports.prev_page_url;
+        });
+      } else {
+        var self = this;
+        axios.get(page).then(function (response) {
+          self.data = response.data.imports.data;
+          self.agents = response.data.agents;
+          self.pagination.current_page = response.data.imports.current_page;
+          self.pagination.last_page = response.data.imports.last_page;
+          self.pagination.next_page_url = response.data.imports.next_page_url;
+          self.pagination.prev_page_url = response.data.imports.prev_page_url;
+        });
+      }
     }
   },
 
@@ -19071,26 +19268,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });else return this.data.filter(function (doc) {
         return doc.document.frequence == 'Mensuel';
       });
-    },
-    sortedDocuments: function sortedDocuments() {
-      var _this = this;
-
-      var temp;
-      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this.search;
-      });
-
-      if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this.type;
-      });
-      if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this.lang;
-      });
-      if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this.version;
-      });
-
-      return temp;
     }
   },
 
@@ -19118,24 +19295,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-left"
   }, [_c('div', {
     staticClass: "level-item"
-  }, [_c('p', {
-    staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
-    staticClass: "level-item"
   }, [_c('div', {
     staticClass: "field has-addons"
   }, [_c('p', {
     staticClass: "control"
   }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.search),
+      expression: "sorts.search"
+    }],
     staticClass: "input",
     attrs: {
       "type": "text",
       "placeholder": "Rechercher..."
     },
+    domProps: {
+      "value": (_vm.sorts.search)
+    },
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
-        _vm.search = $event.target.value
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.search = $event.target.value
       }
     }
   })]), _vm._v(" "), _c('div', {
@@ -19146,19 +19332,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.type),
-      expression: "type"
+      value: (_vm.sorts.type),
+      expression: "sorts.type"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -19176,19 +19365,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.lang),
-      expression: "lang"
+      value: (_vm.sorts.lang),
+      expression: "sorts.lang"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -19214,19 +19406,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.version),
-      expression: "version"
+      value: (_vm.sorts.version),
+      expression: "sorts.version"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -19237,6 +19432,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": "Electronique"
     }
   }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.date),
+      expression: "sorts.date"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "date"
+    },
+    domProps: {
+      "value": (_vm.sorts.date)
+    },
+    on: {
+      "change": function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.date = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('p', {
     staticClass: "control"
   }, [_c('button', {
     staticClass: "button is-info is-inverted",
@@ -19303,7 +19524,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(imported) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(imported) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -20726,8 +20947,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -20744,15 +20963,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         next_page_url: '',
         prev_page_url: ''
       },
+      sorted: false,
 
       filter: 'all',
       showDetail: false,
       showDelete: false,
       detail: {},
-      search: '',
-      type: 'Type',
-      lang: 'Langue',
-      version: 'Version'
+      sorts: {
+        search: '',
+        type: 'Type',
+        lang: 'Langue',
+        version: 'Version',
+        date: ''
+      }
     };
   },
 
@@ -20780,17 +21003,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.showDelete = false;
     },
     reload: function reload() {
-      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-    },
-    fetch: function fetch(page) {
+      this.sorted = false;
+      this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get(page).then(function (response) {
+      axios.get('/receptions/getClipped').then(function (response) {
         self.documents = response.data.data;
         self.pagination.current_page = response.data.current_page;
         self.pagination.last_page = response.data.last_page;
         self.pagination.next_page_url = response.data.next_page_url;
         self.pagination.prev_page_url = response.data.prev_page_url;
       });
+    },
+    sort: function sort() {
+      this.sorted = true;
+      var self = this;
+      axios.post('/sort/clipping', this.sorts).then(function (response) {
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+      });
+    },
+    fetch: function fetch(page) {
+      if (this.sorted) {
+        var self = this;
+        axios.post(page, this.sorts).then(function (response) {
+          self.documents = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      } else {
+        var self = this;
+        axios.get(page).then(function (response) {
+          self.documents = response.data.data;
+          self.pagination.current_page = response.data.current_page;
+          self.pagination.last_page = response.data.last_page;
+          self.pagination.next_page_url = response.data.next_page_url;
+          self.pagination.prev_page_url = response.data.prev_page_url;
+        });
+      }
     }
   },
 
@@ -20803,26 +21057,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });else return this.documents.filter(function (doc) {
         return doc.document.frequence == 'Mensuel';
       });
-    },
-    sortedDocuments: function sortedDocuments() {
-      var _this = this;
-
-      var temp;
-      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this.search;
-      });
-
-      if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this.type;
-      });
-      if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this.lang;
-      });
-      if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this.version;
-      });
-
-      return temp;
     }
   },
 
@@ -20849,24 +21083,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level-left"
   }, [_c('div', {
     staticClass: "level-item"
-  }, [_c('p', {
-    staticClass: "subtitle is-5"
-  }, [_c('strong', [_vm._v(_vm._s(_vm.sortedDocuments.length))]), _vm._v(" Documents\n      ")])]), _vm._v(" "), _c('div', {
-    staticClass: "level-item"
   }, [_c('div', {
     staticClass: "field has-addons"
   }, [_c('p', {
     staticClass: "control"
   }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.search),
+      expression: "sorts.search"
+    }],
     staticClass: "input",
     attrs: {
       "type": "text",
       "placeholder": "Rechercher..."
     },
+    domProps: {
+      "value": (_vm.sorts.search)
+    },
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
-        _vm.search = $event.target.value
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.search = $event.target.value
       }
     }
   })]), _vm._v(" "), _c('div', {
@@ -20877,19 +21120,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.type),
-      expression: "type"
+      value: (_vm.sorts.type),
+      expression: "sorts.type"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -20907,19 +21153,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.lang),
-      expression: "lang"
+      value: (_vm.sorts.lang),
+      expression: "sorts.lang"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -20945,19 +21194,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.version),
-      expression: "version"
+      value: (_vm.sorts.version),
+      expression: "sorts.version"
     }],
     on: {
-      "change": function($event) {
+      "change": [function($event) {
         var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
           return o.selected
         }).map(function(o) {
           var val = "_value" in o ? o._value : o.value;
           return val
         });
-        _vm.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }
+        _vm.sorts.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }, function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      }]
     }
   }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
     attrs: {
@@ -20968,6 +21220,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": "Electronique"
     }
   }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
+    staticClass: "control"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.sorts.date),
+      expression: "sorts.date"
+    }],
+    staticClass: "input",
+    attrs: {
+      "type": "date"
+    },
+    domProps: {
+      "value": (_vm.sorts.date)
+    },
+    on: {
+      "change": function($event) {
+        $event.preventDefault();
+        _vm.sort($event)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.sorts.date = $event.target.value
+      }
+    }
+  })]), _vm._v(" "), _c('p', {
     staticClass: "control"
   }, [_c('button', {
     staticClass: "button is-info is-inverted",
@@ -21034,7 +21312,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table is-striped"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(doc) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(doc) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {

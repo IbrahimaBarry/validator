@@ -4,18 +4,13 @@
       <!-- Left side -->
       <div class="level-left">
         <div class="level-item">
-          <p class="subtitle is-5">
-            <strong>{{sortedDocuments.length}}</strong> Documents
-          </p>
-        </div>
-        <div class="level-item">
           <div class="field has-addons">
             <p class="control">
-              <input class="input" type="text" placeholder="Rechercher..." @keyup.enter="search = $event.target.value">
+              <input class="input" type="text" placeholder="Rechercher..." v-model="sorts.search" @keyup.enter="sort">
             </p>
             <div class="control">
               <div class="select">
-                <select v-model="type">
+                <select v-model="sorts.type" @change.prevent="sort">
                   <option>Type</option>
                   <option value="Magasine">Magasine</option>
                   <option value="Journal">Journal</option>
@@ -24,7 +19,7 @@
             </div>
             <div class="control">
               <div class="select">
-                <select v-model="lang">
+                <select v-model="sorts.lang" @change.prevent="sort">
                   <option>Langue</option>
                   <option value="Anglais">Anglais</option>
                   <option value="Arabe">Arabe</option>
@@ -35,13 +30,16 @@
             </div>
             <div class="control">
               <div class="select">
-                <select v-model="version">
+                <select v-model="sorts.version" @change.prevent="sort">
                   <option>Version</option>
                   <option value="Papier">Papier</option>
                   <option value="Electronique">Electronique</option>
                 </select>
               </div>
             </div>
+            <p class="control">
+              <input class="input" type="date" v-model="sorts.date" @change.prevent="sort">
+            </p>
             <p class="control"><button class="button is-info is-inverted" @click.prevent="reload"><i class="fa fa-refresh" aria-hidden="true"></i></button></p>
           </div>
         </div>
@@ -69,7 +67,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="scan in sortedDocuments">
+            <tr v-for="scan in filteredDocuments">
               <td>{{ scan.document.type }}</td>
               <td>{{ scan.document.name }}</td>
               <td>{{ scan.sourceDate }}</td>
@@ -124,12 +122,16 @@
                   next_page_url: '',
                   prev_page_url: '',
                 },
+                sorted: false,
 
                 filter: 'all',
-                search: '',
-                type: 'Type',
-                lang: 'Langue',
-                version: 'Version'
+                sorts: {
+                  search: '',
+                  type: 'Type',
+                  lang: 'Langue',
+                  version: 'Version',
+                  date: ''
+                }
             }
         },
 
@@ -146,18 +148,51 @@
             },
 
             reload() {
-              this.search = ''; this.type = 'Type'; this.lang = 'Langue'; this.version = 'Version';
-            },
-
-            fetch(page) {
+              this.sorted = false;
+              this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
-              axios.get(page).then(function (response) {
+              axios.get('/receptions/getScanned').then(function(response) {
                 self.scans = response.data.data;
                 self.pagination.current_page = response.data.current_page;
                 self.pagination.last_page = response.data.last_page;
                 self.pagination.next_page_url = response.data.next_page_url;
                 self.pagination.prev_page_url = response.data.prev_page_url;
               });
+            },
+
+            sort() {
+              this.sorted = true;
+              var self = this;
+              axios.post('/sort/import', this.sorts).then(function (response) {
+                self.scans = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+              });
+            },
+
+            fetch(page) {
+              if (this.sorted) {
+                var self = this;
+                axios.post(page, this.sorts).then(function (response) {
+                  self.scans = response.data.data;
+                  self.pagination.current_page = response.data.current_page;
+                  self.pagination.last_page = response.data.last_page;
+                  self.pagination.next_page_url = response.data.next_page_url;
+                  self.pagination.prev_page_url = response.data.prev_page_url;
+                });
+              }
+              else {
+                var self = this;
+                axios.get(page).then(function (response) {
+                  self.scans = response.data.data;
+                  self.pagination.current_page = response.data.current_page;
+                  self.pagination.last_page = response.data.last_page;
+                  self.pagination.next_page_url = response.data.next_page_url;
+                  self.pagination.prev_page_url = response.data.prev_page_url;
+                });
+              }
             }
         },
 
@@ -171,24 +206,7 @@
                     return this.scans.filter(scan => scan.document.frequence == 'Hebdomadaire');
                 else
                     return this.scans.filter(scan => scan.document.frequence == 'Mensuel');
-            },
-
-            sortedDocuments() {
-              var temp;
-                if (this.search == '')
-                  temp = this.filteredDocuments;
-                else
-                  temp = this.filteredDocuments.filter(document => document.document.name == this.search);
-
-                if (this.type != 'Type')
-                  temp = temp.filter(document => document.document.type == this.type);
-                if (this.lang != 'Langue')
-                  temp = temp.filter(document => document.document.lang == this.lang);
-                if (this.version != 'Version')
-                  temp = temp.filter(document => document.document.version == this.version);
-
-                return temp;
-              }
+            }
         },
 
         mounted() {
