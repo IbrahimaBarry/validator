@@ -54,6 +54,8 @@
       </div>
     </nav>
       
+      <Loader v-if="loading"></Loader>
+      <div v-else>
       <table class="table">
           <thead>
             <tr>
@@ -101,10 +103,13 @@
             <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
           </ul>
         </nav>
+        </div>
     </div>
 </template>
 
 <script>
+import Loader from '../Loader';
+
     export default {
         beforeRouteEnter (to, from, next) {
           axios.get('/user').then(function(response) {
@@ -134,12 +139,15 @@
                   lang: 'Langue',
                   version: 'Version',
                   date: ''
-                }
+                },
+
+                loading: false
             }
         },
 
         methods: {
             addScan(id) {
+              this.loading = true;
               var self = this;
               axios.get('/receptions/scan/'+id).then(function (response) {
                 self.receptions = response.data.data;
@@ -147,10 +155,12 @@
                 self.pagination.last_page = response.data.last_page;
                 self.pagination.next_page_url = response.data.next_page_url;
                 self.pagination.prev_page_url = response.data.prev_page_url;
+                self.loading = false;
               });
             },
 
             reload() {
+              this.loading = true;
               this.sorted = false;
               this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
@@ -160,10 +170,12 @@
                 self.pagination.last_page = response.data.last_page;
                 self.pagination.next_page_url = response.data.next_page_url;
                 self.pagination.prev_page_url = response.data.prev_page_url;
+                self.loading = false;
               });
             },
 
             sort() {
+              this.loading = true;
               this.sorted = true;
               var self = this;
               axios.post('/sort/reception', this.sorts).then(function (response) {
@@ -172,11 +184,13 @@
                 self.pagination.last_page = response.data.last_page;
                 self.pagination.next_page_url = response.data.next_page_url;
                 self.pagination.prev_page_url = response.data.prev_page_url;
+                self.loading = false;
               });
             },
 
             fetch(page) {
               if (this.sorted) {
+                this.loading = true;
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
                   self.receptions = response.data.data;
@@ -184,9 +198,11 @@
                   self.pagination.last_page = response.data.last_page;
                   self.pagination.next_page_url = response.data.next_page_url;
                   self.pagination.prev_page_url = response.data.prev_page_url;
+                  self.loading = false;
                 });
               }
               else {
+                this.loading = true;
                 var self = this;
                 axios.get(page).then(function (response) {
                   self.receptions = response.data.data;
@@ -194,6 +210,7 @@
                   self.pagination.last_page = response.data.last_page;
                   self.pagination.next_page_url = response.data.next_page_url;
                   self.pagination.prev_page_url = response.data.prev_page_url;
+                  self.loading = false;
                 });
               }
             }
@@ -213,6 +230,7 @@
         },
 
         mounted() {
+            this.loading = true;
             var self = this;
             axios.get('/receptions/index').then(function (response) {
               self.receptions = response.data.data;
@@ -220,7 +238,12 @@
               self.pagination.last_page = response.data.last_page;
               self.pagination.next_page_url = response.data.next_page_url;
               self.pagination.prev_page_url = response.data.prev_page_url;
+              self.loading = false;
             });
+        },
+
+        components: {
+          Loader
         }
     }
 </script>

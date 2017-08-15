@@ -56,6 +56,8 @@
       </div>
     </nav>
       
+      <Loader v-if="loading"></Loader>
+    <div v-else>
       <table class="table">
         <thead>
           <tr>
@@ -105,6 +107,7 @@
           </tr>
         </tfoot>
       </table>
+    </div>
 
       <div class="modal is-active" v-if="showAddModal === true">
         <div class="modal-background"></div>
@@ -188,7 +191,9 @@
 </template>
 
 <script>
-    import Chrono from './Chrono';
+import Chrono from './Chrono';
+import Loader from '../Loader';
+
     export default {
         beforeRouteEnter (to, from, next) {
           axios.get('/user').then(function(response) {
@@ -200,7 +205,8 @@
         },
 
         components: {
-          Chrono
+          Chrono,
+          Loader
         },
 
         data() {
@@ -218,15 +224,22 @@
                 search: '',
                 type: 'Type',
                 lang: 'Langue',
-                version: 'Version'
+                version: 'Version',
+
+                loading: false
             }
         },
 
         methods: {
             addClipping(id) {
               if (this.hoverId != 0) {
+                this.loading = true;
+                var self = this;
                 axios.post('/receptions/clipping/'+id, this.clipping)
-                    .then(response => this.documents = response.data);
+                    .then(response => {
+                      self.documents = response.data;
+                      self.loading = false;
+                    });
                 this.showAddModal = false;
               }
             },
@@ -277,7 +290,13 @@
         },
 
         mounted() {
-            axios.get('/receptions/clipping/agent').then(response => this.documents = response.data);
+            this.loading = true;
+            var self = this;
+            axios.get('/receptions/clipping/agent')
+              .then(response => {
+                self.documents = response.data;
+                self.loading = false;
+              });
         }
     }
 </script>

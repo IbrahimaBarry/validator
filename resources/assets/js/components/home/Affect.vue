@@ -54,6 +54,8 @@
       </div>
     </nav>
       
+      <Loader v-if="loading"></Loader>
+    <div v-else>
       <table class="table">
         <thead>
           <tr>
@@ -95,6 +97,7 @@
           <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
         </ul>
       </nav>
+    </div>
 
       <!-- MODAL -->
       <div class="modal is-active" v-if="showModal" @blur.prevent="showModal = false">
@@ -119,6 +122,8 @@
 </template>
 
 <script>
+import Loader from '../Loader';
+
     export default {
         beforeRouteEnter (to, from, next) {
           axios.get('/user').then(function(response) {
@@ -151,12 +156,15 @@
                   lang: 'Langue',
                   version: 'Version',
                   date: ''
-                }
+                },
+
+                loading: false
             }
         },
 
         methods: {
             addAgent(receptionId,agentId) {
+              this.loading = true;
               var self = this;
               axios.get('/receptions/clipping/'+receptionId+'/'+agentId).then(function (response) {
                 self.data = response.data.imports.data;
@@ -165,11 +173,13 @@
                 self.pagination.last_page = response.data.imports.last_page;
                 self.pagination.next_page_url = response.data.imports.next_page_url;
                 self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                self.loading = false;
               });
               this.showModal = false;
             },
 
             reload() {
+              this.loading = true;
               this.sorted = false;
               this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
@@ -180,10 +190,12 @@
                 self.pagination.last_page = response.data.imports.last_page;
                 self.pagination.next_page_url = response.data.imports.next_page_url;
                 self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                self.loading = false;
               });
             },
 
             sort() {
+              this.loading = true;
               this.sorted = true;
               var self = this;
               axios.post('/sort/affect', this.sorts).then(function (response) {
@@ -193,11 +205,13 @@
                 self.pagination.last_page = response.data.imports.last_page;
                 self.pagination.next_page_url = response.data.imports.next_page_url;
                 self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                self.loading = false;
               });
             },
 
             fetch(page) {
               if (this.sorted) {
+                this.loading = true;
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
                   self.data = response.data.imports.data;
@@ -206,9 +220,11 @@
                   self.pagination.last_page = response.data.imports.last_page;
                   self.pagination.next_page_url = response.data.imports.next_page_url;
                   self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                  self.loading = false;
                 });
               }
               else {
+                this.loading = true;
                 var self = this;
                 axios.get(page).then(function (response) {
                   self.data = response.data.imports.data;
@@ -217,6 +233,7 @@
                   self.pagination.last_page = response.data.imports.last_page;
                   self.pagination.next_page_url = response.data.imports.next_page_url;
                   self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                  self.loading = false;
                 });
               }
             }
@@ -236,6 +253,7 @@
         },
 
         mounted() {
+            this.loading = true;
             var self = this;
             axios.get('/receptions/getImported').then(function (response) {
               self.data = response.data.imports.data;
@@ -244,7 +262,12 @@
               self.pagination.last_page = response.data.imports.last_page;
               self.pagination.next_page_url = response.data.imports.next_page_url;
               self.pagination.prev_page_url = response.data.imports.prev_page_url;
+              self.loading = false;
             });
+        },
+
+        components: {
+          Loader
         }
     }
 </script>
