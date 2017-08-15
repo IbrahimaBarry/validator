@@ -3,7 +3,7 @@
 		</section>
 		<section class="section">
 		    <div class="container columns">
-		    	<aside class="menu column is-one-quarter">
+		    	<aside class="menu column is-2">
 				  <p class="menu-label">
 				    General
 				  </p>
@@ -31,12 +31,12 @@
 				      <ul>
 					      <li>
 					      	<router-link tag="a" to="/admin/ListUser" exact>
-					      		Liste utilisateur
+					      		Liste utilisateurs
 					      	</router-link>
 					      </li>
 					      <li>
 					      	<router-link tag="a" to="/admin/addUser">
-					      		Ajouter un utilisateur
+					      		Ajout utilisateur
 					      	</router-link>
 					      </li>
 				      </ul>

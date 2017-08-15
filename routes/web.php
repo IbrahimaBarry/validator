@@ -1,6 +1,5 @@
 <?php
 
-use App\Helpers\Sort;
 // Route::get('/test', function () {
 // 	return view('layouts.test');
 // });
@@ -28,6 +27,7 @@ Route::post('teams/store', 'TeamController@store');
 // DOCUMENT
 Route::get('/documents/index', 'DocumentController@index');
 Route::post('/documents/store', 'DocumentController@store');
+Route::post('/documents/update/{id}', 'DocumentController@update');
 
 // RECEPTION
 Route::get('/receptions/index', 'ReceptionController@index');
@@ -35,7 +35,6 @@ Route::post('/receptions/store', 'ReceptionController@store');
 
 // SCAN
 Route::get('/receptions/scan/{id}', 'ReceptionController@scan');
-
 
 // IMPORT
 Route::get('/receptions/import/{id}', 'ReceptionController@import');
@@ -51,7 +50,6 @@ Route::post('/receptions/clipping/{id}', 'ReceptionController@clipping');
 Route::get('/receptions/deleteClipping/{id}', 'ReceptionController@deleteClipping');
 
 // EXPORT
-
 Route::get('/receptions/export/{id}', 'ReceptionController@export');
 Route::get('/receptions/getClipped', 'ReceptionController@getClipped'); 
 

@@ -56,14 +56,6 @@
 				}
 			},
 
-			stop() {
-				if (this.state != 'stop') {
-					this.state = 'stop';
-					clearInterval(this.t);
-					this.$emit('endClipping', this.time);
-				}
-			},
-
 			reset() {
 				if (this.state != 'reset') {
 					this.state = 'reset';
@@ -71,6 +63,15 @@
 					this.time.mn = 0;
 					this.time.s = 0;
 					this.time.ms = 0;
+				}
+			},
+
+			stop() {
+				if (this.state != 'stop') {
+					this.state = 'stop';
+					clearInterval(this.t);
+					this.$emit('endClipping', this.time);
+					this.reset();
 				}
 			}
 		}

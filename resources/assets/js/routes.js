@@ -55,7 +55,7 @@ let routes = [
 			},
 			{
 				path: '/admin/teams',
-				component: require('./components/admin/Teams')
+				component: require('./components/admin/Planning')
 			},
 		]
 	}

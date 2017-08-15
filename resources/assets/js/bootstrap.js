@@ -8,12 +8,15 @@
  import axios from 'axios';
  import VueRouter from 'vue-router';
  import iziToast from 'izitoast';
+ import moment from 'moment';
 
 window.Vue = Vue;
 
 Vue.use(VueRouter);
 
 window.iziToast = iziToast;
+
+window.moment = moment;
 
 window.axios = axios;
 

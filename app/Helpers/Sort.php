@@ -14,6 +14,13 @@ class Sort
 
 	}
 
+	/**
+     * Display a listing of the resource sort.
+     *
+     * @param. string  $model
+     * @param. \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
 	public function index($model, $request)
 	{
 		$conditions = [];
@@ -33,7 +40,10 @@ class Sort
 	            return Reception::with(['user', 'document'])
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->whereDate('created_at', $request->date)->latest()->paginate();
             }
@@ -41,7 +51,10 @@ class Sort
             	return Reception::with(['user', 'document'])
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->latest()->paginate();
             }
@@ -53,7 +66,10 @@ class Sort
 	            return Reception::with('document')
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->where('scanned', true)->whereDate('date_scan', $request->date)->latest()->paginate();
             }
@@ -61,7 +77,10 @@ class Sort
             	return Reception::with('document')
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->where('scanned', true)->latest()->paginate();
             }
@@ -73,7 +92,10 @@ class Sort
 	            return Reception::with('document')
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->where('imported', true)->whereDate('date_import', $request->date)->latest()->paginate();
             }
@@ -81,7 +103,10 @@ class Sort
             	return Reception::with('document')
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->where('imported', true)->latest()->paginate();
             }
@@ -93,7 +118,10 @@ class Sort
 	            return Reception::with('document')
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->where('clipped', true)->whereDate('date_clipping', $request->date)->latest()->paginate();
             }
@@ -101,7 +129,10 @@ class Sort
             	return Reception::with('document')
 	                ->whereHas('document', function($query) use ($conditions) {
 	                    foreach ($conditions as $key => $value) {
-	                    	$query->where($key, $value);
+	                    	if ($key == 'name')
+	                    		$query->where($key, 'LIKE', '%'.$value.'%');
+	                    	else
+	                    		$query->where($key, $value);
 	                    }
 	                })->where('clipped', true)->latest()->paginate();
             }

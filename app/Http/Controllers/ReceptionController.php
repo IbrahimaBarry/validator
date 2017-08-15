@@ -5,13 +5,18 @@ namespace App\Http\Controllers;
 use App\Reception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Document;
 use Carbon\Carbon;
+use DateTimeZone;
 use App\User;
 use App\Helpers\Sort;
 
 class ReceptionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,12 +28,17 @@ class ReceptionController extends Controller
                     // ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
-    // SCAN
+    /**
+     * The resource SCAN.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function scan($id)
     {
         $reception = Reception::find($id);
 
-        $reception->date_scan = Carbon::now();
+        $reception->date_scan = Carbon::now(new DateTimeZone('Africa/Casablanca'));
         $reception->scanned = true;
         $reception->user_scan = Auth::user()->name;
 
@@ -37,17 +47,27 @@ class ReceptionController extends Controller
         return Reception::with(['user', 'document'])->latest()->paginate();
     }
 
-    // IMPORT
+    /**
+     * Display a listing of the resource SCANNED.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getScanned()
     {
         return Reception::with('document')->where('scanned', true)->latest()->paginate();
     }
 
+    /**
+     * The resource IMPORT.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function import($id)
     {
         $reception = Reception::find($id);
 
-        $reception->date_import = Carbon::now();
+        $reception->date_import = Carbon::now(new DateTimeZone('Africa/Casablanca'));
         $reception->imported = true;
         $reception->user_import = Auth::user()->name;
 
@@ -56,7 +76,11 @@ class ReceptionController extends Controller
         return Reception::with('document')->where('scanned', true)->latest()->paginate();
     }
 
-    // AFFECT
+     /**
+     * Display a listing of the resource IMPORTED.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getImported()
     {
         $agents = [];
@@ -71,6 +95,13 @@ class ReceptionController extends Controller
                                      'agents' => $agents];
     }
 
+     /**
+     * Affect a clipping agent to an IMPORTED document.
+     *
+     * @param  int  $reception_id
+     * @param  int  $agent_id
+     * @return \Illuminate\Http\Response
+     */
     public function addAgent($reception_id, $agent_id)
     {
         $reception = Reception::find($reception_id);
@@ -90,7 +121,11 @@ class ReceptionController extends Controller
                                      'agents' => $agents];
     }
 
-    // CLIPPING
+    /**
+     * Display a listing of the resource AFFECTED to the current user.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function agentClipping()
     {
         if (Auth::user()->role === 'agent')
@@ -101,12 +136,19 @@ class ReceptionController extends Controller
                         ->where([['imported', true], ['clipped', false]])->latest()->get();
     }
 
+    /**
+     * The resource CLIPPING.
+     *
+     * @param  Illuminate\Http\Request  $request;
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function clipping(Request $request ,$id)
     {
         $reception = Reception::find($id);
 
         $reception->user_clipping = Auth::user()->name;
-        $reception->date_clipping = Carbon::now();
+        $reception->date_clipping = Carbon::now(new DateTimeZone('Africa/Casablanca'));
         $reception->nbrArtTotal = $request->nbrArtTotal;
         $reception->time = $request->time;
         $reception->clipped = true;
@@ -121,13 +163,18 @@ class ReceptionController extends Controller
                         ->where([['imported', true], ['clipped', false]])->latest()->get();
     }
 
-    // EXPORT
+    /**
+     * The resource EXPORT.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function export($id)
     {
         $reception = Reception::find($id);
 
         $reception->user_export = Auth::user()->name;
-        $reception->date_export = Carbon::now();
+        $reception->date_export = Carbon::now(new DateTimeZone('Africa/Casablanca'));
         $reception->exported = true;
 
         $reception->save();
@@ -135,11 +182,22 @@ class ReceptionController extends Controller
         return Reception::with('document')->where('clipped', true)->latest()->paginate();
     }
 
+     /**
+     * Display a listing of the resource CLIPPED.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getClipped()
     {
         return Reception::with('document')->where('clipped', true)->latest()->paginate();
     }
 
+    /**
+     * Remove the specified resource CLIPPED from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function deleteClipping($id) {
         $reception = Reception::findOrFail($id);
 
@@ -158,18 +216,26 @@ class ReceptionController extends Controller
      */
     public function store(Request $request)
     {
-        $reception = new Reception();
-        $reception->document_id = $request['document_id'];
-        $reception->sourceDate = $request['sourceDate'];
-        $reception->nbrPage = $request['nbrPage'];
-        $reception->message = $request['message'];
-        $reception->user_id = Auth::user()->id;
-        $reception->save();
+        foreach ($request->request as $req) {
+            $reception = new Reception();
+            $reception->document_id = $req['document_id'];
+            $reception->sourceDate = $req['sourceDate'];
+            $reception->nbrPage = $req['nbrPage'];
+            $reception->message = $req['message'];
+            $reception->user_id = Auth::user()->id;
+            $reception->save();
+        }
 
-       // return Reception::with(['user', 'document'])
-       //              ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
+        return Reception::with(['user', 'document'])->latest()->paginate();
     }
 
+    /**
+     * Sort the listed resources.
+     *
+     * @param  string  $model
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function sort($model, Request $request)
     {
         if ($model == 'affect') {

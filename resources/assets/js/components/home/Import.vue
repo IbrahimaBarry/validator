@@ -6,7 +6,7 @@
         <div class="level-item">
           <div class="field has-addons">
             <p class="control">
-              <input class="input" type="text" placeholder="Rechercher..." v-model="sorts.search" @keyup.enter="sort">
+              <input class="input" type="text" placeholder="Rechercher..." v-model="sorts.search" @keyup="sort">
             </p>
             <div class="control">
               <div class="select">
@@ -54,7 +54,7 @@
       </div>
     </nav>
       
-      <table class="table is-striped">
+      <table class="table">
           <thead>
             <tr>
               <th><abbr title="type">Type du document</abbr></th>

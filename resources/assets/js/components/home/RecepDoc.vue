@@ -70,7 +70,7 @@
 		        <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
 		      </div>
 		    </nav>
-	      	<table class="table is-striped">
+	      	<table class="table">
 		        <thead>
 		          <tr>
 		          	<th><abbr>#</abbr></th>
@@ -108,7 +108,7 @@
 		    </div>
 
 		    <!-- Step 2 -->
-	      	<table v-show="step == 2" id="table" class="table is-striped">
+	      	<table v-show="step == 2" id="table" class="table">
 		        <thead>
 		          <tr>
 		            <th><abbr title="type">Type</abbr></th>
@@ -193,10 +193,8 @@
 
 			addReception() {
 				if (this.receptions.length > 0) {
-					this.receptions.forEach(function(el) {
-						axios.post('/receptions/store', el);
-					});
-					this.$emit('documentRecepted');
+						axios.post('/receptions/store', this.receptions)
+							.then(response => this.$emit('documentRecepted', response.data));
 				}
         	},
 

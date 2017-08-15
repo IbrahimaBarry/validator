@@ -17,15 +17,6 @@ class DocumentController extends Controller
         return Document::latest()->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('document.create');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,37 +32,27 @@ class DocumentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Document  $document
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Document $document)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Document  $document
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Document $document)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Document  $document
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Document $document)
+    public function update(Request $request, $id)
     {
-        //
+        $document = Document::find($id);
+        $document->name = $request->name;
+        $document->source = $request->source;
+        $document->sourceName = $request->sourceName;
+        $document->location = $request->location;
+        $document->type = $request->type;
+        $document->version = $request->version;
+        $document->frequence = $request->frequence;
+        $document->lang = $request->lang;
+
+        $document->save();
+
+        return Document::latest()->get();
     }
 
     /**

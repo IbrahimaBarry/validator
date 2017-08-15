@@ -32,7 +32,7 @@
       </div>
     </nav>
     
-    <table class="table is-striped">
+    <table class="table">
         <thead>
           <tr>
             <th><abbr title="type">Type</abbr></th>
@@ -43,6 +43,7 @@
             <th><abbr title="version">Version</abbr></th>
             <th><abbr title="frequence">Fréquence</abbr></th>
             <th><abbr title="emplacement">Emplacement</abbr></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -55,16 +56,39 @@
             <td>{{ document.version }}</td>
             <td>{{ document.frequence }}</td>
             <td>{{ document.location }}</td>
+            <td>
+              <a class="" @click.prevent="showUpdateDoc(document)">
+                <span class="icon">
+                  <i class="fa fa-pencil"></i>
+                </span>
+              </a>
+            </td>
+            <!-- <td><a class="delete is-medium danger" @click.prevent="showDelete = true"></a></td> -->
           </tr>
         </tbody>
       </table>
 
+      <!-- DELETE -->
+      <!-- <div class="modal is-active" v-if="showDelete">
+        <div class="modal-background"></div>
+        <div class="modal-content box has-text-centered">
+          <span class="icon is-large">
+            <i class="fa fa-warning"></i>
+          </span>
+          <h4 class="title is-4">Êtes vous sûr de vouloir supprimer cet objet?</h4>
+          <a class="button is-small is-primary" @click.prevent="deleteDocument(detail.id)">OUI</a>
+          <a class="button is-small" @click.pervent="showDelete = false">NON</a>
+        </div>
+      </div> -->
+
+    <UpdateDoc :initialDocument="updateDoc" v-if="showUpdate" @hideUpdateDoc="showUpdate = false" @documentUpdated="updateDocuments($event)"></UpdateDoc>
     <AddDoc v-if="showAddDoc" @hideAddDoc="showAddDoc = false" @documentAdded="updateDocuments($event)"></AddDoc>
   </div>
 </template>
 
 <script>
     import AddDoc from './AddDoc';
+    import UpdateDoc from './UpdateDoc';
 
     export default {
         beforeRouteEnter (to, from, next) {
@@ -82,15 +106,22 @@
                 filter: 'all',
                 hoverId: 0,
                 showAddDoc: false,
-                showRecepDoc: false
+                showUpdate: false,
+                // showDelete: false,
+                updateDoc: {}
             }
         },
 
         methods: {
             updateDocuments(event) {
               this.showAddDoc = false;
-              this.showRecepDoc = false;
+              this.showUpdate = false;
               this.documents = event;
+            },
+
+            showUpdateDoc(document) {
+              this.updateDoc = document;
+              this.showUpdate = true;
             }
         },
 
@@ -118,11 +149,19 @@
         },
 
         components: {
-            AddDoc
+            AddDoc,
+            UpdateDoc
         }
     }
 </script>
 
 <style scoped>
-
+  /*.danger {
+    background: red;
+  }
+  .fa-warning {
+    padding: 14px;
+    color: hsl(48, 100%, 67%);
+    margin-bottom: 20px;
+  }*/
 </style>
