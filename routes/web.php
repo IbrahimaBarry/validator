@@ -19,6 +19,7 @@ Route::get('/user', 'HomeController@index');
 //  USER
 Route::get('/users/all', 'UserController@index');
 Route::post('/user/store', 'UserController@store');
+Route::get('/users/destroy/{id}', 'UserController@destroy');
 
 // TEAM
 Route::get('/teams/all', 'TeamController@index');

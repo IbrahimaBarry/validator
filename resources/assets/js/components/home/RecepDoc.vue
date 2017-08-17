@@ -73,7 +73,14 @@
 	      	<table class="table">
 		        <thead>
 		          <tr>
-		          	<th><abbr>#</abbr></th>
+		          	<th>
+		          		<div class="field">
+						  <p class="control checkbox">
+					      	<input type="checkbox" id="all" v-model="selectAll">
+						    <label for="all"></label>
+						  </p>
+						</div>
+		          	</th>
 		            <th><abbr title="type">Type</abbr></th>
 		            <th><abbr title="nom">Nom</abbr></th>
 		            <th><abbr title="source">Source</abbr></th>
@@ -158,6 +165,12 @@
 		        </tbody>
 		    </table>
 
+		    <!-- Step 3 -->
+		    <p v-show="step == 3" class="subtitle is-4 has-text-centered">
+		    	Clickez sur terminer pour enregistrer les receptions <br><br>
+		    	Revenez en arrière pour modifier
+		    </p>
+
 	    </section>
 	    <footer class="modal-card-foot">
 	      <a v-if="step != 1" class="button" @click.prevent="back"><i class="fa fa-angle-double-left"></i></a>
@@ -194,7 +207,7 @@
 			addReception() {
 				if (this.receptions.length > 0) {
 						axios.post('/receptions/store', this.receptions)
-							.then(response => this.$emit('documentRecepted', response.data));
+							.then(response => this.$emit('documentRecepted'));
 				}
         	},
 
@@ -228,6 +241,22 @@
 		},
 
 		computed: {
+			selectAll: {
+				get() {
+					return this.sortedDocuments ? this.selected.length == this.sortedDocuments.length : false;
+				},
+				set(value) {
+					if (value) {
+						var selected = [];
+						this.sortedDocuments.forEach(function (el) {
+							selected.push(el);
+						});
+					}
+
+					this.selected = selected;
+				}
+			},
+
 			filteredDocuments() {
                 if (this.filter == 'all')
                     return this.documents;

@@ -57,7 +57,7 @@
             <td>{{ document.frequence }}</td>
             <td>{{ document.location }}</td>
             <td>
-              <a class="" @click.prevent="showUpdateDoc(document)">
+              <a @click.prevent="showUpdateDoc(document)">
                 <span class="icon">
                   <i class="fa fa-pencil"></i>
                 </span>

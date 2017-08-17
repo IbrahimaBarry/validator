@@ -332,7 +332,7 @@ import Loader from '../Loader';
 
 <style scoped>
   .danger {
-    background: red;
+    background: hsl(348, 100%, 61%);
   }
 
   .fa-warning {

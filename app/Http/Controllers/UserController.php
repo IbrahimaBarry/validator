@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with('permissions')->latest()->paginate(10);
+        return User::with('permissions')->latest()->paginate();
     }
 
     /**
@@ -36,10 +36,9 @@ class UserController extends Controller
      */
     public function store(Request $request, RegisterController $register)
     {
-        $register->create($request);
+        $user = $register->create($request);
 
-        $user = User::find(count(User::all()));
-        $user->permissions()->attach($request['permissions']);
+        $user->permissions()->attach($request->permissions);
 
         return ['success'];
     }
@@ -84,8 +83,12 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $user = User::find($id);
+
+        $user->delete();
+
+        return ['success'];
     }
 }

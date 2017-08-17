@@ -32140,7 +32140,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -32300,14 +32300,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
-    updateDocuments: function updateDocuments(event) {
-      this.documents = event.data;
-      this.pagination.current_page = event.current_page;
-      this.pagination.last_page = event.last_page;
-      this.pagination.next_page_url = event.next_page_url;
-      this.pagination.prev_page_url = event.prev_page_url;
-
-      this.showRecepDoc = false;
+    updateDocuments: function updateDocuments() {
+      this.loading = true;
+      var self = this;
+      axios.get('/receptions/index').then(function (response) {
+        self.documents = response.data.data;
+        self.pagination.current_page = response.data.current_page;
+        self.pagination.last_page = response.data.last_page;
+        self.pagination.next_page_url = response.data.next_page_url;
+        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.showRecepDoc = false;
+        self.loading = false;
+      });
     },
     reload: function reload() {
       this.loading = true;
@@ -32656,104 +32660,133 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      documents: [],
-      selected: [],
-      step: 1,
-      filter: 'all',
-      search: '',
-      type: 'Type',
-      lang: 'Langue',
-      version: 'Version',
+	data: function data() {
+		return {
+			documents: [],
+			selected: [],
+			step: 1,
+			filter: 'all',
+			search: '',
+			type: 'Type',
+			lang: 'Langue',
+			version: 'Version',
 
-      today: ''
-    };
-  },
+			today: ''
+		};
+	},
 
 
-  methods: {
-    hideModal: function hideModal() {
-      this.$emit('hideRecepDoc');
-    },
-    addReception: function addReception() {
-      var _this = this;
+	methods: {
+		hideModal: function hideModal() {
+			this.$emit('hideRecepDoc');
+		},
+		addReception: function addReception() {
+			var _this = this;
 
-      if (this.receptions.length > 0) {
-        axios.post('/receptions/store', this.receptions).then(function (response) {
-          return _this.$emit('documentRecepted', response.data);
-        });
-      }
-    },
-    next: function next() {
-      if (this.step < 3) this.step += 1;
-    },
-    back: function back() {
-      if (this.step > 1) this.step -= 1;
-    },
-    update: function update(id, event) {
-      this.receptions.forEach(function (el) {
-        if (el.document_id == id) {
-          if (event.target.name == 'sourceDate') el.sourceDate = event.target.value;else if (event.target.name == 'nbrPage') el.nbrPage = event.target.value;else el.message = event.target.value;
-        }
-      });
-    },
-    reload: function reload() {
-      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-    }
-  },
+			if (this.receptions.length > 0) {
+				axios.post('/receptions/store', this.receptions).then(function (response) {
+					return _this.$emit('documentRecepted');
+				});
+			}
+		},
+		next: function next() {
+			if (this.step < 3) this.step += 1;
+		},
+		back: function back() {
+			if (this.step > 1) this.step -= 1;
+		},
+		update: function update(id, event) {
+			this.receptions.forEach(function (el) {
+				if (el.document_id == id) {
+					if (event.target.name == 'sourceDate') el.sourceDate = event.target.value;else if (event.target.name == 'nbrPage') el.nbrPage = event.target.value;else el.message = event.target.value;
+				}
+			});
+		},
+		reload: function reload() {
+			this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
+		}
+	},
 
-  computed: {
-    filteredDocuments: function filteredDocuments() {
-      if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
-        return document.frequence == 'Quotidien';
-      });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
-        return document.frequence == 'Hebdomadaire';
-      });else return this.documents.filter(function (document) {
-        return document.frequence == 'Mensuel';
-      });
-    },
-    sortedDocuments: function sortedDocuments() {
-      var _this2 = this;
+	computed: {
+		selectAll: {
+			get: function get() {
+				return this.sortedDocuments ? this.selected.length == this.sortedDocuments.length : false;
+			},
+			set: function set(value) {
+				if (value) {
+					var selected = [];
+					this.sortedDocuments.forEach(function (el) {
+						selected.push(el);
+					});
+				}
 
-      var temp;
-      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.name == _this2.search;
-      });
+				this.selected = selected;
+			}
+		},
 
-      if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.type == _this2.type;
-      });
-      if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.lang == _this2.lang;
-      });
-      if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.version == _this2.version;
-      });
+		filteredDocuments: function filteredDocuments() {
+			if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
+				return document.frequence == 'Quotidien';
+			});else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
+				return document.frequence == 'Hebdomadaire';
+			});else return this.documents.filter(function (document) {
+				return document.frequence == 'Mensuel';
+			});
+		},
+		sortedDocuments: function sortedDocuments() {
+			var _this2 = this;
 
-      return temp;
-    },
-    receptions: function receptions() {
-      var tab = [];
-      this.selected.forEach(function (el) {
-        tab.push({ sourceDate: today(),
-          nbrPage: 0,
-          document_id: el.id,
-          message: '' });
-      });
-      return tab;
-    }
-  },
+			var temp;
+			if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+				return document.name == _this2.search;
+			});
 
-  mounted: function mounted() {
-    var self = this;
-    axios.get('documents/index').then(function (response) {
-      self.documents = response.data;
-      self.today = today();
-    });
-  }
+			if (this.type != 'Type') temp = temp.filter(function (document) {
+				return document.type == _this2.type;
+			});
+			if (this.lang != 'Langue') temp = temp.filter(function (document) {
+				return document.lang == _this2.lang;
+			});
+			if (this.version != 'Version') temp = temp.filter(function (document) {
+				return document.version == _this2.version;
+			});
+
+			return temp;
+		},
+		receptions: function receptions() {
+			var tab = [];
+			this.selected.forEach(function (el) {
+				tab.push({ sourceDate: today(),
+					nbrPage: 0,
+					document_id: el.id,
+					message: '' });
+			});
+			return tab;
+		}
+	},
+
+	mounted: function mounted() {
+		var self = this;
+		axios.get('documents/index').then(function (response) {
+			self.documents = response.data;
+			self.today = today();
+		});
+	}
 });
 
 /***/ }),
@@ -32992,7 +33025,47 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), _c('table', {
     staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(document) {
+  }, [_c('thead', [_c('tr', [_c('th', [_c('div', {
+    staticClass: "field"
+  }, [_c('p', {
+    staticClass: "control checkbox"
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.selectAll),
+      expression: "selectAll"
+    }],
+    attrs: {
+      "type": "checkbox",
+      "id": "all"
+    },
+    domProps: {
+      "checked": Array.isArray(_vm.selectAll) ? _vm._i(_vm.selectAll, null) > -1 : (_vm.selectAll)
+    },
+    on: {
+      "__c": function($event) {
+        var $$a = _vm.selectAll,
+          $$el = $event.target,
+          $$c = $$el.checked ? (true) : (false);
+        if (Array.isArray($$a)) {
+          var $$v = null,
+            $$i = _vm._i($$a, $$v);
+          if ($$c) {
+            $$i < 0 && (_vm.selectAll = $$a.concat($$v))
+          } else {
+            $$i > -1 && (_vm.selectAll = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+          }
+        } else {
+          _vm.selectAll = $$c
+        }
+      }
+    }
+  }), _vm._v(" "), _c('label', {
+    attrs: {
+      "for": "all"
+    }
+  })])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._m(5), _vm._v(" "), _vm._m(6), _vm._v(" "), _vm._m(7)])]), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(document) {
     return _c('tr', [_c('td', [_c('div', {
       staticClass: "field"
     }, [_c('p', {
@@ -33046,7 +33119,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "table"
     }
-  }, [_vm._m(1), _vm._v(" "), _c('tbody', _vm._l((_vm.selected), function(document) {
+  }, [_vm._m(8), _vm._v(" "), _c('tbody', _vm._l((_vm.selected), function(document) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -33115,7 +33188,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "value": "Perte document"
       }
     }, [_vm._v("Perte document")]), _vm._v(" "), _c('option', [_vm._v("Autre")])])])])])])])
-  }))])]), _vm._v(" "), _c('footer', {
+  }))]), _vm._v(" "), _c('p', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.step == 3),
+      expression: "step == 3"
+    }],
+    staticClass: "subtitle is-4 has-text-centered"
+  }, [_vm._v("\n\t    \tClickez sur terminer pour enregistrer les receptions "), _c('br'), _c('br'), _vm._v("\n\t    \tRevenez en arrière pour modifier\n\t    ")])]), _vm._v(" "), _c('footer', {
     staticClass: "modal-card-foot"
   }, [(_vm.step != 1) ? _c('a', {
     staticClass: "button",
@@ -33152,39 +33233,53 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Annuler")])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_c('abbr', [_vm._v("#")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "type"
     }
-  }, [_vm._v("Type")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  }, [_vm._v("Type")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "nom"
     }
-  }, [_vm._v("Nom")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  }, [_vm._v("Nom")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "source"
     }
-  }, [_vm._v("Source")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  }, [_vm._v("Source")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "source name"
     }
-  }, [_vm._v("Source name")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  }, [_vm._v("Source name")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "langue"
     }
-  }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  }, [_vm._v("Langue")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "version"
     }
-  }, [_vm._v("Version")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  }, [_vm._v("Version")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "frequence"
     }
-  }, [_vm._v("Fréquence")])]), _vm._v(" "), _c('th', [_c('abbr', {
+  }, [_vm._v("Fréquence")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('th', [_c('abbr', {
     attrs: {
       "title": "emplacement"
     }
-  }, [_vm._v("Emplacement")])])])])
+  }, [_vm._v("Emplacement")])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -33653,9 +33748,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "hideRecepDoc": function($event) {
         _vm.showRecepDoc = false
       },
-      "documentRecepted": function($event) {
-        _vm.updateDocuments($event)
-      }
+      "documentRecepted": _vm.updateDocuments
     }
   }) : _vm._e()], 1)
 },staticRenderFns: []}
@@ -36822,7 +36915,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.danger[data-v-7c12b59a] {\n  background: red;\n}\n.fa-warning[data-v-7c12b59a] {\n  padding: 14px;\n  color: hsl(48, 100%, 67%);\n  margin-bottom: 20px;\n}\n", ""]);
+exports.push([module.i, "\n.danger[data-v-7c12b59a] {\n  background: hsl(348, 100%, 61%);\n}\n.fa-warning[data-v-7c12b59a] {\n  padding: 14px;\n  color: hsl(48, 100%, 67%);\n  margin-bottom: 20px;\n}\n", ""]);
 
 // exports
 
@@ -38689,7 +38782,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-card-head"
   }, [_c('p', {
     staticClass: "modal-card-title"
-  }, [_vm._v("Ajouter un document")]), _vm._v(" "), _c('button', {
+  }, [_vm._v("Modifier document")]), _vm._v(" "), _c('button', {
     staticClass: "delete",
     on: {
       "click": _vm.hideModal
@@ -39892,7 +39985,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.pagination a[data-v-4750d3a3] {\n\tcolor: hsl(217, 71%, 53%)\n}\n.pagination-link.is-current[data-v-4750d3a3] {\n    background-color: hsl(217, 71%, 53%);\n    border-color: hsl(217, 71%, 53%);\n    color: hsl(0, 0%, 100%)\n}\n", ""]);
+exports.push([module.i, "\n.pagination a[data-v-4750d3a3] {\n\t\tcolor: hsl(217, 71%, 53%)\n}\n.pagination-link.is-current[data-v-4750d3a3] {\n\t    background-color: hsl(217, 71%, 53%);\n\t    border-color: hsl(217, 71%, 53%);\n\t    color: hsl(0, 0%, 100%)\n}\n.danger[data-v-4750d3a3] {\n    background: hsl(348, 100%, 61%);\n}\n.fa-warning[data-v-4750d3a3] {\n    padding: 14px;\n    color: hsl(48, 100%, 67%);\n    margin-bottom: 20px;\n}\n", ""]);
 
 // exports
 
@@ -39903,6 +39996,31 @@ exports.push([module.i, "\n.pagination a[data-v-4750d3a3] {\n\tcolor: hsl(217, 7
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -39958,7 +40076,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				last_page: '',
 				next_page_url: '',
 				prev_page_url: ''
-			}
+			},
+
+			showDelete: false,
+			showUpdateUser: false,
+			hoverId: 0,
+			notif: ''
 		};
 	},
 
@@ -39972,6 +40095,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				self.pagination.last_page = response.data.last_page;
 				self.pagination.next_page_url = response.data.next_page_url;
 				self.pagination.prev_page_url = response.data.prev_page_url;
+			});
+		},
+		deleteUser: function deleteUser() {
+			var _this = this;
+
+			var self = this;
+			axios.get('/users/destroy/' + this.hoverId).then(function (response) {
+				_this.notif = response.data;
+				return axios.get('/users/all');
+			}).then(function (response) {
+				self.users = response.data.data;
+				self.pagination.current_page = response.data.current_page;
+				self.pagination.last_page = response.data.last_page;
+				self.pagination.next_page_url = response.data.next_page_url;
+				self.pagination.prev_page_url = response.data.prev_page_url;
+				self.showDelete = false;
 			});
 		}
 	},
@@ -39993,12 +40132,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('table', {
+  return _c('div', [(_vm.notif == 'success') ? _c('div', {
+    staticClass: "notification is-success"
+  }, [_c('button', {
+    staticClass: "delete",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.notif = ''
+      }
+    }
+  }), _vm._v("\n\t\t\tUtilisateur supprimé\n\t\t")]) : _vm._e(), _vm._v(" "), _c('table', {
     staticClass: "table"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.users), function(user) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(user.email))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(user.role))]), _vm._v(" "), _c('td', _vm._l((user.permissions), function(permission) {
-      return (user.role == 'agent') ? _c('span', [_vm._v("\n\t        \t\t" + _vm._s(permission.name) + ", \n\t        \t")]) : _vm._e()
-    })), _vm._v(" "), _c('td')])
+    return _c('tr', {
+      on: {
+        "mouseover": function($event) {
+          $event.preventDefault();
+          _vm.hoverId = user.id
+        }
+      }
+    }, [_c('td', [_vm._v(_vm._s(user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(user.email))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(user.role))]), _vm._v(" "), _c('td', _vm._l((user.permissions), function(permission) {
+      return (user.role == 'agent') ? _c('span', [_vm._v("\n\t\t        \t\t" + _vm._s(permission.name) + ", \n\t\t        \t")]) : _vm._e()
+    })), _vm._v(" "), _c('td', [_c('a', {
+      staticClass: "delete danger",
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.showDelete = true
+        }
+      }
+    })])])
   }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
     staticClass: "pagination"
   }, [_c('a', {
@@ -40032,7 +40196,31 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "pagination-link is-current"
   }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('li', [_c('a', {
     staticClass: "pagination-link"
-  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()])
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e(), _vm._v(" "), (_vm.showDelete) ? _c('div', {
+    staticClass: "modal is-active"
+  }, [_c('div', {
+    staticClass: "modal-background"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "modal-content box has-text-centered"
+  }, [_vm._m(2), _vm._v(" "), _c('h4', {
+    staticClass: "title is-4"
+  }, [_vm._v("Êtes vous sûr de vouloir supprimer cet utilisateur?")]), _vm._v(" "), _c('a', {
+    staticClass: "button is-small is-primary",
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.deleteUser($event)
+      }
+    }
+  }, [_vm._v("OUI")]), _vm._v(" "), _c('a', {
+    staticClass: "button is-small",
+    on: {
+      "click": function($event) {
+        if (!('button' in $event) && _vm._k($event.keyCode, "pervent")) { return null; }
+        _vm.showDelete = false
+      }
+    }
+  }, [_vm._v("NON")])])]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
     attrs: {
@@ -40050,15 +40238,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "title": "type"
     }
-  }, [_vm._v("Permissions")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "version"
-    }
-  }, [_vm._v("Team")])])])])
+  }, [_vm._v("Permissions")])]), _vm._v(" "), _c('th', [_c('abbr')])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', [_c('span', {
     staticClass: "pagination-ellipsis"
   }, [_vm._v("sur")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon is-large"
+  }, [_c('i', {
+    staticClass: "fa fa-warning"
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {

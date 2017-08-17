@@ -101,7 +101,7 @@
       </nav>
     </div>
 
-    <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="updateDocuments($event)"></RecepDoc>
+    <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="updateDocuments"></RecepDoc>
   </div>
 </template>
 
@@ -146,14 +146,18 @@ import Loader from '../Loader';
         },
 
         methods: {
-            updateDocuments(event) {
-              this.documents = event.data;
-              this.pagination.current_page = event.current_page;
-              this.pagination.last_page = event.last_page;
-              this.pagination.next_page_url = event.next_page_url;
-              this.pagination.prev_page_url = event.prev_page_url;
-
-              this.showRecepDoc = false;
+            updateDocuments() {
+              this.loading = true;
+              var self = this;
+              axios.get('/receptions/index').then(function(response) {
+                self.documents = response.data.data;
+                self.pagination.current_page = response.data.current_page;
+                self.pagination.last_page = response.data.last_page;
+                self.pagination.next_page_url = response.data.next_page_url;
+                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.showRecepDoc = false;
+                self.loading = false;
+              });
             },
 
             reload() {

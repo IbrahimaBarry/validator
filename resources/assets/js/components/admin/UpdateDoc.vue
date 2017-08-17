@@ -3,7 +3,7 @@
 	  <div class="modal-background"></div>
 	  <div class="modal-card">
 	    <header class="modal-card-head">
-	      <p class="modal-card-title">Ajouter un document</p>
+	      <p class="modal-card-title">Modifier document</p>
 	      <button class="delete" @click="hideModal"></button>
 	    </header>
 	    <section class="modal-card-body">
