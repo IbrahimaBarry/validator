@@ -13,6 +13,7 @@ class PermissionsTableSeeder extends Seeder
     {
         DB::table('permissions')->insert(['name' => 'reception']);
         DB::table('permissions')->insert(['name' => 'scan']);
+        DB::table('permissions')->insert(['name' => 'ocr']);
         DB::table('permissions')->insert(['name' => 'import']);
         DB::table('permissions')->insert(['name' => 'clipping']);
         DB::table('permissions')->insert(['name' => 'export']);

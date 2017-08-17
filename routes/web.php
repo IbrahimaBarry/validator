@@ -36,9 +36,13 @@ Route::post('/receptions/store', 'ReceptionController@store');
 // SCAN
 Route::get('/receptions/scan/{id}', 'ReceptionController@scan');
 
+// OCR
+Route::get('/receptions/getScanned', 'ReceptionController@getScanned');
+Route::get('/receptions/ocr/{id}', 'ReceptionController@ocr');
+
 // IMPORT
 Route::get('/receptions/import/{id}', 'ReceptionController@import');
-Route::get('/receptions/getScanned', 'ReceptionController@getScanned');
+Route::get('/receptions/getOcr', 'ReceptionController@getOcr');
 
 // AFFECT
 Route::get('/receptions/getImported', 'ReceptionController@getImported');

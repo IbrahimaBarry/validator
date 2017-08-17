@@ -14,6 +14,10 @@ let routes = [
 				path: '/documents/scan',
 				component: require('./components/home/Scan')
 			},
+			{
+				path: '/documents/ocr',
+				component: require('./components/home/Ocr')
+			},
 
 			{
 				path: '/documents/import',

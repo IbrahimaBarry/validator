@@ -1,4 +1,3 @@
-
 import './bootstrap';
 import router from './routes';
 import Admin from './components/Admin';

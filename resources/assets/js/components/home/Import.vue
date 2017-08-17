@@ -229,7 +229,7 @@ import Loader from '../Loader';
         mounted() {
             this.loading = true;
             var self = this;
-            axios.get('/receptions/getScanned').then(function (response) {
+            axios.get('/receptions/getOcr').then(function (response) {
               self.scans = response.data.data;
               self.pagination.current_page = response.data.current_page;
               self.pagination.last_page = response.data.last_page;

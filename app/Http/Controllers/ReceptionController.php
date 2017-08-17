@@ -17,6 +17,7 @@ class ReceptionController extends Controller
         $this->middleware('auth');
     }
 
+
     /**
      * Display a listing of the resource.
      *
@@ -27,6 +28,7 @@ class ReceptionController extends Controller
         return Reception::with(['user', 'document'])->latest()->paginate();
                     // ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
+
 
     /**
      * The resource SCAN.
@@ -47,6 +49,7 @@ class ReceptionController extends Controller
         return Reception::with(['user', 'document'])->latest()->paginate();
     }
 
+
     /**
      * Display a listing of the resource SCANNED.
      *
@@ -55,6 +58,36 @@ class ReceptionController extends Controller
     public function getScanned()
     {
         return Reception::with('document')->where('scanned', true)->latest()->paginate();
+    }
+
+    /**
+     * The resource ORC.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function ocr($id)
+    {
+        $reception = Reception::find($id);
+
+        $reception->date_ocr = Carbon::now(new DateTimeZone('Africa/Casablanca'));
+        $reception->ocr = true;
+        $reception->user_ocr = Auth::user()->name;
+
+        $reception->save();
+
+        return Reception::with('document')->where('scanned', true)->latest()->paginate();
+    } 
+
+
+    /**
+     * Display a listing of the resource OCR.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getOcr()
+    {
+        return Reception::with('document')->where('ocr', true)->latest()->paginate();
     }
 
     /**
@@ -73,8 +106,9 @@ class ReceptionController extends Controller
 
         $reception->save();
 
-        return Reception::with('document')->where('scanned', true)->latest()->paginate();
+        return Reception::with('document')->where('ocr', true)->latest()->paginate();
     }
+
 
      /**
      * Display a listing of the resource IMPORTED.
@@ -121,6 +155,7 @@ class ReceptionController extends Controller
                                      'agents' => $agents];
     }
 
+
     /**
      * Display a listing of the resource AFFECTED to the current user.
      *
@@ -162,6 +197,7 @@ class ReceptionController extends Controller
             return Reception::with('document')
                         ->where([['imported', true], ['clipped', false]])->latest()->get();
     }
+
 
     /**
      * The resource EXPORT.
@@ -228,6 +264,7 @@ class ReceptionController extends Controller
 
         return Reception::with(['user', 'document'])->latest()->paginate();
     }
+
 
     /**
      * Sort the listed resources.
