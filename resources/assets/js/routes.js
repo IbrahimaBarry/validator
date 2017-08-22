@@ -46,6 +46,10 @@ let routes = [
 		component: require('./components/Admin'),
 		children: [
 			{
+				path: '/admin/dashboard',
+				component: require('./components/admin/Dashboard')
+			},
+			{
 				path: '/admin/documents',
 				component: require('./components/admin/Documents')
 			},
@@ -58,10 +62,20 @@ let routes = [
 				component: require('./components/admin/listUser')
 			},
 			{
+				path: '/admin/user/:id(\\d+)',
+				component: require('./components/admin/Profile'),
+				name: 'profile'
+			},
+			{
 				path: '/admin/teams',
 				component: require('./components/admin/Planning')
 			},
 		]
+	},
+
+	{
+		path: '*',
+		redirect: '/'
 	}
 
 	

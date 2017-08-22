@@ -8,12 +8,16 @@
 				    General
 				  </p>
 				  <ul class="menu-list">
-				    <li><a>Tableau de bord</a></li>
+				  	<li>
+				    	<router-link tag="a" to="/admin/dashboard" exact>
+				      		Tableau de bord
+				      	</router-link>
+					</li>
 				    <li>
 				    	<router-link tag="a" to="/admin/documents" exact>
 				      		Documents
 				      	</router-link>
-					  </li>
+					</li>
 				  </ul>
 				  <p class="menu-label">
 				    Administration

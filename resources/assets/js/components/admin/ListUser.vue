@@ -17,7 +17,7 @@
 		    </thead>
 		    <tbody>
 		      <tr v-for="user in users" @mouseover.prevent="hoverId = user.id">
-		        <td>{{ user.name }}</td>
+		        <td><router-link :to="{name: 'profile', params: {id: user.id}}">{{ user.name }}</router-link></td>
 		        <td>{{ user.email }}</td>
 		        <td>{{ user.role }}</td>
 		        <td>

@@ -20,6 +20,7 @@ Route::get('/user', 'HomeController@index');
 Route::get('/users/all', 'UserController@index');
 Route::post('/user/store', 'UserController@store');
 Route::get('/users/destroy/{id}', 'UserController@destroy');
+Route::get('/user/{id}', 'UserController@profile');
 
 // TEAM
 Route::get('/teams/all', 'TeamController@index');
@@ -33,6 +34,7 @@ Route::post('/documents/update/{id}', 'DocumentController@update');
 // RECEPTION
 Route::get('/receptions/index', 'ReceptionController@index');
 Route::post('/receptions/store', 'ReceptionController@store');
+Route::get('/receptions/all', 'ReceptionController@all');
 
 // SCAN
 Route::get('/receptions/scan/{id}', 'ReceptionController@scan');

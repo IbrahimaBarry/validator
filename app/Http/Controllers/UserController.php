@@ -19,13 +19,17 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the user profile.
      *
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function profile($id)
     {
-        //
+        $user = User::find($id);
+        $user->permissions();
+
+        return ['user' => $user, 'documents' => $user->receptions()];
     }
 
     /**
