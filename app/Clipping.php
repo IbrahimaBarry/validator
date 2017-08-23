@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Reception extends Model
+class Clipping extends Model
 {
-	protected $fillable = ['user_id', 'document_id', 'message'];
+    protected $fillable = ['user_id', 'document_id', 'confirmed', 'admin', 'reception_id'];
 
     public function user()
     {
@@ -18,8 +18,8 @@ class Reception extends Model
     	return $this->belongsTo(Document::class);
     }
 
-    public function scan()
+    public function reception()
     {
-    	return $this->hasOne(Scan::class);
+        return $this->belongsTo(Reception::class);
     }
 }

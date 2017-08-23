@@ -35628,9 +35628,6 @@ var routes = [{
 		path: '/documents/scan',
 		component: __webpack_require__(283)
 	}, {
-		path: '/documents/ocr',
-		component: __webpack_require__(288)
-	}, {
 		path: '/documents/import',
 		component: __webpack_require__(293)
 	}, {
@@ -35839,9 +35836,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -35868,11 +35862,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "to": "/documents/scan"
     }
   }, [_c('a', [_vm._v("Scanne")])]), _vm._v(" "), _c('router-link', {
-    attrs: {
-      "tag": "li",
-      "to": "/documents/ocr"
-    }
-  }, [_c('a', [_vm._v("Validation OCR")])]), _vm._v(" "), _c('router-link', {
     attrs: {
       "tag": "li",
       "to": "/documents/import"
@@ -35989,7 +35978,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\ntd > input[data-v-1d5a844e]{\n  display: none\n}\n.edit > input[data-v-1d5a844e] {\n  display: initial;\n}\n", ""]);
 
 // exports
 
@@ -36004,6 +35993,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__RecepDoc___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__RecepDoc__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Loader__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Loader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Loader__);
+//
+//
+//
 //
 //
 //
@@ -36131,7 +36123,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         prev_page_url: ''
       },
       sorted: false,
-
       filter: 'all',
       hoverId: 0,
       showRecepDoc: false,
@@ -36142,22 +36133,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         version: 'Version',
         date: ''
       },
-
-      loading: false
+      loading: false,
+      editing: null
     };
   },
 
 
   methods: {
+    paginate: function paginate(pages) {
+      this.pagination.current_page = pages.current_page;
+      this.pagination.last_page = pages.last_page;
+      this.pagination.next_page_url = pages.next_page_url;
+      this.pagination.prev_page_url = pages.prev_page_url;
+    },
     updateDocuments: function updateDocuments() {
       this.loading = true;
       var self = this;
       axios.get('/receptions/index').then(function (response) {
         self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.showRecepDoc = false;
         self.loading = false;
       });
@@ -36169,10 +36163,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.get('/receptions/index').then(function (response) {
         self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -36182,10 +36173,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.post('/sort/reception', this.sorts).then(function (response) {
         self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -36195,10 +36183,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.post(page, this.sorts).then(function (response) {
           self.documents = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       } else {
@@ -36206,13 +36191,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.get(page).then(function (response) {
           self.documents = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       }
+    },
+    editDocument: function editDocument(val) {
+      this.editing = val;
+    },
+    endEdit: function endEdit(nbrPage) {
+      axios.get('/receptions/update/' + this.editing + '/' + nbrPage).then(this.editing = null);
     }
   },
 
@@ -36233,10 +36221,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     var self = this;
     axios.get('/receptions/index').then(function (response) {
       self.documents = response.data.data;
-      self.pagination.current_page = response.data.current_page;
-      self.pagination.last_page = response.data.last_page;
-      self.pagination.next_page_url = response.data.next_page_url;
-      self.pagination.prev_page_url = response.data.prev_page_url;
+      self.paginate(response.data);
       self.loading = false;
     });
   },
@@ -37517,35 +37502,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Reception")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
     staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "sourceDate"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "date"
-    }
-  }, [_vm._v("Date de réception")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "userName"
-    }
-  }, [_vm._v("Agent reception")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "userName"
-    }
-  }, [_vm._v("Cause du retard")])])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(document) {
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date de réception")]), _vm._v(" "), _c('th', [_vm._v("Agent reception")]), _vm._v(" "), _c('th', [_vm._v("Cause du retard")])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(document) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -37553,7 +37510,42 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.hoverId = document.id
         }
       }
-    }, [_c('td', [_vm._v(_vm._s(document.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.message))])])
+    }, [_c('td', [_vm._v(_vm._s(document.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.sourceDate))]), _vm._v(" "), _c('td', {
+      class: {
+        edit: document.id === _vm.editing
+      }
+    }, [(document.id != _vm.editing) ? _c('div', {
+      on: {
+        "dblclick": function($event) {
+          $event.preventDefault();
+          _vm.editDocument(document.id)
+        }
+      }
+    }, [_vm._v(_vm._s(document.nbrPage))]) : _c('input', {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: (document.nbrPage),
+        expression: "document.nbrPage"
+      }],
+      staticClass: "input",
+      attrs: {
+        "type": "numeric"
+      },
+      domProps: {
+        "value": (document.nbrPage)
+      },
+      on: {
+        "keyup": function($event) {
+          if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13)) { return null; }
+          _vm.endEdit(document.nbrPage)
+        },
+        "input": function($event) {
+          if ($event.target.composing) { return; }
+          document.nbrPage = $event.target.value
+        }
+      }
+    })]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(document.message))])])
   }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
     staticClass: "pagination"
   }, [_c('a', {
@@ -37688,7 +37680,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -37701,9 +37693,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Loader__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Loader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Loader__);
-//
-//
-//
 //
 //
 //
@@ -37846,15 +37835,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
+    paginate: function paginate(pages) {
+      this.pagination.current_page = pages.current_page;
+      this.pagination.last_page = pages.last_page;
+      this.pagination.next_page_url = pages.next_page_url;
+      this.pagination.prev_page_url = pages.prev_page_url;
+    },
     addScan: function addScan(id) {
       this.loading = true;
       var self = this;
-      axios.get('/receptions/scan/' + id).then(function (response) {
+      axios.get('/scan/store/' + id).then(function (response) {
         self.receptions = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -37865,10 +37857,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.get('/receptions/index').then(function (response) {
         self.receptions = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -37878,10 +37867,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.post('/sort/reception', this.sorts).then(function (response) {
         self.receptions = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -37891,10 +37877,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.post(page, this.sorts).then(function (response) {
           self.receptions = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       } else {
@@ -37902,10 +37885,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.get(page).then(function (response) {
           self.receptions = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       }
@@ -37927,12 +37907,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted: function mounted() {
     this.loading = true;
     var self = this;
-    axios.get('/receptions/index').then(function (response) {
+    axios.get('/scan/index').then(function (response) {
       self.receptions = response.data.data;
-      self.pagination.current_page = response.data.current_page;
-      self.pagination.last_page = response.data.last_page;
-      self.pagination.next_page_url = response.data.next_page_url;
-      self.pagination.prev_page_url = response.data.prev_page_url;
+      self.paginate(response.data);
       self.loading = false;
     });
   },
@@ -38180,40 +38157,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
     staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "sourceDate"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "date"
-    }
-  }, [_vm._v("Date de réception")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "userName"
-    }
-  }, [_vm._v("Agent reception")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "userName"
-    }
-  }, [_vm._v("Cause du retard")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  })])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(reception) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.message))]), _vm._v(" "), (reception.scanned == false) ? _c('td', [_c('a', {
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date de réception")]), _vm._v(" "), _c('th', [_vm._v("Agent reception")]), _vm._v(" "), _c('th', [_vm._v("Cause du retard")]), _vm._v(" "), _c('th')])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(reception) {
+    return _c('tr', [_c('td', [_vm._v(_vm._s(reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.user.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(reception.message))]), _vm._v(" "), _c('td', [_c('a', {
       staticClass: "button is-small is-info is-outlined",
       on: {
         "click": function($event) {
@@ -38221,11 +38166,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.addScan(reception.id)
         }
       }
-    }, [_vm._v("Valider le scanne")])]) : _c('td', [_c('span', {
-      staticClass: "icon"
-    }, [_c('i', {
-      staticClass: "fa fa-check success"
-    })])])])
+    }, [_vm._v("Démarrer le scanne")])])])
   }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
     staticClass: "pagination"
   }, [_c('a', {
@@ -38272,661 +38213,11 @@ if (false) {
 }
 
 /***/ }),
-/* 288 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(289)
-}
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(291),
-  /* template */
-  __webpack_require__(292),
-  /* styles */
-  injectStyle,
-  /* scopeId */
-  "data-v-1d77ea28",
-  /* moduleIdentifier (server only) */
-  null
-)
-Component.options.__file = "/Users/Barry/Laravel/validator/resources/assets/js/components/home/Ocr.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Ocr.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1d77ea28", Component.options)
-  } else {
-    hotAPI.reload("data-v-1d77ea28", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 289 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(290);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(3)("59987ff6", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1d77ea28\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Ocr.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1d77ea28\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Ocr.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 290 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 291 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Loader__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Loader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Loader__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-    axios.get('/user').then(function (response) {
-      if (response.data.import) next();else next({ path: from.path });
-    });
-  },
-  data: function data() {
-    return {
-      scans: [],
-      pagination: {
-        current_page: '',
-        last_page: '',
-        next_page_url: '',
-        prev_page_url: ''
-      },
-      sorted: false,
-
-      filter: 'all',
-      sorts: {
-        search: '',
-        type: 'Type',
-        lang: 'Langue',
-        version: 'Version',
-        date: ''
-      },
-
-      loading: false
-    };
-  },
-
-
-  methods: {
-    addOcr: function addOcr(id) {
-      this.loading = true;
-      var self = this;
-      axios.get('/receptions/ocr/' + id).then(function (response) {
-        self.scans = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
-        self.loading = false;
-      });
-    },
-    reload: function reload() {
-      this.loading = true;
-      this.sorted = false;
-      this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
-      var self = this;
-      axios.get('/receptions/getScanned').then(function (response) {
-        self.scans = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
-        self.loading = false;
-      });
-    },
-    sort: function sort() {
-      this.loading = true;
-      this.sorted = true;
-      var self = this;
-      axios.post('/sort/import', this.sorts).then(function (response) {
-        self.scans = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
-        self.loading = false;
-      });
-    },
-    fetch: function fetch(page) {
-      if (this.sorted) {
-        this.loading = true;
-        var self = this;
-        axios.post(page, this.sorts).then(function (response) {
-          self.scans = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
-          self.loading = false;
-        });
-      } else {
-        this.loading = true;
-        var self = this;
-        axios.get(page).then(function (response) {
-          self.scans = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
-          self.loading = false;
-        });
-      }
-    }
-  },
-
-  computed: {
-    filteredDocuments: function filteredDocuments() {
-      if (this.filter == 'all') return this.scans;else if (this.filter == 'Quotidien') return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Quotidien';
-      });else if (this.filter == 'Hebdomadaire') return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Hebdomadaire';
-      });else return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Mensuel';
-      });
-    }
-  },
-
-  mounted: function mounted() {
-    this.loading = true;
-    var self = this;
-    axios.get('/receptions/getScanned').then(function (response) {
-      self.scans = response.data.data;
-      self.pagination.current_page = response.data.current_page;
-      self.pagination.last_page = response.data.last_page;
-      self.pagination.next_page_url = response.data.next_page_url;
-      self.pagination.prev_page_url = response.data.prev_page_url;
-      self.loading = false;
-    });
-  },
-
-
-  components: {
-    Loader: __WEBPACK_IMPORTED_MODULE_0__Loader___default.a
-  }
-});
-
-/***/ }),
-/* 292 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('nav', {
-    staticClass: "level"
-  }, [_c('div', {
-    staticClass: "level-left"
-  }, [_c('div', {
-    staticClass: "level-item"
-  }, [_c('div', {
-    staticClass: "field has-addons"
-  }, [_c('p', {
-    staticClass: "control"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.sorts.search),
-      expression: "sorts.search"
-    }],
-    staticClass: "input",
-    attrs: {
-      "type": "text",
-      "placeholder": "Rechercher..."
-    },
-    domProps: {
-      "value": (_vm.sorts.search)
-    },
-    on: {
-      "keyup": _vm.sort,
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.sorts.search = $event.target.value
-      }
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "control"
-  }, [_c('div', {
-    staticClass: "select"
-  }, [_c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.sorts.type),
-      expression: "sorts.type"
-    }],
-    on: {
-      "change": [function($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        });
-        _vm.sorts.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }, function($event) {
-        $event.preventDefault();
-        _vm.sort($event)
-      }]
-    }
-  }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Magasine"
-    }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Journal"
-    }
-  }, [_vm._v("Journal")])])])]), _vm._v(" "), _c('div', {
-    staticClass: "control"
-  }, [_c('div', {
-    staticClass: "select"
-  }, [_c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.sorts.lang),
-      expression: "sorts.lang"
-    }],
-    on: {
-      "change": [function($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        });
-        _vm.sorts.lang = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }, function($event) {
-        $event.preventDefault();
-        _vm.sort($event)
-      }]
-    }
-  }, [_c('option', [_vm._v("Langue")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Anglais"
-    }
-  }, [_vm._v("Anglais")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Arabe"
-    }
-  }, [_vm._v("Arabe")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Français"
-    }
-  }, [_vm._v("Français")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Tamazight"
-    }
-  }, [_vm._v("Tamazight")])])])]), _vm._v(" "), _c('div', {
-    staticClass: "control"
-  }, [_c('div', {
-    staticClass: "select"
-  }, [_c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.sorts.version),
-      expression: "sorts.version"
-    }],
-    on: {
-      "change": [function($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        });
-        _vm.sorts.version = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-      }, function($event) {
-        $event.preventDefault();
-        _vm.sort($event)
-      }]
-    }
-  }, [_c('option', [_vm._v("Version")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Papier"
-    }
-  }, [_vm._v("Papier")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "Electronique"
-    }
-  }, [_vm._v("Electronique")])])])]), _vm._v(" "), _c('p', {
-    staticClass: "control"
-  }, [_c('input', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.sorts.date),
-      expression: "sorts.date"
-    }],
-    staticClass: "input",
-    attrs: {
-      "type": "date"
-    },
-    domProps: {
-      "value": (_vm.sorts.date)
-    },
-    on: {
-      "change": function($event) {
-        $event.preventDefault();
-        _vm.sort($event)
-      },
-      "input": function($event) {
-        if ($event.target.composing) { return; }
-        _vm.sorts.date = $event.target.value
-      }
-    }
-  })]), _vm._v(" "), _c('p', {
-    staticClass: "control"
-  }, [_c('button', {
-    staticClass: "button is-info is-inverted",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.reload($event)
-      }
-    }
-  }, [_c('i', {
-    staticClass: "fa fa-refresh",
-    attrs: {
-      "aria-hidden": "true"
-    }
-  })])])])])]), _vm._v(" "), _c('div', {
-    staticClass: "level-right"
-  }, [_c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    class: {
-      'is-active': _vm.filter == 'all'
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.filter = 'all'
-      }
-    }
-  }, [_vm._v("Tous")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    class: {
-      'is-active': _vm.filter == 'Quotidien'
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.filter = 'Quotidien'
-      }
-    }
-  }, [_vm._v("Quotidiens")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    class: {
-      'is-active': _vm.filter == 'Hebdomadaire'
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.filter = 'Hebdomadaire'
-      }
-    }
-  }, [_vm._v("Hebdomadaires")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item"
-  }, [_c('a', {
-    class: {
-      'is-active': _vm.filter == 'Mensuel'
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.filter = 'Mensuel'
-      }
-    }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
-    staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "sourceDate"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "date"
-    }
-  }, [_vm._v("Date du scanne")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "userName"
-    }
-  }, [_vm._v("Agent scanne")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  })])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(scan) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(scan.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.date_scan))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.user_scan))]), _vm._v(" "), (scan.ocr == false) ? _c('td', [_c('a', {
-      staticClass: "button is-small is-outlined is-info",
-      on: {
-        "click": function($event) {
-          $event.preventDefault();
-          _vm.addOcr(scan.id)
-        }
-      }
-    }, [_vm._v("Valider l'OCR")])]) : _c('td', [_c('span', {
-      staticClass: "icon"
-    }, [_c('i', {
-      staticClass: "fa fa-check success"
-    })])])])
-  }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
-    staticClass: "pagination"
-  }, [_c('a', {
-    staticClass: "pagination-previous",
-    attrs: {
-      "title": "This is the first page",
-      "disabled": !_vm.pagination.prev_page_url
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.fetch(_vm.pagination.prev_page_url)
-      }
-    }
-  }, [_vm._v("Precedent")]), _vm._v(" "), _c('a', {
-    staticClass: "pagination-next",
-    attrs: {
-      "disabled": !_vm.pagination.next_page_url
-    },
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.fetch(_vm.pagination.next_page_url)
-      }
-    }
-  }, [_vm._v("Page suivant")]), _vm._v(" "), _c('ul', {
-    staticClass: "pagination-list"
-  }, [_c('li', [_c('span', {
-    staticClass: "pagination-ellipsis"
-  }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
-    staticClass: "pagination-link is-current"
-  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _c('li', [_c('span', {
-    staticClass: "pagination-ellipsis"
-  }, [_vm._v("sur")])]), _vm._v(" "), _c('li', [_c('a', {
-    staticClass: "pagination-link"
-  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()])], 1)
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1d77ea28", module.exports)
-  }
-}
-
-/***/ }),
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
 /* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39005,7 +38296,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -39122,9 +38413,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -39160,15 +38448,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
+    paginate: function paginate(pages) {
+      this.pagination.current_page = pages.current_page;
+      this.pagination.last_page = pages.last_page;
+      this.pagination.next_page_url = pages.next_page_url;
+      this.pagination.prev_page_url = pages.prev_page_url;
+    },
     addImport: function addImport(id) {
       this.loading = true;
       var self = this;
-      axios.get('/receptions/import/' + id).then(function (response) {
+      axios.get('/import/store/' + id).then(function (response) {
         self.scans = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -39179,10 +38470,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.get('/receptions/getScanned').then(function (response) {
         self.scans = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -39192,10 +38480,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.post('/sort/import', this.sorts).then(function (response) {
         self.scans = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -39205,10 +38490,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.post(page, this.sorts).then(function (response) {
           self.scans = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       } else {
@@ -39216,10 +38498,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.get(page).then(function (response) {
           self.scans = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       }
@@ -39241,12 +38520,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted: function mounted() {
     this.loading = true;
     var self = this;
-    axios.get('/receptions/getOcr').then(function (response) {
+    axios.get('/import/index').then(function (response) {
       self.scans = response.data.data;
-      self.pagination.current_page = response.data.current_page;
-      self.pagination.last_page = response.data.last_page;
-      self.pagination.next_page_url = response.data.next_page_url;
-      self.pagination.prev_page_url = response.data.prev_page_url;
+      self.paginate(response.data);
       self.loading = false;
     });
   },
@@ -39494,36 +38770,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
     staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "sourceDate"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "date"
-    }
-  }, [_vm._v("Date du scanne")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "userName"
-    }
-  }, [_vm._v("Agent scanne")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  })])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(scan) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(scan.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.date_scan))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.user_scan))]), _vm._v(" "), (scan.imported == false) ? _c('td', [_c('a', {
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date du scanne")]), _vm._v(" "), _c('th', [_vm._v("Agent scanne")]), _vm._v(" "), _c('th')])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(scan) {
+    return _c('tr', [_c('td', [_vm._v(_vm._s(scan.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.user.name))]), _vm._v(" "), _c('td', [_c('a', {
       staticClass: "button is-small is-outlined is-info",
       on: {
         "click": function($event) {
@@ -39531,11 +38779,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.addImport(scan.id)
         }
       }
-    }, [_vm._v("Valider l'import")])]) : _c('td', [_c('span', {
-      staticClass: "icon"
-    }, [_c('i', {
-      staticClass: "fa fa-check success"
-    })])])])
+    }, [_vm._v("Valider l'import")])])])
   }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
     staticClass: "pagination"
   }, [_c('a', {
@@ -41645,15 +40889,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
+    paginate: function paginate(pages) {
+      this.pagination.current_page = pages.current_page;
+      this.pagination.last_page = pages.last_page;
+      this.pagination.next_page_url = pages.next_page_url;
+      this.pagination.prev_page_url = pages.prev_page_url;
+    },
     addExport: function addExport(id) {
       this.loading = true;
       var self = this;
       axios.get('/receptions/export/' + id).then(function (response) {
         self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -41662,10 +40909,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.get('/receptions/deleteClipping/' + id).then(function (response) {
         self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
       this.showDelete = false;
@@ -41677,10 +40921,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.get('/receptions/getClipped').then(function (response) {
         self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -41690,10 +40931,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var self = this;
       axios.post('/sort/clipping', this.sorts).then(function (response) {
         self.documents = response.data.data;
-        self.pagination.current_page = response.data.current_page;
-        self.pagination.last_page = response.data.last_page;
-        self.pagination.next_page_url = response.data.next_page_url;
-        self.pagination.prev_page_url = response.data.prev_page_url;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -41703,10 +40941,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.post(page, this.sorts).then(function (response) {
           self.documents = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       } else {
@@ -41714,10 +40949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var self = this;
         axios.get(page).then(function (response) {
           self.documents = response.data.data;
-          self.pagination.current_page = response.data.current_page;
-          self.pagination.last_page = response.data.last_page;
-          self.pagination.next_page_url = response.data.next_page_url;
-          self.pagination.prev_page_url = response.data.prev_page_url;
+          self.paginate(response.data);
           self.loading = false;
         });
       }
@@ -41741,10 +40973,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     var self = this;
     axios.get('/receptions/getClipped').then(function (response) {
       self.documents = response.data.data;
-      self.pagination.current_page = response.data.current_page;
-      self.pagination.last_page = response.data.last_page;
-      self.pagination.next_page_url = response.data.next_page_url;
-      self.pagination.prev_page_url = response.data.prev_page_url;
+      self.paginate(response.data);
       self.loading = false;
     });
   },

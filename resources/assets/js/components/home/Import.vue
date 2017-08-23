@@ -59,28 +59,25 @@
       <table class="table">
           <thead>
             <tr>
-              <th><abbr title="type">Type du document</abbr></th>
-              <th><abbr title="nom">Nom du document</abbr></th>
-              <th><abbr title="sourceDate">Date de publication</abbr></th>
-              <th><abbr title="nbrPage">Nombre de page</abbr></th>
-              <th><abbr title="date">Date du scanne</abbr></th>
-              <th><abbr title="userName">Agent scanne</abbr></th>
-              <th><abbr title="nbrPage"></abbr></th>
+              <th>Type du document</th>
+              <th>Nom du document</th>
+              <th>Date de publication</th>
+              <th>Nombre de page</th>
+              <th>Date du scanne</th>
+              <th>Agent scanne</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="scan in filteredDocuments">
               <td>{{ scan.document.type }}</td>
               <td>{{ scan.document.name }}</td>
-              <td>{{ scan.sourceDate }}</td>
-              <td>{{ scan.nbrPage }}</td>
-              <td>{{ scan.date_scan }}</td>
-              <td>{{ scan.user_scan }}</td>
-              <td v-if="scan.imported == false"><a class="button is-small is-outlined is-info" @click.prevent="addImport(scan.id)">Valider l'import</a></td>
-              <td v-else>
-                <span class="icon">
-                  <i class="fa fa-check success"></i>
-                </span>
+              <td>{{ scan.reception.sourceDate }}</td>
+              <td>{{ scan.reception.nbrPage }}</td>
+              <td>{{ scan.created_at }}</td>
+              <td>{{ scan.user.name }}</td>
+              <td>
+                <a class="button is-small is-outlined is-info" @click.prevent="addImport(scan.id)">Valider l'import</a>
               </td>
             </tr>
           </tbody>
@@ -143,15 +140,19 @@ import Loader from '../Loader';
         },
 
         methods: {
+            paginate(pages) {
+              this.pagination.current_page = pages.current_page;
+              this.pagination.last_page = pages.last_page;
+              this.pagination.next_page_url = pages.next_page_url;
+              this.pagination.prev_page_url = pages.prev_page_url;
+            },
+            
             addImport(id) {
               this.loading = true;
               var self = this;
-              axios.get('/receptions/import/'+id).then(function (response) {
+              axios.get('/import/store/'+id).then(function (response) {
                 self.scans = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -163,10 +164,7 @@ import Loader from '../Loader';
               var self = this;
               axios.get('/receptions/getScanned').then(function(response) {
                 self.scans = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -177,10 +175,7 @@ import Loader from '../Loader';
               var self = this;
               axios.post('/sort/import', this.sorts).then(function (response) {
                 self.scans = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -191,10 +186,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
                   self.scans = response.data.data;
-                  self.pagination.current_page = response.data.current_page;
-                  self.pagination.last_page = response.data.last_page;
-                  self.pagination.next_page_url = response.data.next_page_url;
-                  self.pagination.prev_page_url = response.data.prev_page_url;
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }
@@ -203,10 +195,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.get(page).then(function (response) {
                   self.scans = response.data.data;
-                  self.pagination.current_page = response.data.current_page;
-                  self.pagination.last_page = response.data.last_page;
-                  self.pagination.next_page_url = response.data.next_page_url;
-                  self.pagination.prev_page_url = response.data.prev_page_url;
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }
@@ -229,12 +218,9 @@ import Loader from '../Loader';
         mounted() {
             this.loading = true;
             var self = this;
-            axios.get('/receptions/getOcr').then(function (response) {
+            axios.get('/import/index').then(function (response) {
               self.scans = response.data.data;
-              self.pagination.current_page = response.data.current_page;
-              self.pagination.last_page = response.data.last_page;
-              self.pagination.next_page_url = response.data.next_page_url;
-              self.pagination.prev_page_url = response.data.prev_page_url;
+              self.paginate(response.data);
               self.loading = false;
             });
         },

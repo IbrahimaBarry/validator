@@ -52,8 +52,6 @@ class DocumentsTableSeeder extends Seeder
 
         DB::table('documents')->insert(['name' => 'Le matin', 'source' => 'Matin', 'sourceName' => 'Le Matin', 'location' => 'National', 'type' => 'Journal', 'version' => 'Papier', 'frequence' => 'Quotidien', 'lang' => 'Français', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
 
-        DB::table('documents')->insert(['name' => 'Le matin', 'source' => 'Matin', 'sourceName' => 'Le Matin', 'location' => 'National', 'type' => 'Journal', 'version' => 'Papier', 'frequence' => 'Quotidien', 'lang' => 'Français', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
-
         DB::table('documents')->insert(['name' => 'La nouvelle tribune', 'source' => 'tribune', 'sourceName' => 'La nouvelle tribune', 'location' => 'National', 'type' => 'Journal', 'version' => 'Papier', 'frequence' => 'Hebdomadaire', 'lang' => 'Français', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
 
         DB::table('documents')->insert(['name' => 'La vie éco', 'source' => 'vie éco', 'sourceName' => 'La vie éco', 'location' => 'National', 'type' => 'Journal', 'version' => 'Papier', 'frequence' => 'Hebdomadaire', 'lang' => 'Français', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);

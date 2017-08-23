@@ -27,17 +27,32 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function permissions() {
+        return $this->belongsToMany(Permission::class, 'permission_users');
+    }
+
     public function receptions()
     {
         return $this->hasMany(Reception::class);
     }
 
-    public function permissions() {
-        return $this->belongsToMany(Permission::class, 'permission_users');
+    public function scans()
+    {
+        return $this->hasMany(Scan::class);
     }
 
-    public function horaires()
+    public function imports()
     {
-        return $this->belongsToMany(Horaire::class);
+        return $this->hasMany(Import::class);
+    }
+
+    public function clippings()
+    {
+        return $this->hasMany(Clipping::class);
+    }
+
+    public function exports()
+    {
+        return $this->hasMany(Export::class);
     }
 }

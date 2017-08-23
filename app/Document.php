@@ -12,4 +12,24 @@ class Document extends Model
     {
     	return $this->hasMany(Reception::class);
     }
+
+    public function scans()
+    {
+    	return $this->hasMany(Scan::class);
+    }
+
+    public function imports()
+    {
+        return $this->hasMany(Import::class);
+    }
+
+    public function clippings()
+    {
+        return $this->hasMany(Clipping::class);
+    }
+
+    public function exports()
+    {
+        return $this->hasMany(Export::class);
+    }
 }

@@ -22,10 +22,6 @@ Route::post('/user/store', 'UserController@store');
 Route::get('/users/destroy/{id}', 'UserController@destroy');
 Route::get('/user/{id}', 'UserController@profile');
 
-// TEAM
-Route::get('/teams/all', 'TeamController@index');
-Route::post('teams/store', 'TeamController@store');
-
 // DOCUMENT
 Route::get('/documents/index', 'DocumentController@index');
 Route::post('/documents/store', 'DocumentController@store');
@@ -34,17 +30,15 @@ Route::post('/documents/update/{id}', 'DocumentController@update');
 // RECEPTION
 Route::get('/receptions/index', 'ReceptionController@index');
 Route::post('/receptions/store', 'ReceptionController@store');
+Route::get('/receptions/update/{id}/{nbrPage}', 'ReceptionController@update');
 
 // SCAN
-Route::get('/receptions/scan/{id}', 'ReceptionController@scan');
-
-// OCR
-Route::get('/receptions/getScanned', 'ReceptionController@getScanned');
-Route::get('/receptions/ocr/{id}', 'ReceptionController@ocr');
+Route::get('/scan/index', 'ScanController@index');
+Route::get('/scan/store/{id}', 'ScanController@store');
 
 // IMPORT
-Route::get('/receptions/import/{id}', 'ReceptionController@import');
-Route::get('/receptions/getOcr', 'ReceptionController@getOcr');
+Route::get('/import/index', 'ImportController@index');
+Route::get('/import/store/{id}', 'ImportController@store');
 
 // AFFECT
 Route::get('/receptions/getImported', 'ReceptionController@getImported');

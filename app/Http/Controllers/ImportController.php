@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Import;
 use App\Scan;
-use App\Reception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ScanController extends Controller
+class ImportController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return Reception::with(['user', 'document'])->where('scanned', false)->latest()->paginate(5);
+        return Scan::with(['user', 'document', 'reception'])->where('imported', false)->latest()->paginate(5);
     }
 
     /**
@@ -27,18 +27,17 @@ class ScanController extends Controller
      */
     public function store($id)
     {
-        $reception = Reception::find($id);
-        $reception->scanned = true;
-        $reception->save();
-
-        $scan = new Scan();
-        $scan->user_id = Auth::user()->id;
-        $scan->document_id = $reception->document->id;
-        $scan->reception_id = $id;
-
+        $scan = Scan::find($id);
+        $scan->imported = true;
         $scan->save();
 
-        return Reception::with(['user', 'document'])->where('scanned', false)->latest()->paginate(5);
+        $import = new Import();
+        $import->user_id = Auth::user()->id;
+        $import->document_id = $scan->reception->document->id;
+        $import->reception_id = $scan->reception->id;
+        $import->save();
+
+        return Scan::with(['user', 'document', 'reception'])->where('imported', false)->latest()->paginate(5);
     }
 
     /**

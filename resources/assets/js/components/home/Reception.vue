@@ -62,13 +62,13 @@
     <table class="table">
         <thead>
           <tr>
-            <th><abbr title="type">Type du document</abbr></th>
-              <th><abbr title="nom">Nom du document</abbr></th>
-              <th><abbr title="sourceDate">Date de publication</abbr></th>
-              <th><abbr title="nbrPage">Nombre de page</abbr></th>
-              <th><abbr title="date">Date de réception</abbr></th>
-              <th><abbr title="userName">Agent reception</abbr></th>
-              <th><abbr title="userName">Cause du retard</abbr></th>
+            <th>Type du document</th>
+            <th>Nom du document</th>
+            <th>Date de publication</th>
+            <th>Nombre de page</th>
+            <th>Date de réception</th>
+            <th>Agent reception</th>
+            <th>Cause du retard</th>
           </tr>
         </thead>
         <tbody>
@@ -76,7 +76,10 @@
             <td>{{ document.document.type }}</td>
             <td>{{ document.document.name }}</td>
             <td>{{ document.sourceDate }}</td>
-            <td>{{ document.nbrPage }}</td>
+            <td :class="{edit: document.id === editing}">
+              <div v-if="document.id != editing" @dblclick.prevent="editDocument(document.id)">{{ document.nbrPage }}</div>
+              <input v-else type="numeric" class="input" @keyup.enter="endEdit(document.nbrPage)" v-model="document.nbrPage">
+            </td>
             <td>{{ document.created_at }}</td>
             <td>{{ document.user.name }}</td>
             <td>{{ document.message }}</td>
@@ -129,7 +132,6 @@ import Loader from '../Loader';
                   prev_page_url: '',
                 },
                 sorted: false,
-
                 filter: 'all',
                 hoverId: 0,
                 showRecepDoc: false,
@@ -140,21 +142,25 @@ import Loader from '../Loader';
                   version: 'Version',
                   date: ''
                 },
-
-                loading: false
+                loading: false,
+                editing: null
             }
         },
 
         methods: {
+            paginate(pages) {
+              this.pagination.current_page = pages.current_page;
+              this.pagination.last_page = pages.last_page;
+              this.pagination.next_page_url = pages.next_page_url;
+              this.pagination.prev_page_url = pages.prev_page_url;
+            },
+
             updateDocuments() {
               this.loading = true;
               var self = this;
               axios.get('/receptions/index').then(function(response) {
                 self.documents = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.showRecepDoc = false;
                 self.loading = false;
               });
@@ -167,10 +173,7 @@ import Loader from '../Loader';
               var self = this;
               axios.get('/receptions/index').then(function(response) {
                 self.documents = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -181,10 +184,7 @@ import Loader from '../Loader';
               var self = this;
               axios.post('/sort/reception', this.sorts).then(function (response) {
                 self.documents = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -195,10 +195,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
                   self.documents = response.data.data;
-                  self.pagination.current_page = response.data.current_page;
-                  self.pagination.last_page = response.data.last_page;
-                  self.pagination.next_page_url = response.data.next_page_url;
-                  self.pagination.prev_page_url = response.data.prev_page_url;
+                 self.paginate(response.data);
                   self.loading = false;
                 });
               }
@@ -207,13 +204,18 @@ import Loader from '../Loader';
                 var self = this;
                 axios.get(page).then(function (response) {
                   self.documents = response.data.data;
-                  self.pagination.current_page = response.data.current_page;
-                  self.pagination.last_page = response.data.last_page;
-                  self.pagination.next_page_url = response.data.next_page_url;
-                  self.pagination.prev_page_url = response.data.prev_page_url;
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }
+            },
+
+            editDocument(val) {
+              this.editing = val;
+            },
+
+            endEdit(nbrPage) {
+              axios.get('/receptions/update/'+this.editing+'/'+nbrPage).then(this.editing = null);
             }
         },
 
@@ -235,10 +237,7 @@ import Loader from '../Loader';
             var self = this;
             axios.get('/receptions/index').then(function(response) {
               self.documents = response.data.data;
-              self.pagination.current_page = response.data.current_page;
-              self.pagination.last_page = response.data.last_page;
-              self.pagination.next_page_url = response.data.next_page_url;
-              self.pagination.prev_page_url = response.data.prev_page_url;
+              self.paginate(response.data);
               self.loading = false;
             });
         },
@@ -251,5 +250,10 @@ import Loader from '../Loader';
 </script>
 
 <style scoped>
-  
+  td > input{
+    display: none
+  }
+  .edit > input {
+    display: initial;
+  }
 </style>

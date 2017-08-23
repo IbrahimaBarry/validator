@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReceptionsTable extends Migration
+class CreateExportsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateReceptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('receptions', function (Blueprint $table) {
+        Schema::create('exports', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('sourceDate');
-            $table->integer('nbrPage');
-            $table->integer('user_id')->unsigned();
             $table->integer('document_id')->unsigned();
-            $table->string('message')->nullable();
-            $table->boolean('scanned')->default(false);
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('reception_id')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->boolean('confirmed')->default(false);
+            $table->string('admin')->nullable();
             $table->foreign('document_id')->references('id')->on('documents')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('reception_id')->references('id')->on('receptions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ class CreateReceptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('receptions');
+        Schema::dropIfExists('exports');
     }
 }

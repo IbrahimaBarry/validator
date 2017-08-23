@@ -214,15 +214,19 @@ import Loader from '../Loader';
         },
 
         methods: {
+            paginate(pages) {
+              this.pagination.current_page = pages.current_page;
+              this.pagination.last_page = pages.last_page;
+              this.pagination.next_page_url = pages.next_page_url;
+              this.pagination.prev_page_url = pages.prev_page_url;
+            },
+            
             addExport(id) {
               this.loading = true;
               var self = this;
               axios.get('/receptions/export/'+id).then(function (response) {
                 self.documents = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -232,10 +236,7 @@ import Loader from '../Loader';
               var self = this;
               axios.get('/receptions/deleteClipping/'+id).then(function (response) {
                 self.documents = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
               this.showDelete = false;
@@ -248,10 +249,7 @@ import Loader from '../Loader';
               var self = this;
               axios.get('/receptions/getClipped').then(function(response) {
                 self.documents = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -262,10 +260,7 @@ import Loader from '../Loader';
               var self = this;
               axios.post('/sort/clipping', this.sorts).then(function (response) {
                 self.documents = response.data.data;
-                self.pagination.current_page = response.data.current_page;
-                self.pagination.last_page = response.data.last_page;
-                self.pagination.next_page_url = response.data.next_page_url;
-                self.pagination.prev_page_url = response.data.prev_page_url;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -276,10 +271,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
                   self.documents = response.data.data;
-                  self.pagination.current_page = response.data.current_page;
-                  self.pagination.last_page = response.data.last_page;
-                  self.pagination.next_page_url = response.data.next_page_url;
-                  self.pagination.prev_page_url = response.data.prev_page_url;
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }
@@ -288,10 +280,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.get(page).then(function (response) {
                   self.documents = response.data.data;
-                  self.pagination.current_page = response.data.current_page;
-                  self.pagination.last_page = response.data.last_page;
-                  self.pagination.next_page_url = response.data.next_page_url;
-                  self.pagination.prev_page_url = response.data.prev_page_url;
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }
@@ -316,10 +305,7 @@ import Loader from '../Loader';
             var self = this;
             axios.get('/receptions/getClipped').then(function (response) {
               self.documents = response.data.data;
-              self.pagination.current_page = response.data.current_page;
-              self.pagination.last_page = response.data.last_page;
-              self.pagination.next_page_url = response.data.next_page_url;
-              self.pagination.prev_page_url = response.data.prev_page_url;
+              self.paginate(response.data);
               self.loading = false;
             });
         },
