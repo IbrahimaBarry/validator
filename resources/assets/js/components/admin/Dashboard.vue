@@ -60,14 +60,44 @@
 	          </div>
 	        </div>
 	    </section>
+	    <section>
+	    	<h1 class="title">Statistiques du jour</h1>
+
+			<!-- <div class="field">
+			  <label class="label"><h5 class="title is-5">Profile</h5></label>
+			  <div class="control">
+			    <div class="select">
+			      <select>
+			        <option>Clipping</option>
+			        <option>Reception</option>
+			        <option>Scanne</option>
+			        <option>Abby OCR</option>
+			        <option>Import</option>
+			        <option>Export</option>
+			      </select>
+			    </div>
+			  </div>
+			</div> -->
+
+	    	<Bar-chart :chart-data="today" :chart-labels="labels"></Bar-chart>
+	    </section>
 	</div>
 </template>
 
 <script>
+import BarChart from './BarChart.js'
+
 	export default {
+		components: {
+			BarChart
+		},
+
 		data() {
 			return {
-				documents: []
+				documents: [],
+				chartData : [
+					{label: 'reception', value: '23'}
+				]
 			}
 		},
 
@@ -80,11 +110,25 @@
 			},
 			mensuels() {
 				return this.documents.filter(document => document.document.frequence == 'Mensuel');
+			},
+
+			today() {
+				return [
+					'12'
+				];
+			},
+			labels() {
+				return ['reception']
 			}
 		},
 
 		mounted() {
-			axios.get('/receptions/all').then(response => this.documents = response.data)
+			var self = this;
+			axios.get('/admin/dashboard').then(response => {
+				self.documents = response.data.receptions;
+				// self.chartData = response.data.chartData;
+				// console.log(self.chartData);
+			})
 		}
 	}
 </script>

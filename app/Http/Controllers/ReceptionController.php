@@ -291,14 +291,4 @@ class ReceptionController extends Controller
             return (new Sort())->index($model, $request);
     }
 
-
-
-    /**
-     * Listed resources.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function all() {
-        return Reception::with('document')->get();
-    }
 }

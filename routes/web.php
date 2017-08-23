@@ -34,7 +34,6 @@ Route::post('/documents/update/{id}', 'DocumentController@update');
 // RECEPTION
 Route::get('/receptions/index', 'ReceptionController@index');
 Route::post('/receptions/store', 'ReceptionController@store');
-Route::get('/receptions/all', 'ReceptionController@all');
 
 // SCAN
 Route::get('/receptions/scan/{id}', 'ReceptionController@scan');
@@ -63,3 +62,5 @@ Route::get('/receptions/getClipped', 'ReceptionController@getClipped');
 // SORT
 Route::post('/sort/{model}', 'ReceptionController@sort');
 
+// ADMIN
+Route::get('/admin/dashboard', 'AdminController@dashboard');
