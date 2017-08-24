@@ -51,12 +51,15 @@
           <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
           <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
           <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
+          <p class="level-item verticalLine">
+            <a v-if="showHistoique" class="button" @click.prevent="showHistoique = false">Masquer l'historique</a>
+            <a v-else class="button" @click.prevent="showHistoique = true">Afficher l'historique</a>
+          </p>
         </div>
       </nav>
       
-      <Loader v-if="loading"></Loader>
-      <div v-else>
-      <table class="table">
+      <Loader v-show="loading"></Loader>
+      <table :class="{table: true, loading: loading}">
           <thead>
             <tr>
               <th>Type du document</th>
@@ -66,20 +69,33 @@
               <th>Date de réception</th>
               <th>Agent reception</th>
               <th>Cause du retard</th>
-              <th></th>
+              <th>Etat</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="reception in filteredDocuments">
-              <td>{{ reception.document.type }}</td>
-              <td>{{ reception.document.name }}</td>
-              <td>{{ reception.sourceDate }}</td>
-              <td>{{ reception.nbrPage }}</td>
-              <td>{{ reception.created_at }}</td>
-              <td>{{ reception.user.name }}</td>
-              <td>{{ reception.message }}</td>
-              <td>
-                <a class="button is-small is-info is-outlined" @click.prevent="addScan(reception.id)">Démarrer le scanne</a>
+            <tr v-for="scan in filteredDocuments">
+              <td>{{ scan.reception.document.type }}</td>
+              <td>{{ scan.reception.document.name }}</td>
+              <td>{{ scan.reception.sourceDate }}</td>
+              <td>{{ scan.reception.nbrPage }}</td>
+              <td>{{ scan.reception.created_at }}</td>
+              <td>{{ scan.reception.user.name }}</td>
+              <td>{{ scan.reception.message }}</td>
+              <div v-if="scan.scanned">
+                <td v-if="scan.confirmed">
+                  <span class="icon">
+                    <i class="fa fa-check success"></i>
+                  </span>
+                </td>
+                <div v-else>
+                  <td v-if="role == 'agent'">En attente...</td>
+                  <td v-else>
+                    <a class="button is-small is-primary is-outlined" @click.prevent="doneScan(scan)">Confirmer</a>
+                  </td>
+                </div>
+              </div>
+              <td v-else>
+                <a class="button is-small is-info is-outlined" @click.prevent="addScan(scan)">Démarrer le scanne</a>
               </td>
             </tr>
           </tbody>
@@ -100,7 +116,6 @@
             <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
           </ul>
         </nav>
-        </div>
     </div>
 </template>
 
@@ -120,7 +135,8 @@ import Loader from '../Loader';
         data() {
             return {
                 showModal: false,
-                receptions: [],
+                role: '',
+                scans: [],
                 pagination: {
                   current_page: '',
                   last_page: '',
@@ -138,7 +154,8 @@ import Loader from '../Loader';
                   date: ''
                 },
 
-                loading: false
+                loading: false,
+                showHistoique: false
             }
         },
 
@@ -150,12 +167,20 @@ import Loader from '../Loader';
               this.pagination.prev_page_url = pages.prev_page_url;
             },
 
-            addScan(id) {
+            addScan(scan) {
               this.loading = true;
               var self = this;
-              axios.get('/scan/store/'+id).then(function (response) {
-                self.receptions = response.data.data;
-                self.paginate(response.data);
+              axios.get('/scan/scanning/'+scan.id).then(function (response) {
+                scan.scanned = true;
+                self.loading = false;
+              });
+            },
+
+            doneScan(scan) {
+              this.loading = true;
+              var self = this;
+              axios.get('/scan/confirm/'+scan.id).then(function (response) {
+                scan.confirmed = true;
                 self.loading = false;
               });
             },
@@ -166,7 +191,7 @@ import Loader from '../Loader';
               this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
               axios.get('/receptions/index').then(function(response) {
-                self.receptions = response.data.data;
+                self.scans = response.data.data;
                 self.paginate(response.data);
                 self.loading = false;
               });
@@ -177,8 +202,8 @@ import Loader from '../Loader';
               this.sorted = true;
               var self = this;
               axios.post('/sort/reception', this.sorts).then(function (response) {
-                self.receptions = response.data.data;
-                self.paginate(response.data);
+                self.scans = response.data.scans.data;
+                self.paginate(response.data.scans);
                 self.loading = false;
               });
             },
@@ -188,8 +213,8 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
-                  self.receptions = response.data.data;
-                  self.paginate(response.data);
+                  self.scans = response.data.scans.data;
+                  self.paginate(response.data.scans);
                   self.loading = false;
                 });
               }
@@ -197,8 +222,8 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.get(page).then(function (response) {
-                  self.receptions = response.data.data;
-                  self.paginate(response.data);
+                  self.scans = response.data.scans.data;
+                  self.paginate(response.data.scans);
                   self.loading = false;
                 });
               }
@@ -208,13 +233,13 @@ import Loader from '../Loader';
         computed: {
             filteredDocuments() {
                 if (this.filter == 'all')
-                    return this.receptions;
+                    return this.scans;
                 else if (this.filter == 'Quotidien')
-                    return this.receptions.filter(reception => reception.document.frequence == 'Quotidien');
+                    return this.scans.filter(scan => scan.document.frequence == 'Quotidien');
                 else if (this.filter == 'Hebdomadaire')
-                    return this.receptions.filter(reception => reception.document.frequence == 'Hebdomadaire');
+                    return this.scans.filter(scan => scan.document.frequence == 'Hebdomadaire');
                 else
-                    return this.receptions.filter(reception => reception.document.frequence == 'Mensuel');
+                    return this.scans.filter(scan => scan.document.frequence == 'Mensuel');
             }
         },
 
@@ -222,8 +247,9 @@ import Loader from '../Loader';
             this.loading = true;
             var self = this;
             axios.get('/scan/index').then(function (response) {
-              self.receptions = response.data.data;
-              self.paginate(response.data);
+              self.role = response.data.role;
+              self.scans = response.data.scans.data;
+              self.paginate(response.data.scans);
               self.loading = false;
             });
         },
@@ -235,5 +261,7 @@ import Loader from '../Loader';
 </script>
 
 <style scoped>
-  
+  .verticalLine {
+    border-left: thick solid hsl(0, 0%, 21%);
+  }
 </style>

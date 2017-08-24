@@ -34,7 +34,8 @@ Route::get('/receptions/update/{id}/{nbrPage}', 'ReceptionController@update');
 
 // SCAN
 Route::get('/scan/index', 'ScanController@index');
-Route::get('/scan/store/{id}', 'ScanController@store');
+Route::get('/scan/scanning/{id}', 'ScanController@scanning');
+Route::get('/scan/confirm/{id}', 'ScanController@confirm');
 
 // IMPORT
 Route::get('/import/index', 'ImportController@index');

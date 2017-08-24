@@ -9151,3 +9151,7 @@ body {
   color: white;
 }
 
+.loading {
+  opacity: .3;
+}
+

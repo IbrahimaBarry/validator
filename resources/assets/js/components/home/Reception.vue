@@ -51,9 +51,9 @@
         <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
-        <p class="level-item">
-          <a class="button is-info is-outlined" @click.prevent="showRecepDoc = true">Reception</a>
-          </p>
+        <p class="level-item verticalLine">
+          <a class="button" @click.prevent="showRecepDoc = true">Reception</a>
+        </p>
       </div>
     </nav>
 
@@ -76,9 +76,10 @@
             <td>{{ document.document.type }}</td>
             <td>{{ document.document.name }}</td>
             <td>{{ document.sourceDate }}</td>
-            <td :class="{edit: document.id === editing}">
-              <div v-if="document.id != editing" @dblclick.prevent="editDocument(document.id)">{{ document.nbrPage }}</div>
-              <input v-else type="numeric" class="input" @keyup.enter="endEdit(document.nbrPage)" v-model="document.nbrPage">
+            <td :class="{edit: document === editing}">
+              <div v-if="document != editing" @dblclick.prevent="editDocument(document)">{{ document.nbrPage }}</div>
+              <input v-else type="numeric" class="input" @keyup.enter="doneEdit(document.nbrPage)" v-model="document.nbrPage" 
+              v-focus="document === editing" @keyup.esc="cancelEdit" @blur="cancelEdit">
             </td>
             <td>{{ document.created_at }}</td>
             <td>{{ document.user.name }}</td>
@@ -143,7 +144,8 @@ import Loader from '../Loader';
                   date: ''
                 },
                 loading: false,
-                editing: null
+                editing: null,
+                oldEditing: null
             }
         },
 
@@ -212,10 +214,16 @@ import Loader from '../Loader';
 
             editDocument(val) {
               this.editing = val;
+              this.oldEditing = val.nbrPage;
             },
 
-            endEdit(nbrPage) {
-              axios.get('/receptions/update/'+this.editing+'/'+nbrPage).then(this.editing = null);
+            doneEdit(nbrPage) {
+              axios.get('/receptions/update/'+this.editing.id+'/'+nbrPage).then(this.editing = null);
+            },
+
+            cancelEdit() {
+              this.editing.nbrPage = this.oldEditing;
+              this.editing = null
             }
         },
 
@@ -230,6 +238,14 @@ import Loader from '../Loader';
                 else
                     return this.documents.filter(document => document.document.frequence == 'Mensuel');
             }
+        },
+
+        directives: {
+          focus(el, value) {
+            Vue.nextTick(_ => {
+              el.focus();
+            })
+          }
         },
 
         mounted() {
@@ -255,5 +271,9 @@ import Loader from '../Loader';
   }
   .edit > input {
     display: initial;
+  }
+
+  .verticalLine {
+    border-left: thick solid hsl(0, 0%, 21%);
   }
 </style>

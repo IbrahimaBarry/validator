@@ -15,14 +15,12 @@ class CreateImportsTable extends Migration
     {
         Schema::create('imports', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('document_id')->unsigned();
-            $table->integer('reception_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('scan_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->boolean('imported')->default(false);
             $table->boolean('confirmed')->default(false);
             $table->string('admin')->nullable();
-            $table->boolean('clipped')->default(false);
-            $table->foreign('document_id')->references('id')->on('documents')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('reception_id')->references('id')->on('receptions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('scan_id')->references('id')->on('scans')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

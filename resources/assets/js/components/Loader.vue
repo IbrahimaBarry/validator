@@ -20,7 +20,8 @@
 
 <style scoped>
 	.container {
-	  height: 30vh;
+	  position: fixed;
+	  height: 20vh;
 	  width: 100vw;
 	  font-family: Helvetica;
 	}

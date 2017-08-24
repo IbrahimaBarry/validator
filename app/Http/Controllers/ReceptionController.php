@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use DateTimeZone;
 use App\User;
+use App\Scan;
 use App\Helpers\Sort;
 
 class ReceptionController extends Controller
@@ -25,7 +26,7 @@ class ReceptionController extends Controller
      */
     public function index()
     {
-        return Reception::with(['user', 'document'])->latest()->paginate(5);
+        return Reception::with(['user', 'document'])->latest()->paginate(20);
                     // ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 
@@ -50,6 +51,8 @@ class ReceptionController extends Controller
             $reception->message = $req['message'];
             $reception->user_id = Auth::user()->id;
             $reception->save();
+
+            $reception->scan()->create([]);
         }
     }
 

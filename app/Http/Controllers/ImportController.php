@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Import;
-use App\Scan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +15,8 @@ class ImportController extends Controller
      */
     public function index()
     {
-        return Scan::with(['user', 'document', 'reception'])->where('imported', false)->latest()->paginate(5);
+        return Import::with(['user', 'scan.reception.user', 'scan.reception.document'])
+                ->where('imported', false)->latest()->paginate(20);
     }
 
     /**
@@ -37,7 +37,7 @@ class ImportController extends Controller
         $import->reception_id = $scan->reception->id;
         $import->save();
 
-        return Scan::with(['user', 'document', 'reception'])->where('imported', false)->latest()->paginate(5);
+        return Scan::with(['user', 'document', 'reception'])->where('imported', false)->latest()->paginate(20);
     }
 
     /**

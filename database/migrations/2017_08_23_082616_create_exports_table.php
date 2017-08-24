@@ -15,13 +15,11 @@ class CreateExportsTable extends Migration
     {
         Schema::create('exports', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('document_id')->unsigned();
-            $table->integer('reception_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('clipping_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
             $table->boolean('confirmed')->default(false);
             $table->string('admin')->nullable();
-            $table->foreign('document_id')->references('id')->on('documents')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('reception_id')->references('id')->on('receptions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('clipping_id')->references('id')->on('clippings')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

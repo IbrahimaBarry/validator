@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Scan;
-use App\Reception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +15,8 @@ class ScanController extends Controller
      */
     public function index()
     {
-        return Reception::with(['user', 'document'])->where('scanned', false)->latest()->paginate(5);
+        return ['scans' => Scan::with(['user', 'reception.user', 'reception.document'])->latest()->paginate(20), 
+                'role' => Auth::user()->role];
     }
 
     /**
@@ -25,32 +25,44 @@ class ScanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($id)
+    public function store($tab)
     {
-        $reception = Reception::find($id);
-        $reception->scanned = true;
-        $reception->save();
+        foreach ($tab as $el) {
+            $scan = new Scan();
+            $scan->user_id = Auth::user()->id;
+            $scan->reception_id = $el[0];
+            $scan->document_id = $el[1];
 
-        $scan = new Scan();
-        $scan->user_id = Auth::user()->id;
-        $scan->document_id = $reception->document->id;
-        $scan->reception_id = $id;
-
-        $scan->save();
-
-        return Reception::with(['user', 'document'])->where('scanned', false)->latest()->paginate(5);
+            $scan->save();
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Scan  $scan
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Scan $scan)
+    public function scanning($id)
     {
-        //
+        $scan = Scan::find($id);
+        $scan->user_id = Auth::user()->id;
+        $scan->scanned = true;
+        $scan->save();
+    }
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirm($id)
+    {
+        $scan = Scan::find($id);
+        $scan->admin = Auth::user()->name;
+        $scan->confirmed = true;
+        $scan->save();
     }
 
     /**
