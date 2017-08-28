@@ -39,16 +39,15 @@ Route::get('/scan/confirm/{id}', 'ScanController@confirm');
 
 // IMPORT
 Route::get('/import/index', 'ImportController@index');
-Route::get('/import/store/{id}', 'ImportController@store');
+Route::get('/import/importing/{id}', 'ImportController@importing');
+Route::get('/import/confirm/{id}', 'ImportController@confirm');
 
 // AFFECT
-Route::get('/receptions/getImported', 'ReceptionController@getImported');
-Route::get('/receptions/clipping/{reception_id}/{agent_id}', 'ReceptionController@addAgent');
+Route::get('/affect/index', 'AffectController@index');
+Route::get('/affect/{id}', 'AffectController@affect');
 
 // CLIPPING
-Route::get('/receptions/clipping/agent', 'ReceptionController@agentClipping');
-Route::post('/receptions/clipping/{id}', 'ReceptionController@clipping');
-Route::get('/receptions/deleteClipping/{id}', 'ReceptionController@deleteClipping');
+Route::get('/clipping/index', 'ClippingController@index');
 
 // EXPORT
 Route::get('/receptions/export/{id}', 'ReceptionController@export');

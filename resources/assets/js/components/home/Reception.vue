@@ -58,8 +58,7 @@
     </nav>
 
     <Loader v-if="loading"></Loader>
-    <div v-else>
-    <table class="table">
+    <table :class="{table: true, loading: loading}">
         <thead>
           <tr>
             <th>Type du document</th>
@@ -88,22 +87,21 @@
         </tbody>
     </table>
 
-      <!-- PAGINATION -->
-      <nav class="pagination" v-if="pagination.last_page > 1">
-        <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
-        :disabled="!pagination.prev_page_url">Precedent</a>
-        <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
-        :disabled="!pagination.next_page_url">Page suivant</a>
-        <ul class="pagination-list">
-          <li>
-            <span class="pagination-ellipsis">Page</span>
-            <a class="pagination-link is-current">{{ pagination.current_page }}</a>
-          </li>
-          <li><span class="pagination-ellipsis">sur</span></li>
-          <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
-        </ul>
-      </nav>
-    </div>
+    <!-- PAGINATION -->
+    <nav class="pagination" v-if="pagination.last_page > 1">
+      <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
+      :disabled="!pagination.prev_page_url">Precedent</a>
+      <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
+      :disabled="!pagination.next_page_url">Page suivant</a>
+      <ul class="pagination-list">
+        <li>
+          <span class="pagination-ellipsis">Page</span>
+          <a class="pagination-link is-current">{{ pagination.current_page }}</a>
+        </li>
+        <li><span class="pagination-ellipsis">sur</span></li>
+        <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
+      </ul>
+    </nav>
 
     <RecepDoc v-if="showRecepDoc" @hideRecepDoc="showRecepDoc = false" :id="hoverId" @documentRecepted="updateDocuments"></RecepDoc>
   </div>

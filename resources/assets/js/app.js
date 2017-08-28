@@ -12,6 +12,22 @@ window.today = function() {
     return year+"-"+month+"-"+day;
 };
 
+window.success = function(message) {
+    iziToast.success({
+        title: 'OK',
+        message: message,
+        position: 'topCenter'
+    });
+};
+
+window.error = function(message) {
+    iziToast.error({
+        title: 'ERROR',
+        message: message,
+        position: 'topCenter'
+    });
+}
+
 new Vue({
     el: '#app',
 

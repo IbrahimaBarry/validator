@@ -15,26 +15,8 @@ class ScanController extends Controller
      */
     public function index()
     {
-        return ['scans' => Scan::with(['user', 'reception.user', 'reception.document'])->latest()->paginate(20), 
+        return ['scans' => Scan::with(['reception.user', 'reception.document'])->latest()->paginate(20), 
                 'role' => Auth::user()->role];
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store($tab)
-    {
-        foreach ($tab as $el) {
-            $scan = new Scan();
-            $scan->user_id = Auth::user()->id;
-            $scan->reception_id = $el[0];
-            $scan->document_id = $el[1];
-
-            $scan->save();
-        }
     }
 
     /**
@@ -63,6 +45,8 @@ class ScanController extends Controller
         $scan->admin = Auth::user()->name;
         $scan->confirmed = true;
         $scan->save();
+
+        $scan->import()->create([]);
     }
 
     /**

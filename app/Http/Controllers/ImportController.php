@@ -15,41 +15,38 @@ class ImportController extends Controller
      */
     public function index()
     {
-        return Import::with(['user', 'scan.reception.user', 'scan.reception.document'])
-                ->where('imported', false)->latest()->paginate(20);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store($id)
-    {
-        $scan = Scan::find($id);
-        $scan->imported = true;
-        $scan->save();
-
-        $import = new Import();
-        $import->user_id = Auth::user()->id;
-        $import->document_id = $scan->reception->document->id;
-        $import->reception_id = $scan->reception->id;
-        $import->save();
-
-        return Scan::with(['user', 'document', 'reception'])->where('imported', false)->latest()->paginate(20);
+        return ['imports' => Import::with(['scan.user', 'scan.reception.document'])->latest()->paginate(20), 
+                'role' => Auth::user()->role];
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Scan  $scan
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Scan $scan)
+    public function importing($id)
     {
-        //
+        $import = Import::find($id);
+        $import->user_id = Auth::user()->id;
+        $import->imported = true;
+        $import->save();
+    }
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confirm($id)
+    {
+        $import = Import::find($id);
+        $import->admin = Auth::user()->name;
+        $import->confirmed = true;
+        $import->save();
+
+        // $import->import()->create([]);
     }
 
     /**

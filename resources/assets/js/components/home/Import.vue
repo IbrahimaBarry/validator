@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <nav class="level">
+  <div>
+    <nav class="level">
       <!-- Left side -->
       <div class="level-left">
         <div class="level-item">
@@ -54,52 +54,63 @@
       </div>
     </nav>
 
-      <Loader v-if="loading"></Loader>
-    <div v-else>  
-      <table class="table">
-          <thead>
-            <tr>
-              <th>Type du document</th>
-              <th>Nom du document</th>
-              <th>Date de publication</th>
-              <th>Nombre de page</th>
-              <th>Date du scanne</th>
-              <th>Agent scanne</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="scan in filteredDocuments">
-              <td>{{ scan.document.type }}</td>
-              <td>{{ scan.document.name }}</td>
-              <td>{{ scan.reception.sourceDate }}</td>
-              <td>{{ scan.reception.nbrPage }}</td>
-              <td>{{ scan.created_at }}</td>
-              <td>{{ scan.user.name }}</td>
-              <td>
-                <a class="button is-small is-outlined is-info" @click.prevent="addImport(scan.id)">Valider l'import</a>
+    <Loader v-if="loading"></Loader>
+    <table :class="{table: true, loading: loading}">
+        <thead>
+          <tr>
+            <th>Type du document</th>
+            <th>Nom du document</th>
+            <th>Date de publication</th>
+            <th>Nombre de page</th>
+            <th>Date du scanne</th>
+            <th>Agent scanne</th>
+            <th>Etat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="doc in filteredDocuments">
+            <td>{{ doc.scan.reception.document.type }}</td>
+            <td>{{ doc.scan.reception.document.name }}</td>
+            <td>{{ doc.scan.reception.sourceDate }}</td>
+            <td>{{ doc.scan.reception.nbrPage }}</td>
+            <td>{{ doc.scan.created_at }}</td>
+            <td>{{ doc.scan.user.name }}</td>
+            <div v-if="doc.imported">
+              <td v-if="doc.confirmed">
+                <span class="icon">
+                  <i class="fa fa-check success"></i>
+                </span>
               </td>
-            </tr>
-          </tbody>
-        </table>
+              <div v-else>
+                <td v-if="role == 'agent'">En attente...</td>
+                <td v-else>
+                  <a class="button is-small is-primary is-outlined" @click.prevent="doneImport(doc)">Confirmer</a>
+                </td>
+              </div>
+            </div>
+              <td v-else>
+                <a class="button is-small is-info is-outlined" @click.prevent="addImport(doc)">Valider l'import</a>
+              </td>
+          </tr>
+        </tbody>
+    </table>
 
-        <!-- PAGINATION -->
-        <nav class="pagination" v-if="pagination.last_page > 1">
-          <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
-          :disabled="!pagination.prev_page_url">Precedent</a>
-          <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
-          :disabled="!pagination.next_page_url">Page suivant</a>
-          <ul class="pagination-list">
-            <li>
-              <span class="pagination-ellipsis">Page</span>
-              <a class="pagination-link is-current">{{ pagination.current_page }}</a>
-            </li>
-            <li><span class="pagination-ellipsis">sur</span></li>
-            <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
+    <!-- PAGINATION -->
+    <nav class="pagination" v-if="pagination.last_page > 1">
+      <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
+      :disabled="!pagination.prev_page_url">Precedent</a>
+      <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
+      :disabled="!pagination.next_page_url">Page suivant</a>
+      <ul class="pagination-list">
+        <li>
+          <span class="pagination-ellipsis">Page</span>
+          <a class="pagination-link is-current">{{ pagination.current_page }}</a>
+        </li>
+        <li><span class="pagination-ellipsis">sur</span></li>
+        <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
+      </ul>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -117,7 +128,8 @@ import Loader from '../Loader';
 
         data() {
             return {
-                scans: [],
+                role: '',
+                imports: [],
                 pagination: {
                   current_page: '',
                   last_page: '',
@@ -147,12 +159,20 @@ import Loader from '../Loader';
               this.pagination.prev_page_url = pages.prev_page_url;
             },
             
-            addImport(id) {
+            addImport(doc) {
               this.loading = true;
               var self = this;
-              axios.get('/import/store/'+id).then(function (response) {
-                self.scans = response.data.data;
-                self.paginate(response.data);
+              axios.get('/import/importing/'+doc.id).then(function (response) {
+                doc.imported = true;
+                self.loading = false;
+              });
+            },
+
+            doneImport(doc) {
+              this.loading = true;
+              var self = this;
+              axios.get('/import/confirm/'+doc.id).then(function (response) {
+                doc.confirmed = true;
                 self.loading = false;
               });
             },
@@ -162,9 +182,10 @@ import Loader from '../Loader';
               this.sorted = false;
               this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
-              axios.get('/receptions/getScanned').then(function(response) {
-                self.scans = response.data.data;
-                self.paginate(response.data);
+              axios.get('/import/index').then(function(response) {
+                self.role = response.data.role;
+                self.imports = response.data.imports.data;
+                self.paginate(response.data.imports);
                 self.loading = false;
               });
             },
@@ -174,7 +195,7 @@ import Loader from '../Loader';
               this.sorted = true;
               var self = this;
               axios.post('/sort/import', this.sorts).then(function (response) {
-                self.scans = response.data.data;
+                self.imports = response.data.data;
                 self.paginate(response.data);
                 self.loading = false;
               });
@@ -185,7 +206,7 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
-                  self.scans = response.data.data;
+                  self.imports = response.data.data;
                   self.paginate(response.data);
                   self.loading = false;
                 });
@@ -194,7 +215,7 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.get(page).then(function (response) {
-                  self.scans = response.data.data;
+                  self.imports = response.data.data;
                   self.paginate(response.data);
                   self.loading = false;
                 });
@@ -205,13 +226,13 @@ import Loader from '../Loader';
         computed: {
             filteredDocuments() {
                 if (this.filter == 'all')
-                    return this.scans;
+                    return this.imports;
                 else if (this.filter == 'Quotidien')
-                    return this.scans.filter(scan => scan.document.frequence == 'Quotidien');
+                    return this.imports.filter(doc => doc.scan.reception.document.frequence == 'Quotidien');
                 else if (this.filter == 'Hebdomadaire')
-                    return this.scans.filter(scan => scan.document.frequence == 'Hebdomadaire');
+                    return this.imports.filter(doc => doc.scan.reception.document.frequence == 'Hebdomadaire');
                 else
-                    return this.scans.filter(scan => scan.document.frequence == 'Mensuel');
+                    return this.imports.filter(doc => doc.scan.reception.document.frequence == 'Mensuel');
             }
         },
 
@@ -219,8 +240,9 @@ import Loader from '../Loader';
             this.loading = true;
             var self = this;
             axios.get('/import/index').then(function (response) {
-              self.scans = response.data.data;
-              self.paginate(response.data);
+              self.role = response.data.role;
+              self.imports = response.data.imports.data;
+              self.paginate(response.data.imports);
               self.loading = false;
             });
         },
@@ -232,5 +254,5 @@ import Loader from '../Loader';
 </script>
 
 <style scoped>
-
+  
 </style>

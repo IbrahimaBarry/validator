@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Import extends Model
 {
-    protected $fillable = ['user_id', 'document_id', 'reception_id', 'confirmed', 'admin'];
+    protected $fillable = ['user_id', 'imported', 'confirmed', 'affected', 'admin'];
 
     public function user()
     {
     	return $this->belongsTo(User::class);
     }
 
-    public function document()
+    public function scan()
     {
-    	return $this->belongsTo(Document::class);
+        return $this->belongsTo(Scan::class);
     }
 
-    public function reception()
+    public function clipping()
     {
-        return $this->belongsTo(Reception::class);
+        return $this->hasOne(Clipping::class);
     }
 }

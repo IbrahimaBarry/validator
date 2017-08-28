@@ -33,12 +33,6 @@ class ReceptionPolicy
         }
     }
 
-    public function affect(User $user)
-    {
-        if ($user->role === 'admin')
-            return true;
-    }
-
     public function clipping(User $user)
     {
         foreach ($user->permissions as $permission) {

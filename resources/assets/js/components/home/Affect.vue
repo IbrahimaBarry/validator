@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <nav class="level">
+  <div>
+    <nav class="level">
       <!-- Left side -->
       <div class="level-left">
         <div class="level-item">
@@ -54,71 +54,55 @@
       </div>
     </nav>
       
-      <Loader v-if="loading"></Loader>
-    <div v-else>
-      <table class="table">
-        <thead>
-          <tr>
-            <th><abbr title="type">Type du document</abbr></th>
-            <th><abbr title="nom">Nom du document</abbr></th>
-            <th><abbr title="sourceDate">Date de publication</abbr></th>
-            <th><abbr title="nbrPage">Nombre de page</abbr></th>
-            <th><abbr title="date">Date de l'import</abbr></th>
-            <th><abbr title="userName">Nom de l'agent</abbr></th>
-            <th><abbr title="nbrPage">Charger du clipping</abbr></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="imported in filteredDocuments" @mouseover="hoverId = imported.id">
-            <td>{{ imported.document.type }}</td>
-            <td>{{ imported.document.name }}</td>
-            <td>{{ imported.sourceDate }}</td>
-            <td>{{ imported.nbrPage }}</td>
-            <td>{{ imported.date_import }}</td>
-            <td>{{ imported.user_import }}</td>
-            <td v-if="imported.user_clipping == null"><a class="button is-small is-outlined is-info" @click.prevent="showModal = true">Affecter à un agent de clipping</a></td>
-            <td v-else>{{imported.user_clipping}}</td>
-          </tr>
-        </tbody>
-      </table>
+    <Loader v-if="loading"></Loader>
+    <table :class="{table: true, loading: loading}">
+      <thead>
+        <tr>
+          <th>Type du document</th>
+          <th>Nom du document</th>
+          <th>Date de publication</th>
+          <th>Nombre de page</th>
+          <th>Date de l'import</th>
+          <th>Nom de l'agent</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="doc in filteredDocuments">
+          <td>{{ doc.scan.reception.document.type }}</td>
+          <td>{{ doc.scan.reception.document.name }}</td>
+          <td>{{ doc.scan.reception.sourceDate }}</td>
+          <td>{{ doc.scan.reception.nbrPage }}</td>
+          <td>{{ doc.created_at }}</td>
+          <td>{{ doc.user.name }}</td>
+          <td v-if="doc.affected">
+            <span class="icon">
+              <i class="fa fa-check success"></i>
+            </span>
+          </td>
+          <td v-else>
+            <a class="button is-small is-outlined is-info" @click.prevent="affect(doc)">Affecter</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <!-- PAGINATION -->
-      <nav class="pagination" v-if="pagination.last_page > 1">
-        <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
-        :disabled="!pagination.prev_page_url">Precedent</a>
-        <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
-        :disabled="!pagination.next_page_url">Page suivant</a>
-        <ul class="pagination-list">
-          <li>
-            <span class="pagination-ellipsis">Page</span>
-            <a class="pagination-link is-current">{{ pagination.current_page }}</a>
-          </li>
-          <li><span class="pagination-ellipsis">sur</span></li>
-          <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
-        </ul>
-      </nav>
-    </div>
-
-      <!-- MODAL -->
-      <div class="modal is-active" v-if="showModal" @blur.prevent="showModal = false">
-        <div class="modal-background"></div>
-        <div class="modal-content box">
-          <table class="table">
-            <thead>
-              <tr>
-                <th><abbr title="type">Choisir un agent</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="agent in agents" @mouseover="hovered = agent.id" @mouseout="hovered = 0" :class="{'is-selected': hovered === agent.id}" @click.prevent="addAgent(hoverId, agent.id)">
-                <td>{{ agent.name }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <button class="modal-close is-large" @click.pervent="showModal = false"></button>
-      </div>
-    </div>
+    <!-- PAGINATION -->
+    <nav class="pagination" v-if="pagination.last_page > 1">
+      <a class="pagination-previous" title="This is the first page" @click.prevent="fetch(pagination.prev_page_url)" 
+      :disabled="!pagination.prev_page_url">Precedent</a>
+      <a class="pagination-next" @click.prevent="fetch(pagination.next_page_url)" 
+      :disabled="!pagination.next_page_url">Page suivant</a>
+      <ul class="pagination-list">
+        <li>
+          <span class="pagination-ellipsis">Page</span>
+          <a class="pagination-link is-current">{{ pagination.current_page }}</a>
+        </li>
+        <li><span class="pagination-ellipsis">sur</span></li>
+        <li><a class="pagination-link">{{ pagination.last_page }}</a></li>
+      </ul>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -127,7 +111,7 @@ import Loader from '../Loader';
     export default {
         beforeRouteEnter (to, from, next) {
           axios.get('/user').then(function(response) {
-            if (response.data.affect)
+            if (response.data.clipping)
               next();
             else
               next({path: from.path});
@@ -137,7 +121,6 @@ import Loader from '../Loader';
         data() {
             return {
                 data: [],
-                agents: [],
                 pagination: {
                   current_page: '',
                   last_page: '',
@@ -147,9 +130,6 @@ import Loader from '../Loader';
                 sorted: false,
 
                 filter: 'all',
-                showModal: false,
-                hoverId: 0,
-                hovered: 0,
                 sorts: {
                   search: '',
                   type: 'Type',
@@ -163,19 +143,26 @@ import Loader from '../Loader';
         },
 
         methods: {
-            addAgent(receptionId,agentId) {
+            paginate(pages) {
+              this.pagination.current_page = pages.current_page;
+              this.pagination.last_page = pages.last_page;
+              this.pagination.next_page_url = pages.next_page_url;
+              this.pagination.prev_page_url = pages.prev_page_url;
+            },
+
+            affect(doc) {
               this.loading = true;
               var self = this;
-              axios.get('/receptions/clipping/'+receptionId+'/'+agentId).then(function (response) {
-                self.data = response.data.imports.data;
-                self.agents = response.data.agents;
-                self.pagination.current_page = response.data.imports.current_page;
-                self.pagination.last_page = response.data.imports.last_page;
-                self.pagination.next_page_url = response.data.imports.next_page_url;
-                self.pagination.prev_page_url = response.data.imports.prev_page_url;
+              axios.get('/affect/'+doc.id).then(function (response) {
+                if (response.data.type == 'success') {
+                  doc.affected = true;
+                  success(response.data.message);
+                }
+                else
+                  error(response.data.message);
+
                 self.loading = false;
               });
-              this.showModal = false;
             },
 
             reload() {
@@ -183,13 +170,9 @@ import Loader from '../Loader';
               this.sorted = false;
               this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
-              axios.get('/receptions/getImported').then(function(response) {
-                self.data = response.data.imports.data;
-                self.agents = response.data.agents;
-                self.pagination.current_page = response.data.imports.current_page;
-                self.pagination.last_page = response.data.imports.last_page;
-                self.pagination.next_page_url = response.data.imports.next_page_url;
-                self.pagination.prev_page_url = response.data.imports.prev_page_url;
+              axios.get('/affect/index').then(function (response) {
+                self.data = response.data.data;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -199,12 +182,8 @@ import Loader from '../Loader';
               this.sorted = true;
               var self = this;
               axios.post('/sort/affect', this.sorts).then(function (response) {
-                self.data = response.data.imports.data;
-                self.agents = response.data.agents;
-                self.pagination.current_page = response.data.imports.current_page;
-                self.pagination.last_page = response.data.imports.last_page;
-                self.pagination.next_page_url = response.data.imports.next_page_url;
-                self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                self.data = response.data.data;
+                self.paginate(response.data.scans);
                 self.loading = false;
               });
             },
@@ -214,12 +193,8 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
-                  self.data = response.data.imports.data;
-                  self.agents = response.data.agents;
-                  self.pagination.current_page = response.data.imports.current_page;
-                  self.pagination.last_page = response.data.imports.last_page;
-                  self.pagination.next_page_url = response.data.imports.next_page_url;
-                  self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                  self.data = response.data.data;
+                  self.paginate(response.data.scans);
                   self.loading = false;
                 });
               }
@@ -227,12 +202,8 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.get(page).then(function (response) {
-                  self.data = response.data.imports.data;
-                  self.agents = response.data.agents;
-                  self.pagination.current_page = response.data.imports.current_page;
-                  self.pagination.last_page = response.data.imports.last_page;
-                  self.pagination.next_page_url = response.data.imports.next_page_url;
-                  self.pagination.prev_page_url = response.data.imports.prev_page_url;
+                  self.data = response.data.data;
+                self.paginate(response.data.scans);
                   self.loading = false;
                 });
               }
@@ -244,24 +215,20 @@ import Loader from '../Loader';
                 if (this.filter == 'all')
                     return this.data;
                 else if (this.filter == 'Quotidien')
-                    return this.data.filter(doc => doc.document.frequence == 'Quotidien');
+                    return this.data.filter(doc => doc.scan.reception.document.frequence == 'Quotidien');
                 else if (this.filter == 'Hebdomadaire')
-                    return this.data.filter(doc => doc.document.frequence == 'Hebdomadaire');
+                    return this.data.filter(doc => doc.scan.reception.document.frequence == 'Hebdomadaire');
                 else
-                    return this.data.filter(doc => doc.document.frequence == 'Mensuel');
+                    return this.data.filter(doc => doc.scan.reception.document.frequence == 'Mensuel');
             }
         },
 
         mounted() {
             this.loading = true;
             var self = this;
-            axios.get('/receptions/getImported').then(function (response) {
-              self.data = response.data.imports.data;
-              self.agents = response.data.agents;
-              self.pagination.current_page = response.data.imports.current_page;
-              self.pagination.last_page = response.data.imports.last_page;
-              self.pagination.next_page_url = response.data.imports.next_page_url;
-              self.pagination.prev_page_url = response.data.imports.prev_page_url;
+            axios.get('/affect/index').then(function (response) {
+              self.data = response.data.data;
+              self.paginate(response.data);
               self.loading = false;
             });
         },

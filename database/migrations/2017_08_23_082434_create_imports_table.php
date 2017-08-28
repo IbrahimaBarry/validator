@@ -19,6 +19,7 @@ class CreateImportsTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->boolean('imported')->default(false);
             $table->boolean('confirmed')->default(false);
+            $table->boolean('affected')->default(false);
             $table->string('admin')->nullable();
             $table->foreign('scan_id')->references('id')->on('scans')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

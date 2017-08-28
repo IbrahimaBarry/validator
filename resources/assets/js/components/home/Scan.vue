@@ -51,14 +51,10 @@
           <p class="level-item"><a :class="{'is-active': filter == 'Quotidien'}" @click.prevent="filter = 'Quotidien'">Quotidiens</a></p>
           <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
           <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
-          <p class="level-item verticalLine">
-            <a v-if="showHistoique" class="button" @click.prevent="showHistoique = false">Masquer l'historique</a>
-            <a v-else class="button" @click.prevent="showHistoique = true">Afficher l'historique</a>
-          </p>
         </div>
       </nav>
       
-      <Loader v-show="loading"></Loader>
+      <Loader v-if="loading"></Loader>
       <table :class="{table: true, loading: loading}">
           <thead>
             <tr>
@@ -154,8 +150,7 @@ import Loader from '../Loader';
                   date: ''
                 },
 
-                loading: false,
-                showHistoique: false
+                loading: false
             }
         },
 
@@ -190,9 +185,10 @@ import Loader from '../Loader';
               this.sorted = false;
               this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
-              axios.get('/receptions/index').then(function(response) {
-                self.scans = response.data.data;
-                self.paginate(response.data);
+              axios.get('/scan/index').then(function (response) {
+                self.role = response.data.role;
+                self.scans = response.data.scans.data;
+                self.paginate(response.data.scans);
                 self.loading = false;
               });
             },
@@ -235,11 +231,11 @@ import Loader from '../Loader';
                 if (this.filter == 'all')
                     return this.scans;
                 else if (this.filter == 'Quotidien')
-                    return this.scans.filter(scan => scan.document.frequence == 'Quotidien');
+                    return this.scans.filter(scan => scan.reception.document.frequence == 'Quotidien');
                 else if (this.filter == 'Hebdomadaire')
-                    return this.scans.filter(scan => scan.document.frequence == 'Hebdomadaire');
+                    return this.scans.filter(scan => scan.reception.document.frequence == 'Hebdomadaire');
                 else
-                    return this.scans.filter(scan => scan.document.frequence == 'Mensuel');
+                    return this.scans.filter(scan => scan.reception.document.frequence == 'Mensuel');
             }
         },
 

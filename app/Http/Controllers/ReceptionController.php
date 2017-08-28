@@ -26,7 +26,7 @@ class ReceptionController extends Controller
      */
     public function index()
     {
-        return Reception::with(['user', 'document'])->latest()->paginate(20);
+        return Reception::with('user', 'document')->latest()->paginate(20);
                     // ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateString())->latest()->get();
     }
 

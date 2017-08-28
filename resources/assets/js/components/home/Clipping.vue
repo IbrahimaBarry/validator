@@ -58,52 +58,56 @@
       
       <Loader v-if="loading"></Loader>
     <div v-else>
-      <table class="table">
+      <table :class="{table: true, loading: loading}">
         <thead>
           <tr>
-            <th><abbr title="nom">Nom</abbr></th>
-            <th><abbr title="source">Source</abbr></th>
-            <th><abbr title="source name">Source name</abbr></th>
-            <th><abbr title="type">Type</abbr></th>
-            <th><abbr title="page">Nombre de page</abbr></th>
-            <th><abbr title="langue">Langue</abbr></th>
-            <th><abbr title="action">Date de publication</abbr></th>
-            <th><abbr title="action"></abbr></th>
+            <th>>Nom</th>
+            <th>Source</th>
+            <th>Source name</th>
+            <th>Type</th>
+            <th>Nombre de page</th>
+            <th>Langue</th>
+            <th>Date de publication</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="doc in sortedDocuments" @mouseover="affect(doc)">
-            <td>{{ doc.document.name }}</td>
-            <td>{{ doc.document.source }}</td>
-            <td>{{ doc.document.sourceName }}</td>
-            <td>{{ doc.document.type }}</td>
-            <td>{{ doc.nbrPage }}</td>
-            <td>{{ doc.document.lang }}</td>
-            <td>{{ doc.sourceDate }}</td>
-            <td v-if="doc.clipped == false">
-              <!-- <a class="button is-small is-outlined is-info" @click.prevent="showAddModal = true">Valider le clipping</a> -->
-              <div class="chrono"><Chrono @endClipping="endClipping"></Chrono></div>
-            </td>
-            <div v-else>
-              <td>
+          <tr v-for="doc in sortedDocuments">
+            <td>{{ doc.import.scan.reception.document.name }}</td>
+            <td>{{ doc.import.scan.reception.document.source }}</td>
+            <td>{{ doc.import.scan.reception.document.sourceName }}</td>
+            <td>{{ doc.import.scan.reception.document.type }}</td>
+            <td>{{ doc.import.scan.reception.nbrPage }}</td>
+            <td>{{ doc.import.scan.reception.document.lang }}</td>
+            <td>{{ doc.import.scan.reception.sourceDate }}</td>
+            <div v-if="doc.clipped">
+              <td v-if="doc.confirmed">
                 <span class="icon">
                   <i class="fa fa-check success"></i>
                 </span>
               </td>
-              <td><a class="button is-small is-info" @click.prevent="showModal = true">Détails</a></td>
+              <div v-else>
+                <td v-if="role == 'agent'">En attente...</td>
+                <td v-else>
+                  <a class="button is-small is-primary is-outlined" @click.prevent="">Confirmer</a>
+                </td>
+              </div>
             </div>
+            <td v-else>
+              <div class="chrono"><Chrono @endClipping="endClipping"></Chrono></div>
+            </td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <th><abbr title="nom">Nom</abbr></th>
-            <th><abbr title="source">Source</abbr></th>
-            <th><abbr title="source name">Source name</abbr></th>
-            <th><abbr title="type">Type</abbr></th>
-            <th><abbr title="page">Nombre de page</abbr></th>
-            <th><abbr title="langue">Langue</abbr></th>
-            <th><abbr title="action">Date de publication</abbr></th>
-            <th><abbr title="action"></abbr></th>
+            <th>Nom</th>
+            <th>Source</th>
+            <th>Source name</th>
+            <th>Type</th>
+            <th>Nombre de page</th>
+            <th>Langue</th>
+            <th>Date de publication</th>
+            <th></th>
           </tr>
         </tfoot>
       </table>
@@ -139,54 +143,6 @@
           </footer>
         </div>
       </div>
-      
-      <div class="modal is-active" v-if="showModal">
-        <div class="modal-background"></div>
-        <div class="modal-content box">
-          <table class="table">
-            <thead>
-              <tr>
-                <th><abbr title="type">Détails du clipping</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Type du document</td>
-                <td>{{ detail.document.type }}</td>
-              </tr>
-              <tr>
-                <td>Nom du document</td>
-                <td>{{ detail.document.name }}</td>
-              </tr>
-              <tr>
-                <td>Date de publication</td>
-                <td>{{ detail.sourceDate }}</td>
-              </tr>
-              <tr>
-                <td>Nbr. de page</td>
-                <td>{{ detail.nbrPage }}</td>
-              </tr>
-              <tr>
-                <td>Date clipping</td>
-                <td>{{ detail.date_clipping }}</td>
-              </tr>
-              <tr>
-                <td>Nom du clippeur</td>
-                <td>{{ detail.user_clipping }}</td>
-              </tr>
-              <tr>
-                <td>Nombre de d'articles total</td>
-                <td>{{ detail.nbrArtTotal }}</td>
-              </tr>
-              <tr>
-                <td>Durée totale du clipping</td>
-                <td>{{ detail.time }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <button class="modal-close is-large" @click.pervent="showModal = false"></button>
-      </div>
     </div>
 </template>
 
@@ -211,15 +167,14 @@ import Loader from '../Loader';
 
         data() {
             return {
+                role: '',
                 documents: [],
+                document: null,
                 clipping: {
                   nbrArtTotal: '',
                   time: ''
                 },
-                hoverId: 0,
                 showAddModal: false,
-                showModal: false,
-                detail: {},
                 filter: 'all',
                 search: '',
                 type: 'Type',
@@ -244,11 +199,6 @@ import Loader from '../Loader';
               }
             },
 
-            affect(doc) {
-              this.detail = doc;
-              this.hoverId = doc.id;
-            },
-
             endClipping(event) {
               this.showAddModal = true;
               this.clipping.time = event.mn+'mn:'+event.s+'s:'+event.ms+'ms';
@@ -264,11 +214,11 @@ import Loader from '../Loader';
                 if (this.filter == 'all')
                     return this.documents;
                 else if (this.filter == 'Quotidien')
-                    return this.documents.filter(doc => doc.document.frequence == 'Quotidien');
+                    return this.documents.filter(doc => doc.import.scan.reception.document.frequence == 'Quotidien');
                 else if (this.filter == 'Hebdomadaire')
-                    return this.documents.filter(doc => doc.document.frequence == 'Hebdomadaire');
+                    return this.documents.filter(doc => doc.import.scan.reception.document.frequence == 'Hebdomadaire');
                 else
-                    return this.documents.filter(doc => doc.document.frequence == 'Mensuel');
+                    return this.documents.filter(doc => doc.import.scan.reception.document.frequence == 'Mensuel');
             },
 
             sortedDocuments() {
@@ -276,14 +226,14 @@ import Loader from '../Loader';
                 if (this.search == '')
                   temp = this.filteredDocuments;
                 else
-                  temp = this.filteredDocuments.filter(document => document.document.name == this.search);
+                  temp = this.filteredDocuments.filter(doc => doc.import.scan.reception.document.name == this.search);
 
                 if (this.type != 'Type')
-                  temp = temp.filter(document => document.document.type == this.type);
+                  temp = temp.filter(doc => doc.import.scan.reception.document.type == this.type);
                 if (this.lang != 'Langue')
-                  temp = temp.filter(document => document.document.lang == this.lang);
+                  temp = temp.filter(doc => doc.import.scan.reception.document.lang == this.lang);
                 if (this.version != 'Version')
-                  temp = temp.filter(document => document.document.version == this.version);
+                  temp = temp.filter(doc => doc.import.scan.reception.document.version == this.version);
 
                 return temp;
               }
@@ -292,9 +242,10 @@ import Loader from '../Loader';
         mounted() {
             this.loading = true;
             var self = this;
-            axios.get('/receptions/clipping/agent')
+            axios.get('/clipping/index')
               .then(response => {
-                self.documents = response.data;
+                self.documents = response.data.clippings;
+                self.role = response.data.role;
                 self.loading = false;
               });
         }

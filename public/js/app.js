@@ -33269,6 +33269,22 @@ window.today = function () {
     return year + "-" + month + "-" + day;
 };
 
+window.success = function (message) {
+    iziToast.success({
+        title: 'OK',
+        message: message,
+        position: 'topCenter'
+    });
+};
+
+window.error = function (message) {
+    iziToast.error({
+        title: 'ERROR',
+        message: message,
+        position: 'topCenter'
+    });
+};
+
 new Vue({
     el: '#app',
 
@@ -36102,8 +36118,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -37515,9 +37529,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.showRecepDoc = true
       }
     }
-  }, [_vm._v("Reception")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
-    staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date de réception")]), _vm._v(" "), _c('th', [_vm._v("Agent reception")]), _vm._v(" "), _c('th', [_vm._v("Cause du retard")])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(document) {
+  }, [_vm._v("Reception")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _vm._e(), _vm._v(" "), _c('table', {
+    class: {
+      table: true, loading: _vm.loading
+    }
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(document) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -37601,11 +37617,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "pagination-ellipsis"
   }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
     staticClass: "pagination-link is-current"
-  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _c('li', [_c('span', {
-    staticClass: "pagination-ellipsis"
-  }, [_vm._v("sur")])]), _vm._v(" "), _c('li', [_c('a', {
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('li', [_c('a', {
     staticClass: "pagination-link"
-  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()]), _vm._v(" "), (_vm.showRecepDoc) ? _c('RecepDoc', {
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e(), _vm._v(" "), (_vm.showRecepDoc) ? _c('RecepDoc', {
     attrs: {
       "id": _vm.hoverId
     },
@@ -37616,7 +37630,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "documentRecepted": _vm.updateDocuments
     }
   }) : _vm._e()], 1)
-},staticRenderFns: []}
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date de réception")]), _vm._v(" "), _c('th', [_vm._v("Agent reception")]), _vm._v(" "), _c('th', [_vm._v("Cause du retard")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -37834,10 +37854,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -37869,8 +37885,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         date: ''
       },
 
-      loading: false,
-      showHistoique: false
+      loading: false
     };
   },
 
@@ -37903,9 +37918,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.sorted = false;
       this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get('/receptions/index').then(function (response) {
-        self.scans = response.data.data;
-        self.paginate(response.data);
+      axios.get('/scan/index').then(function (response) {
+        self.role = response.data.role;
+        self.scans = response.data.scans.data;
+        self.paginate(response.data.scans);
         self.loading = false;
       });
     },
@@ -37943,11 +37959,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     filteredDocuments: function filteredDocuments() {
       if (this.filter == 'all') return this.scans;else if (this.filter == 'Quotidien') return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Quotidien';
+        return scan.reception.document.frequence == 'Quotidien';
       });else if (this.filter == 'Hebdomadaire') return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Hebdomadaire';
+        return scan.reception.document.frequence == 'Hebdomadaire';
       });else return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Mensuel';
+        return scan.reception.document.frequence == 'Mensuel';
       });
     }
   },
@@ -38204,32 +38220,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])]), _vm._v(" "), _c('p', {
-    staticClass: "level-item verticalLine"
-  }, [(_vm.showHistoique) ? _c('a', {
-    staticClass: "button",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.showHistoique = false
-      }
-    }
-  }, [_vm._v("Masquer l'historique")]) : _c('a', {
-    staticClass: "button",
-    on: {
-      "click": function($event) {
-        $event.preventDefault();
-        _vm.showHistoique = true
-      }
-    }
-  }, [_vm._v("Afficher l'historique")])])])]), _vm._v(" "), _c('Loader', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.loading),
-      expression: "loading"
-    }]
-  }), _vm._v(" "), _c('table', {
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _vm._e(), _vm._v(" "), _c('table', {
     class: {
       table: true, loading: _vm.loading
     }
@@ -38385,7 +38376,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -38502,6 +38493,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -38513,7 +38515,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   data: function data() {
     return {
-      scans: [],
+      role: '',
+      imports: [],
       pagination: {
         current_page: '',
         last_page: '',
@@ -38543,12 +38546,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.pagination.next_page_url = pages.next_page_url;
       this.pagination.prev_page_url = pages.prev_page_url;
     },
-    addImport: function addImport(id) {
+    addImport: function addImport(doc) {
       this.loading = true;
       var self = this;
-      axios.get('/import/store/' + id).then(function (response) {
-        self.scans = response.data.data;
-        self.paginate(response.data);
+      axios.get('/import/importing/' + doc.id).then(function (response) {
+        doc.imported = true;
+        self.loading = false;
+      });
+    },
+    doneImport: function doneImport(doc) {
+      this.loading = true;
+      var self = this;
+      axios.get('/import/confirm/' + doc.id).then(function (response) {
+        doc.confirmed = true;
         self.loading = false;
       });
     },
@@ -38557,9 +38567,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.sorted = false;
       this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get('/receptions/getScanned').then(function (response) {
-        self.scans = response.data.data;
-        self.paginate(response.data);
+      axios.get('/import/index').then(function (response) {
+        self.role = response.data.role;
+        self.imports = response.data.imports.data;
+        self.paginate(response.data.imports);
         self.loading = false;
       });
     },
@@ -38568,7 +38579,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.sorted = true;
       var self = this;
       axios.post('/sort/import', this.sorts).then(function (response) {
-        self.scans = response.data.data;
+        self.imports = response.data.data;
         self.paginate(response.data);
         self.loading = false;
       });
@@ -38578,7 +38589,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.loading = true;
         var self = this;
         axios.post(page, this.sorts).then(function (response) {
-          self.scans = response.data.data;
+          self.imports = response.data.data;
           self.paginate(response.data);
           self.loading = false;
         });
@@ -38586,7 +38597,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.loading = true;
         var self = this;
         axios.get(page).then(function (response) {
-          self.scans = response.data.data;
+          self.imports = response.data.data;
           self.paginate(response.data);
           self.loading = false;
         });
@@ -38596,12 +38607,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
     filteredDocuments: function filteredDocuments() {
-      if (this.filter == 'all') return this.scans;else if (this.filter == 'Quotidien') return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Quotidien';
-      });else if (this.filter == 'Hebdomadaire') return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Hebdomadaire';
-      });else return this.scans.filter(function (scan) {
-        return scan.document.frequence == 'Mensuel';
+      if (this.filter == 'all') return this.imports;else if (this.filter == 'Quotidien') return this.imports.filter(function (doc) {
+        return doc.scan.reception.document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.imports.filter(function (doc) {
+        return doc.scan.reception.document.frequence == 'Hebdomadaire';
+      });else return this.imports.filter(function (doc) {
+        return doc.scan.reception.document.frequence == 'Mensuel';
       });
     }
   },
@@ -38610,8 +38621,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     this.loading = true;
     var self = this;
     axios.get('/import/index').then(function (response) {
-      self.scans = response.data.data;
-      self.paginate(response.data);
+      self.role = response.data.role;
+      self.imports = response.data.imports.data;
+      self.paginate(response.data.imports);
       self.loading = false;
     });
   },
@@ -38857,15 +38869,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
-    staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date du scanne")]), _vm._v(" "), _c('th', [_vm._v("Agent scanne")]), _vm._v(" "), _c('th')])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(scan) {
-    return _c('tr', [_c('td', [_vm._v(_vm._s(scan.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(scan.user.name))]), _vm._v(" "), _c('td', [_c('a', {
-      staticClass: "button is-small is-outlined is-info",
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _vm._e(), _vm._v(" "), _c('table', {
+    class: {
+      table: true, loading: _vm.loading
+    }
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(doc) {
+    return _c('tr', [_c('td', [_vm._v(_vm._s(doc.scan.reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.user.name))]), _vm._v(" "), (doc.imported) ? _c('div', [(doc.confirmed) ? _c('td', [_vm._m(1, true)]) : _c('div', [(_vm.role == 'agent') ? _c('td', [_vm._v("En attente...")]) : _c('td', [_c('a', {
+      staticClass: "button is-small is-primary is-outlined",
       on: {
         "click": function($event) {
           $event.preventDefault();
-          _vm.addImport(scan.id)
+          _vm.doneImport(doc)
+        }
+      }
+    }, [_vm._v("Confirmer")])])])]) : _c('td', [_c('a', {
+      staticClass: "button is-small is-info is-outlined",
+      on: {
+        "click": function($event) {
+          $event.preventDefault();
+          _vm.addImport(doc)
         }
       }
     }, [_vm._v("Valider l'import")])])])
@@ -38900,12 +38922,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "pagination-ellipsis"
   }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
     staticClass: "pagination-link is-current"
-  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _c('li', [_c('span', {
-    staticClass: "pagination-ellipsis"
-  }, [_vm._v("sur")])]), _vm._v(" "), _c('li', [_c('a', {
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _c('li', [_c('a', {
     staticClass: "pagination-link"
-  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()])], 1)
-},staticRenderFns: []}
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()], 1)
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date du scanne")]), _vm._v(" "), _c('th', [_vm._v("Agent scanne")]), _vm._v(" "), _c('th', [_vm._v("Etat")])])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon"
+  }, [_c('i', {
+    staticClass: "fa fa-check success"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -39113,35 +39145,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     axios.get('/user').then(function (response) {
-      if (response.data.affect) next();else next({ path: from.path });
+      if (response.data.clipping) next();else next({ path: from.path });
     });
   },
   data: function data() {
     return {
       data: [],
-      agents: [],
       pagination: {
         current_page: '',
         last_page: '',
@@ -39151,9 +39166,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       sorted: false,
 
       filter: 'all',
-      showModal: false,
-      hoverId: 0,
-      hovered: 0,
       sorts: {
         search: '',
         type: 'Type',
@@ -39168,32 +39180,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
   methods: {
-    addAgent: function addAgent(receptionId, agentId) {
+    paginate: function paginate(pages) {
+      this.pagination.current_page = pages.current_page;
+      this.pagination.last_page = pages.last_page;
+      this.pagination.next_page_url = pages.next_page_url;
+      this.pagination.prev_page_url = pages.prev_page_url;
+    },
+    affect: function affect(doc) {
       this.loading = true;
       var self = this;
-      axios.get('/receptions/clipping/' + receptionId + '/' + agentId).then(function (response) {
-        self.data = response.data.imports.data;
-        self.agents = response.data.agents;
-        self.pagination.current_page = response.data.imports.current_page;
-        self.pagination.last_page = response.data.imports.last_page;
-        self.pagination.next_page_url = response.data.imports.next_page_url;
-        self.pagination.prev_page_url = response.data.imports.prev_page_url;
+      axios.get('/affect/' + doc.id).then(function (response) {
+        if (response.data.type == 'success') {
+          doc.affected = true;
+          success(response.data.message);
+        } else error(response.data.message);
+
         self.loading = false;
       });
-      this.showModal = false;
     },
     reload: function reload() {
       this.loading = true;
       this.sorted = false;
       this.sorts.search = '';this.sorts.type = 'Type';this.sorts.lang = 'Langue';this.sorts.version = 'Version';this.sorts.date = '';
       var self = this;
-      axios.get('/receptions/getImported').then(function (response) {
-        self.data = response.data.imports.data;
-        self.agents = response.data.agents;
-        self.pagination.current_page = response.data.imports.current_page;
-        self.pagination.last_page = response.data.imports.last_page;
-        self.pagination.next_page_url = response.data.imports.next_page_url;
-        self.pagination.prev_page_url = response.data.imports.prev_page_url;
+      axios.get('/affect/index').then(function (response) {
+        self.data = response.data.data;
+        self.paginate(response.data);
         self.loading = false;
       });
     },
@@ -39202,12 +39214,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.sorted = true;
       var self = this;
       axios.post('/sort/affect', this.sorts).then(function (response) {
-        self.data = response.data.imports.data;
-        self.agents = response.data.agents;
-        self.pagination.current_page = response.data.imports.current_page;
-        self.pagination.last_page = response.data.imports.last_page;
-        self.pagination.next_page_url = response.data.imports.next_page_url;
-        self.pagination.prev_page_url = response.data.imports.prev_page_url;
+        self.data = response.data.data;
+        self.paginate(response.data.scans);
         self.loading = false;
       });
     },
@@ -39216,24 +39224,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.loading = true;
         var self = this;
         axios.post(page, this.sorts).then(function (response) {
-          self.data = response.data.imports.data;
-          self.agents = response.data.agents;
-          self.pagination.current_page = response.data.imports.current_page;
-          self.pagination.last_page = response.data.imports.last_page;
-          self.pagination.next_page_url = response.data.imports.next_page_url;
-          self.pagination.prev_page_url = response.data.imports.prev_page_url;
+          self.data = response.data.data;
+          self.paginate(response.data.scans);
           self.loading = false;
         });
       } else {
         this.loading = true;
         var self = this;
         axios.get(page).then(function (response) {
-          self.data = response.data.imports.data;
-          self.agents = response.data.agents;
-          self.pagination.current_page = response.data.imports.current_page;
-          self.pagination.last_page = response.data.imports.last_page;
-          self.pagination.next_page_url = response.data.imports.next_page_url;
-          self.pagination.prev_page_url = response.data.imports.prev_page_url;
+          self.data = response.data.data;
+          self.paginate(response.data.scans);
           self.loading = false;
         });
       }
@@ -39243,11 +39243,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     filteredDocuments: function filteredDocuments() {
       if (this.filter == 'all') return this.data;else if (this.filter == 'Quotidien') return this.data.filter(function (doc) {
-        return doc.document.frequence == 'Quotidien';
+        return doc.scan.reception.document.frequence == 'Quotidien';
       });else if (this.filter == 'Hebdomadaire') return this.data.filter(function (doc) {
-        return doc.document.frequence == 'Hebdomadaire';
+        return doc.scan.reception.document.frequence == 'Hebdomadaire';
       });else return this.data.filter(function (doc) {
-        return doc.document.frequence == 'Mensuel';
+        return doc.scan.reception.document.frequence == 'Mensuel';
       });
     }
   },
@@ -39255,13 +39255,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted: function mounted() {
     this.loading = true;
     var self = this;
-    axios.get('/receptions/getImported').then(function (response) {
-      self.data = response.data.imports.data;
-      self.agents = response.data.agents;
-      self.pagination.current_page = response.data.imports.current_page;
-      self.pagination.last_page = response.data.imports.last_page;
-      self.pagination.next_page_url = response.data.imports.next_page_url;
-      self.pagination.prev_page_url = response.data.imports.prev_page_url;
+    axios.get('/affect/index').then(function (response) {
+      self.data = response.data.data;
+      self.paginate(response.data);
       self.loading = false;
     });
   },
@@ -39507,52 +39503,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.filter = 'Mensuel'
       }
     }
-  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
-    staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
+  }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _vm._e(), _vm._v(" "), _c('table', {
+    class: {
+      table: true, loading: _vm.loading
     }
-  }, [_vm._v("Type du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom du document")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "sourceDate"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "date"
-    }
-  }, [_vm._v("Date de l'import")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "userName"
-    }
-  }, [_vm._v("Nom de l'agent")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  }, [_vm._v("Charger du clipping")])])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(imported) {
-    return _c('tr', {
-      on: {
-        "mouseover": function($event) {
-          _vm.hoverId = imported.id
-        }
-      }
-    }, [_c('td', [_vm._v(_vm._s(imported.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(imported.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(imported.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(imported.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(imported.date_import))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(imported.user_import))]), _vm._v(" "), (imported.user_clipping == null) ? _c('td', [_c('a', {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.filteredDocuments), function(doc) {
+    return _c('tr', [_c('td', [_vm._v(_vm._s(doc.scan.reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.reception.sourceDate))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.scan.reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.created_at))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.user.name))]), _vm._v(" "), (doc.affected) ? _c('td', [_vm._m(1, true)]) : _c('td', [_c('a', {
       staticClass: "button is-small is-outlined is-info",
       on: {
         "click": function($event) {
           $event.preventDefault();
-          _vm.showModal = true
+          _vm.affect(doc)
         }
       }
-    }, [_vm._v("Affecter à un agent de clipping")])]) : _c('td', [_vm._v(_vm._s(imported.user_clipping))])])
+    }, [_vm._v("Affecter")])])])
   }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
     staticClass: "pagination"
   }, [_c('a', {
@@ -39584,57 +39548,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "pagination-ellipsis"
   }, [_vm._v("Page")]), _vm._v(" "), _c('a', {
     staticClass: "pagination-link is-current"
-  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _c('li', [_c('span', {
-    staticClass: "pagination-ellipsis"
-  }, [_vm._v("sur")])]), _vm._v(" "), _c('li', [_c('a', {
+  }, [_vm._v(_vm._s(_vm.pagination.current_page))])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _c('li', [_c('a', {
     staticClass: "pagination-link"
-  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()]), _vm._v(" "), (_vm.showModal) ? _c('div', {
-    staticClass: "modal is-active",
-    on: {
-      "blur": function($event) {
-        $event.preventDefault();
-        _vm.showModal = false
-      }
-    }
-  }, [_c('div', {
-    staticClass: "modal-background"
-  }), _vm._v(" "), _c('div', {
-    staticClass: "modal-content box"
-  }, [_c('table', {
-    staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.agents), function(agent) {
-    return _c('tr', {
-      class: {
-        'is-selected': _vm.hovered === agent.id
-      },
-      on: {
-        "mouseover": function($event) {
-          _vm.hovered = agent.id
-        },
-        "mouseout": function($event) {
-          _vm.hovered = 0
-        },
-        "click": function($event) {
-          $event.preventDefault();
-          _vm.addAgent(_vm.hoverId, agent.id)
-        }
-      }
-    }, [_c('td', [_vm._v(_vm._s(agent.name))])])
-  }))])]), _vm._v(" "), _c('button', {
-    staticClass: "modal-close is-large",
-    on: {
-      "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "pervent")) { return null; }
-        _vm.showModal = false
-      }
-    }
-  })]) : _vm._e()], 1)
+  }, [_vm._v(_vm._s(_vm.pagination.last_page))])])])]) : _vm._e()], 1)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Choisir un agent")])])])])
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Type du document")]), _vm._v(" "), _c('th', [_vm._v("Nom du document")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Date de l'import")]), _vm._v(" "), _c('th', [_vm._v("Nom de l'agent")]), _vm._v(" "), _c('th')])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "icon"
+  }, [_c('i', {
+    staticClass: "fa fa-check success"
+  })])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', [_c('span', {
+    staticClass: "pagination-ellipsis"
+  }, [_vm._v("sur")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -39886,50 +39814,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -39949,15 +39833,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   data: function data() {
     return {
+      role: '',
       documents: [],
+      document: null,
       clipping: {
         nbrArtTotal: '',
         time: ''
       },
-      hoverId: 0,
       showAddModal: false,
-      showModal: false,
-      detail: {},
       filter: 'all',
       search: '',
       type: 'Type',
@@ -39981,10 +39864,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.showAddModal = false;
       }
     },
-    affect: function affect(doc) {
-      this.detail = doc;
-      this.hoverId = doc.id;
-    },
     endClipping: function endClipping(event) {
       this.showAddModal = true;
       this.clipping.time = event.mn + 'mn:' + event.s + 's:' + event.ms + 'ms';
@@ -39997,29 +39876,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     filteredDocuments: function filteredDocuments() {
       if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (doc) {
-        return doc.document.frequence == 'Quotidien';
+        return doc.import.scan.reception.document.frequence == 'Quotidien';
       });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (doc) {
-        return doc.document.frequence == 'Hebdomadaire';
+        return doc.import.scan.reception.document.frequence == 'Hebdomadaire';
       });else return this.documents.filter(function (doc) {
-        return doc.document.frequence == 'Mensuel';
+        return doc.import.scan.reception.document.frequence == 'Mensuel';
       });
     },
     sortedDocuments: function sortedDocuments() {
       var _this = this;
 
       var temp;
-      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-        return document.document.name == _this.search;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (doc) {
+        return doc.import.scan.reception.document.name == _this.search;
       });
 
-      if (this.type != 'Type') temp = temp.filter(function (document) {
-        return document.document.type == _this.type;
+      if (this.type != 'Type') temp = temp.filter(function (doc) {
+        return doc.import.scan.reception.document.type == _this.type;
       });
-      if (this.lang != 'Langue') temp = temp.filter(function (document) {
-        return document.document.lang == _this.lang;
+      if (this.lang != 'Langue') temp = temp.filter(function (doc) {
+        return doc.import.scan.reception.document.lang == _this.lang;
       });
-      if (this.version != 'Version') temp = temp.filter(function (document) {
-        return document.document.version == _this.version;
+      if (this.version != 'Version') temp = temp.filter(function (doc) {
+        return doc.import.scan.reception.document.version == _this.version;
       });
 
       return temp;
@@ -40029,8 +39908,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   mounted: function mounted() {
     this.loading = true;
     var self = this;
-    axios.get('/receptions/clipping/agent').then(function (response) {
-      self.documents = response.data;
+    axios.get('/clipping/index').then(function (response) {
+      self.documents = response.data.clippings;
+      self.role = response.data.role;
       self.loading = false;
     });
   }
@@ -40460,98 +40340,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("Mensuels")])])])]), _vm._v(" "), (_vm.loading) ? _c('Loader') : _c('div', [_c('table', {
-    staticClass: "table"
-  }, [_c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
+    class: {
+      table: true, loading: _vm.loading
     }
-  }, [_vm._v("Nom")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source"
-    }
-  }, [_vm._v("Source")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source name"
-    }
-  }, [_vm._v("Source name")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "page"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "langue"
-    }
-  }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "action"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "action"
-    }
-  })])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(doc) {
-    return _c('tr', {
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v(">Nom")]), _vm._v(" "), _c('th', [_vm._v("Source")]), _vm._v(" "), _c('th', [_vm._v("Source name")]), _vm._v(" "), _c('th', [_vm._v("Type")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Langue")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th')])]), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(doc) {
+    return _c('tr', [_c('td', [_vm._v(_vm._s(doc.import.scan.reception.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.import.scan.reception.document.source))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.import.scan.reception.document.sourceName))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.import.scan.reception.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.import.scan.reception.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.import.scan.reception.document.lang))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.import.scan.reception.sourceDate))]), _vm._v(" "), (doc.clipped) ? _c('div', [(doc.confirmed) ? _c('td', [_c('span', {
+      staticClass: "icon"
+    }, [_c('i', {
+      staticClass: "fa fa-check success"
+    })])]) : _c('div', [(_vm.role == 'agent') ? _c('td', [_vm._v("En attente...")]) : _c('td', [_c('a', {
+      staticClass: "button is-small is-primary is-outlined",
       on: {
-        "mouseover": function($event) {
-          _vm.affect(doc)
+        "click": function($event) {
+          $event.preventDefault();
         }
       }
-    }, [_c('td', [_vm._v(_vm._s(doc.document.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.document.source))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.document.sourceName))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.document.type))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.nbrPage))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.document.lang))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(doc.sourceDate))]), _vm._v(" "), (doc.clipped == false) ? _c('td', [_c('div', {
+    }, [_vm._v("Confirmer")])])])]) : _c('td', [_c('div', {
       staticClass: "chrono"
     }, [_c('Chrono', {
       on: {
         "endClipping": _vm.endClipping
       }
-    })], 1)]) : _c('div', [_c('td', [_c('span', {
-      staticClass: "icon"
-    }, [_c('i', {
-      staticClass: "fa fa-check success"
-    })])]), _vm._v(" "), _c('td', [_c('a', {
-      staticClass: "button is-small is-info",
-      on: {
-        "click": function($event) {
-          $event.preventDefault();
-          _vm.showModal = true
-        }
-      }
-    }, [_vm._v("Détails")])])])])
-  })), _vm._v(" "), _c('tfoot', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source"
-    }
-  }, [_vm._v("Source")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source name"
-    }
-  }, [_vm._v("Source name")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "page"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "langue"
-    }
-  }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "action"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "action"
-    }
-  })])])])])]), _vm._v(" "), (_vm.showAddModal === true) ? _c('div', {
+    })], 1)])])
+  })), _vm._v(" "), _c('tfoot', [_c('tr', [_c('th', [_vm._v("Nom")]), _vm._v(" "), _c('th', [_vm._v("Source")]), _vm._v(" "), _c('th', [_vm._v("Source name")]), _vm._v(" "), _c('th', [_vm._v("Type")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Langue")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th')])])])]), _vm._v(" "), (_vm.showAddModal === true) ? _c('div', {
     staticClass: "modal is-active"
   }, [_c('div', {
     staticClass: "modal-background"
@@ -40641,30 +40452,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.showAddModal = false
       }
     }
-  }, [_vm._v("Fermer")])])])]) : _vm._e(), _vm._v(" "), (_vm.showModal) ? _c('div', {
-    staticClass: "modal is-active"
-  }, [_c('div', {
-    staticClass: "modal-background"
-  }), _vm._v(" "), _c('div', {
-    staticClass: "modal-content box"
-  }, [_c('table', {
-    staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', [_c('tr', [_c('td', [_vm._v("Type du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.type))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du document")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.document.name))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date de publication")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.sourceDate))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nbr. de page")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrPage))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Date clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.date_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nom du clippeur")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.user_clipping))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Nombre de d'articles total")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.nbrArtTotal))])]), _vm._v(" "), _c('tr', [_c('td', [_vm._v("Durée totale du clipping")]), _vm._v(" "), _c('td', [_vm._v(_vm._s(_vm.detail.time))])])])])]), _vm._v(" "), _c('button', {
-    staticClass: "modal-close is-large",
-    on: {
-      "click": function($event) {
-        if (!('button' in $event) && _vm._k($event.keyCode, "pervent")) { return null; }
-        _vm.showModal = false
-      }
-    }
-  })]) : _vm._e()], 1)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Détails du clipping")])])])])
-}]}
+  }, [_vm._v("Fermer")])])])]) : _vm._e()], 1)
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()

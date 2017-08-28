@@ -33,8 +33,7 @@ class HomeController extends Controller
         $import = Gate::allows('import', Reception::class);
         $clipping = Gate::allows('clipping', Reception::class);
         $export = Gate::allows('export', Reception::class);
-        $affect = Gate::allows('affect', Reception::class);
 
-        return ['reception' => $reception, 'scan' => $scan, 'import' => $import, 'clipping' => $clipping, 'export' => $export, 'affect' => $affect];
+        return ['reception' => $reception, 'scan' => $scan, 'import' => $import, 'clipping' => $clipping, 'export' => $export];
     }
 }
