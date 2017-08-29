@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Import;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\Sort;
 
 class AffectController extends Controller
 {
@@ -38,5 +39,17 @@ class AffectController extends Controller
         }
         else
             return ['type' => 'error', 'message' => 'Ce document a déja été affecté!'];
+    }
+
+    /**
+     * Sort the listed resources.
+     *
+     * @param  string  $model
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sort(Request $request)
+    {
+        return (new Sort($request))->affect($request);
     }
 }

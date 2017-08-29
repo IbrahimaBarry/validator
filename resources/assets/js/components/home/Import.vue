@@ -88,9 +88,9 @@
                 </td>
               </div>
             </div>
-              <td v-else>
-                <a class="button is-small is-info is-outlined" @click.prevent="addImport(doc)">Valider l'import</a>
-              </td>
+            <td v-else>
+              <a class="button is-small is-info is-outlined" @click.prevent="addImport(doc)">Valider l'import</a>
+            </td>
           </tr>
         </tbody>
     </table>
@@ -215,8 +215,8 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.get(page).then(function (response) {
-                  self.imports = response.data.data;
-                  self.paginate(response.data);
+                  self.imports = response.data.imports.data;
+                  self.paginate(response.data.imports);
                   self.loading = false;
                 });
               }

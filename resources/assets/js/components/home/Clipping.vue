@@ -61,7 +61,7 @@
       <table :class="{table: true, loading: loading}">
         <thead>
           <tr>
-            <th>>Nom</th>
+            <th>Nom</th>
             <th>Source</th>
             <th>Source name</th>
             <th>Type</th>
@@ -89,12 +89,13 @@
               <div v-else>
                 <td v-if="role == 'agent'">En attente...</td>
                 <td v-else>
-                  <a class="button is-small is-primary is-outlined" @click.prevent="">Confirmer</a>
+                  <a class="button is-small is-primary is-outlined" @click.prevent="confirm(doc)">Confirmer</a>
                 </td>
               </div>
             </div>
             <td v-else>
-              <div class="chrono"><Chrono @endClipping="endClipping"></Chrono></div>
+              <!-- <div class="chrono"><Chrono @endClipping="endClipping"></Chrono></div> -->
+              <a class="button is-small is-info is-outlined" @click.prevent="startClipping(doc)">Démarrer le clipping</a>
             </td>
           </tr>
         </tbody>
@@ -113,12 +114,12 @@
       </table>
     </div>
 
-      <div class="modal is-active" v-if="showAddModal === true">
+      <div class="modal is-active" v-if="showModal === true">
         <div class="modal-background"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Validation du clipping</p>
-            <button class="delete" @click="showAddModal = false"></button>
+            <button class="delete" @click="showModal = false"></button>
           </header>
 
           <section class="modal-card-body">  
@@ -132,14 +133,14 @@
             <div class="field">
               <label class="label">Durée totale du clipping</label>
               <p class="control">
-                <input class="input" type="text" disabled v-model="clipping.time">
+                <input class="input" type="time" v-model="clipping.time">
               </p>
             </div>
           </section>
 
           <footer class="modal-card-foot">
-            <a class="button is-primary" @click.prevent="addClipping(hoverId)">Valider</a>
-            <a class="button" @click="showAddModal = false">Fermer</a>
+            <a class="button is-primary" @click.prevent="doneClipping">Valider</a>
+            <a class="button" @click="showModal = false">Fermer</a>
           </footer>
         </div>
       </div>
@@ -147,7 +148,7 @@
 </template>
 
 <script>
-import Chrono from './Chrono';
+// import Chrono from './Chrono';
 import Loader from '../Loader';
 
     export default {
@@ -161,7 +162,6 @@ import Loader from '../Loader';
         },
 
         components: {
-          Chrono,
           Loader
         },
 
@@ -169,12 +169,8 @@ import Loader from '../Loader';
             return {
                 role: '',
                 documents: [],
-                document: null,
-                clipping: {
-                  nbrArtTotal: '',
-                  time: ''
-                },
-                showAddModal: false,
+                clipping: null,
+                showModal: false,
                 filter: 'all',
                 search: '',
                 type: 'Type',
@@ -186,22 +182,30 @@ import Loader from '../Loader';
         },
 
         methods: {
-            addClipping(id) {
-              if (this.hoverId != 0) {
-                this.loading = true;
-                var self = this;
-                axios.post('/receptions/clipping/'+id, this.clipping)
-                    .then(response => {
-                      self.documents = response.data;
-                      self.loading = false;
-                    });
-                this.showAddModal = false;
-              }
+            startClipping(doc) {
+              this.clipping = doc;
+              this.showModal = true;
             },
 
-            endClipping(event) {
-              this.showAddModal = true;
-              this.clipping.time = event.mn+'mn:'+event.s+'s:'+event.ms+'ms';
+            doneClipping() {
+              this.loading = true;
+              var self = this;
+              axios.post('/clipping', this.clipping)
+                .then(response => {
+                  self.clipping.clipped = true;
+                  self.showModal = false;
+                  self.loading = false;
+                });
+            },
+
+            confirm(doc) {
+              this.loading = true;
+              var self = this;
+              axios.get('/clipping/confirm/'+doc.id)
+                .then(response => {
+                  doc.confirmed = true;
+                  self.loading = false;
+                });
             },
 
             reload() {

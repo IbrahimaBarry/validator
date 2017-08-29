@@ -48,13 +48,20 @@ Route::get('/affect/{id}', 'AffectController@affect');
 
 // CLIPPING
 Route::get('/clipping/index', 'ClippingController@index');
+Route::post('/clipping', 'ClippingController@clipped');
+Route::get('/clipping/confirm/{id}', 'ClippingController@confirm');
 
 // EXPORT
-Route::get('/receptions/export/{id}', 'ReceptionController@export');
-Route::get('/receptions/getClipped', 'ReceptionController@getClipped'); 
+Route::get('/export/index', 'ExportController@index');
+Route::get('/export/{id}', 'ExportController@exported');
+Route::get('/export/confirm/{id}', 'ExportController@confirm');
 
 // SORT
-Route::post('/sort/{model}', 'ReceptionController@sort');
+Route::post('/sort/reception', 'ReceptionController@sort');
+Route::post('/sort/scan', 'ScanController@sort');
+Route::post('/sort/import', 'ImportController@sort');
+Route::post('/sort/affect', 'AffectController@sort');
+Route::post('/sort/export', 'ExportController@sort');
 
 // ADMIN
 Route::get('/admin/dashboard', 'AdminController@dashboard');

@@ -43,8 +43,6 @@ class UserController extends Controller
         $user = $register->create($request);
 
         $user->permissions()->attach($request->permissions);
-
-        return ['success'];
     }
 
     /**

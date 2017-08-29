@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Import;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\Sort;
 
 class ImportController extends Controller
 {
@@ -58,5 +59,17 @@ class ImportController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Sort the listed resources.
+     *
+     * @param  string  $model
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sort(Request $request)
+    {
+        return (new Sort($request))->import($request);
     }
 }

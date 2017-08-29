@@ -6,9 +6,7 @@ use App\Reception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use DateTimeZone;
 use App\User;
-use App\Scan;
 use App\Helpers\Sort;
 
 class ReceptionController extends Controller
@@ -77,22 +75,22 @@ class ReceptionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function sort($model, Request $request)
+    public function sort(Request $request)
     {
-        if ($model == 'affect') {
-            $agents = [];
+        // if ($model == 'affect') {
+        //     $agents = [];
 
-            foreach (User::where('role', 'agent')->get() as $user) {
-                foreach ($user->permissions as $permission) {
-                    if ($permission->name === 'clipping')
-                        array_push($agents, $user);
-                }
-            }
+        //     foreach (User::where('role', 'agent')->get() as $user) {
+        //         foreach ($user->permissions as $permission) {
+        //             if ($permission->name === 'clipping')
+        //                 array_push($agents, $user);
+        //         }
+        //     }
 
-            return ['imports' => (new Sort())->index($model, $request), 'agents' => $agents];
-        }
-        else
-            return (new Sort())->index($model, $request);
+        //     return ['imports' => (new Sort())->index($model, $request), 'agents' => $agents];
+        // }
+        // else
+        return (new Sort($request))->reception($request);
     }
 
 }

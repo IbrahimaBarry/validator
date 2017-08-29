@@ -183,7 +183,7 @@ import Loader from '../Loader';
               var self = this;
               axios.post('/sort/affect', this.sorts).then(function (response) {
                 self.data = response.data.data;
-                self.paginate(response.data.scans);
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -194,7 +194,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
                   self.data = response.data.data;
-                  self.paginate(response.data.scans);
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }
@@ -203,7 +203,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.get(page).then(function (response) {
                   self.data = response.data.data;
-                self.paginate(response.data.scans);
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }

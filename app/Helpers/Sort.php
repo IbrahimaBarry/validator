@@ -3,139 +3,171 @@
 namespace App\Helpers;
 
 use App\Reception;
+use App\Scan;
+use App\Import;
+use App\Export;
 
 /**
 * Class for sorting Receptions
 */
 class Sort
-{	
-	public function __construct()
-	{
+{
+	protected $conditions = [];
 
+	public function __construct($request)
+	{
+		if ($request->search != '')
+			$this->conditions['name'] = $request->search;
+		if ($request->type != 'Type')
+			$this->conditions['type'] = $request->type;
+		if ($request->lang != 'Langue')
+			$this->conditions['lang'] = $request->lang;
+		if ($request->version != 'Version')
+			$this->conditions['version'] = $request->version;
 	}
 
-	/**
-     * Display a listing of the resource sort.
-     *
-     * @param. string  $model
-     * @param. \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-	public function index($model, $request)
+	// SORT RECEPtiON
+	public function reception($request)
 	{
-		$conditions = [];
+		$conditions = $this->conditions;
 
-		if ($request->search != '')
-			$conditions['name'] = $request->search;
-		if ($request->type != 'Type')
-			$conditions['type'] = $request->type;
-		if ($request->lang != 'Langue')
-			$conditions['lang'] = $request->lang;
-		if ($request->version != 'Version')
-			$conditions['version'] = $request->version;
-
-		// RECEPTION
-		if ($model == 'reception') {
-			if ($request->date != '') {
-	            return Reception::with(['user', 'document'])
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->whereDate('created_at', $request->date)->latest()->paginate();
-            }
-            else {
-            	return Reception::with(['user', 'document'])
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->latest()->paginate();
-            }
+		if ($request->date != '') {
+            return Reception::with(['user', 'document'])
+                ->whereHas('document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->whereDate('created_at', $request->date)->latest()->paginate(20);
         }
-
-        // IMPORT
-		if ($model == 'import') {
-			if ($request->date != '') {
-	            return Reception::with('document')
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->where('scanned', true)->whereDate('date_scan', $request->date)->latest()->paginate();
-            }
-            else {
-            	return Reception::with('document')
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->where('scanned', true)->latest()->paginate();
-            }
+        else {
+        	return Reception::with(['user', 'document'])
+                ->whereHas('document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->latest()->paginate(20);
         }
+	}
 
-        // AFFECT
-        if ($model == 'affect') {
-			if ($request->date != '') {
-	            return Reception::with('document')
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->where('imported', true)->whereDate('date_import', $request->date)->latest()->paginate();
-            }
-            else {
-            	return Reception::with('document')
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->where('imported', true)->latest()->paginate();
-            }
+	// SORT SCAN
+	public function scan($request)
+	{
+		$conditions = $this->conditions;
+
+		if ($request->date != '') {
+            return Scan::with(['reception.user', 'reception.document'])
+                ->whereHas('reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->whereDate('created_at', $request->date)->latest()->paginate(20);
         }
+        else {
+        	return Scan::with(['reception.user', 'reception.document'])
+                ->whereHas('reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->latest()->paginate(20);
+        }
+	}
 
-        // AFFECT
-        if ($model == 'clipping') {
-			if ($request->date != '') {
-	            return Reception::with('document')
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->where('clipped', true)->whereDate('date_clipping', $request->date)->latest()->paginate();
-            }
-            else {
-            	return Reception::with('document')
-	                ->whereHas('document', function($query) use ($conditions) {
-	                    foreach ($conditions as $key => $value) {
-	                    	if ($key == 'name')
-	                    		$query->where($key, 'LIKE', '%'.$value.'%');
-	                    	else
-	                    		$query->where($key, $value);
-	                    }
-	                })->where('clipped', true)->latest()->paginate();
-            }
+	// SORT IMPORT
+	public function import($request)
+	{
+		$conditions = $this->conditions;
+
+		if ($request->date != '') {
+            return Import::with(['scan.user', 'scan.reception.document'])
+                ->whereHas('scan.reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->whereDate('created_at', $request->date)->latest()->paginate(20);
+        }
+        else {
+        	return Import::with(['scan.user', 'scan.reception.document'])
+                ->whereHas('scan.reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->latest()->paginate(20);
+        }
+	}
+
+	// SORT AFFECT
+	public function affect($request)
+	{
+		$conditions = $this->conditions;
+
+		if ($request->date != '') {
+            return Import::with(['user', 'scan.user', 'scan.reception.document'])
+                ->whereHas('scan.reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->whereDate('created_at', $request->date)->latest()->paginate(20);
+        }
+        else {
+        	return Import::with(['user', 'scan.user', 'scan.reception.document'])
+                ->whereHas('scan.reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->latest()->paginate(20);
+        }
+	}
+
+	// SORT EXPORT
+	public function export($request)
+	{
+		$conditions = $this->conditions;
+
+		if ($request->date != '') {
+            return Export::with(['clipping.user', 'clipping.import.scan.reception.document'])
+                ->whereHas('clipping.import.scan.reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->whereDate('created_at', $request->date)->latest()->paginate(20);
+        }
+        else {
+        	return Export::with(['clipping.user', 'clipping.import.scan.reception.document'])
+                ->whereHas('clipping.import.scan.reception.document', function($query) use ($conditions) {
+                    foreach ($conditions as $key => $value) {
+                    	if ($key == 'name')
+                    		$query->where($key, 'LIKE', '%'.$value.'%');
+                    	else
+                    		$query->where($key, $value);
+                    }
+                })->latest()->paginate(20);
         }
 	}
 

@@ -59,35 +59,41 @@
       <table class="table">
         <thead>
           <tr>
-            <th><abbr title="type">Type du document</abbr></th>
-            <th><abbr title="nom">Nom du document</abbr></th>
-            <th><abbr title="date">Date de publication</abbr></th>
-            <th><abbr title="nbrPage">Nbr. de page</abbr></th>
-            <th><abbr title="nbrPage">Date clipping</abbr></th>
-            <th><abbr title="userName">Agent clipping</abbr></th>
-            <th><abbr title="nbrPage"></abbr></th>
-            <th><abbr title="nbrPage"></abbr></th>
-            <th><abbr title="nbrPage"></abbr></th>
+            <th>Type du document</th>
+            <th>Nom du document</th>
+            <th>Date de publication</th>
+            <th>Nbr. de page</th>
+            <th>Date clipping</th>
+            <th>Agent clipping</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="doc in filteredDocuments" @mouseover="detail = doc">
-            <td>{{ doc.document.type }}</td>
-            <td>{{ doc.document.name }}</td>
-            <td>{{ doc.sourceDate }}</td>
-            <td>{{ doc.nbrPage }}</td>
-            <td>{{ doc.date_clipping }}</td>
-            <td>{{ doc.user_clipping }}</td>
-            <div v-if="doc.exported == false">
-              <td><a class="button is-small is-outlined is-info" @click.prevent="addExport(doc.id)">Valider l'export</a></td>
-              <td><a class="delete is-medium danger" @click.prevent="showDelete = true"></a></td>
+          <tr v-for="doc in filteredDocuments">
+            <td>{{ doc.clipping.import.scan.reception.document.type }}</td>
+            <td>{{ doc.clipping.import.scan.reception.document.name }}</td>
+            <td>{{ doc.clipping.import.scan.reception.sourceDate }}</td>
+            <td>{{ doc.clipping.import.scan.reception.nbrPage }}</td>
+            <td>{{ doc.clipping.created_at }}</td>
+            <td>{{ doc.clipping.user.name }}</td>
+            <div v-if="doc.exported">
+              <td v-if="doc.confirmed">
+                <span class="icon">
+                  <i class="fa fa-check success"></i>
+                </span>
+              </td>
+              <div v-else>
+                <td v-if="role == 'agent'">En attente...</td>
+                <td v-else>
+                  <a class="button is-small is-primary is-outlined" @click.prevent="confirm(doc)">Confirmer</a>
+                </td>
+              </div>
             </div>
             <td v-else>
-              <span class="icon">
-                <i class="fa fa-check success"></i>
-              </span>
+              <a class="button is-small is-outlined is-info" @click.prevent="addExport(doc)">Valider l'export</a>
+              <!-- <a class="delete is-medium danger" @click.prevent="showDelete = true"></a> -->
             </td>
-            <td><a class="button is-small is-info" @click.prevent="showDetail = true">Détails</a></td>
           </tr>
         </tbody>
       </table>
@@ -108,58 +114,9 @@
         </ul>
       </nav>
     </div>
-      
-      <!-- DETAIL -->
-      <div class="modal is-active" v-if="showDetail">
-        <div class="modal-background"></div>
-        <div class="modal-content box">
-          <table class="table">
-            <thead>
-              <tr>
-                <th><abbr title="type">Détails du clipping</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Type du document</td>
-                <td>{{ detail.document.type }}</td>
-              </tr>
-              <tr>
-                <td>Nom du document</td>
-                <td>{{ detail.document.name }}</td>
-              </tr>
-              <tr>
-                <td>Date de publication</td>
-                <td>{{ detail.sourceDate }}</td>
-              </tr>
-              <tr>
-                <td>Nbr. de page</td>
-                <td>{{ detail.nbrPage }}</td>
-              </tr>
-              <tr>
-                <td>Date clipping</td>
-                <td>{{ detail.date_clipping }}</td>
-              </tr>
-              <tr>
-                <td>Nom du clippeur</td>
-                <td>{{ detail.user_clipping }}</td>
-              </tr>
-              <tr>
-                <td>Nombre de d'articles total</td>
-                <td>{{ detail.nbrArtTotal }}</td>
-              </tr>
-              <tr>
-                <td>Durée totale du clipping</td>
-                <td>{{ detail.time }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <button class="modal-close is-large" @click.pervent="showDetail = false"></button>
-      </div>
 
       <!-- DELETE -->
-      <div class="modal is-active" v-if="showDelete">
+      <!-- <div class="modal is-active" v-if="showDelete">
         <div class="modal-background"></div>
         <div class="modal-content box has-text-centered">
           <span class="icon is-large">
@@ -169,7 +126,7 @@
           <a class="button is-small is-primary" @click.prevent="deleteClipped(detail.id)">OUI</a>
           <a class="button is-small" @click.pervent="showDelete = false">NON</a>
         </div>
-      </div>
+      </div> -->
     </div>
 </template>
 
@@ -188,6 +145,7 @@ import Loader from '../Loader';
 
         data() {
             return {
+                role: '',
                 documents: [],
                 pagination: {
                   current_page: '',
@@ -200,7 +158,6 @@ import Loader from '../Loader';
                 filter: 'all',
                 showDetail: false,
                 showDelete: false,
-                detail: {},
                 sorts: {
                   search: '',
                   type: 'Type',
@@ -221,35 +178,43 @@ import Loader from '../Loader';
               this.pagination.prev_page_url = pages.prev_page_url;
             },
             
-            addExport(id) {
+            addExport(doc) {
               this.loading = true;
               var self = this;
-              axios.get('/receptions/export/'+id).then(function (response) {
-                self.documents = response.data.data;
-                self.paginate(response.data);
+              axios.get('/export/'+doc.id).then(function (response) {
+                doc.exported = true;
                 self.loading = false;
               });
             },
 
-            deleteClipped(id) {
+            confirm(doc) {
               this.loading = true;
               var self = this;
-              axios.get('/receptions/deleteClipping/'+id).then(function (response) {
-                self.documents = response.data.data;
-                self.paginate(response.data);
+              axios.get('/export/confirm/'+doc.id).then(function (response) {
+                doc.confirmed = true;
                 self.loading = false;
               });
-              this.showDelete = false;
             },
+
+            // deleteClipped(id) {
+            //   this.loading = true;
+            //   var self = this;
+            //   axios.get('/receptions/deleteClipping/'+id).then(function (response) {
+            //     self.documents = response.data.data;
+            //     self.paginate(response.data);
+            //     self.loading = false;
+            //   });
+            //   this.showDelete = false;
+            // },
 
             reload() {
               this.loading = true;
               this.sorted = false;
               this.sorts.search = ''; this.sorts.type = 'Type'; this.sorts.lang = 'Langue'; this.sorts.version = 'Version'; this.sorts.date = '';
               var self = this;
-              axios.get('/receptions/getClipped').then(function(response) {
-                self.documents = response.data.data;
-                self.paginate(response.data);
+              axios.get('/export/index').then(function(response) {
+                self.documents = response.data.exports.data;
+                self.paginate(response.data.exports);
                 self.loading = false;
               });
             },
@@ -258,7 +223,7 @@ import Loader from '../Loader';
               this.loading = true;
               this.sorted = true;
               var self = this;
-              axios.post('/sort/clipping', this.sorts).then(function (response) {
+              axios.post('/sort/export', this.sorts).then(function (response) {
                 self.documents = response.data.data;
                 self.paginate(response.data);
                 self.loading = false;
@@ -279,8 +244,8 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.get(page).then(function (response) {
-                  self.documents = response.data.data;
-                  self.paginate(response.data);
+                  self.documents = response.data.exports.data;
+                  self.paginate(response.data.exports);
                   self.loading = false;
                 });
               }
@@ -303,9 +268,10 @@ import Loader from '../Loader';
         mounted() {
             this.loading = true;
             var self = this;
-            axios.get('/receptions/getClipped').then(function (response) {
-              self.documents = response.data.data;
-              self.paginate(response.data);
+            axios.get('/export/index').then(function (response) {
+              self.role = response.data.role;
+              self.documents = response.data.exports.data;
+              self.paginate(response.data.exports);
               self.loading = false;
             });
         },

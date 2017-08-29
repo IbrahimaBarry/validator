@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Scan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\Sort;
 
 class ScanController extends Controller
 {
@@ -58,5 +59,17 @@ class ScanController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Sort the listed resources.
+     *
+     * @param  string  $model
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sort(Request $request)
+    {
+        return (new Sort($request))->scan($request);
     }
 }

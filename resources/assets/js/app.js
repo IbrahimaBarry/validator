@@ -16,7 +16,7 @@ window.success = function(message) {
     iziToast.success({
         title: 'OK',
         message: message,
-        position: 'topCenter'
+        position: 'topRight'
     });
 };
 
@@ -24,7 +24,7 @@ window.error = function(message) {
     iziToast.error({
         title: 'ERROR',
         message: message,
-        position: 'topCenter'
+        position: 'topRight'
     });
 }
 

@@ -197,9 +197,9 @@ import Loader from '../Loader';
               this.loading = true;
               this.sorted = true;
               var self = this;
-              axios.post('/sort/reception', this.sorts).then(function (response) {
-                self.scans = response.data.scans.data;
-                self.paginate(response.data.scans);
+              axios.post('/sort/scan', this.sorts).then(function (response) {
+                self.scans = response.data.data;
+                self.paginate(response.data);
                 self.loading = false;
               });
             },
@@ -209,8 +209,8 @@ import Loader from '../Loader';
                 this.loading = true;
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
-                  self.scans = response.data.scans.data;
-                  self.paginate(response.data.scans);
+                  self.scans = response.data.data;
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }

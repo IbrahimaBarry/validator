@@ -17,6 +17,7 @@ class CreateExportsTable extends Migration
             $table->increments('id');
             $table->integer('clipping_id')->unsigned();
             $table->integer('user_id')->unsigned()->nullable();
+            $table->boolean('exported')->default(false);
             $table->boolean('confirmed')->default(false);
             $table->string('admin')->nullable();
             $table->foreign('clipping_id')->references('id')->on('clippings')->onUpdate('cascade')->onDelete('cascade');

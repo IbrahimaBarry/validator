@@ -1,10 +1,6 @@
 <template>
 	<div class="column is-offset-1 is-8">
 		<h2 class="title">Ajouter un utilisateur</h2>
-		<div class="notification is-success" v-if="etat == 'success'">
-			<button class="delete" 	@click.prevent="etat = ''"></button>
-			Utilisateur ajouter avec succès
-		</div>
 		<form action="" @submit.prevent="addUser">
 		<div class="field">
 		  <label class="label">Nom</label>
@@ -111,9 +107,7 @@
 					password_confirmation: '',
 					role: '',
 					permissions: []
-				},
-
-				etat: ''
+				}
 			}
 		},
 
@@ -141,7 +135,9 @@
 
 			addUser() {
 				if (this.confirmedPassword && this.permissionsNotChecked == false) {
-					axios.post('/user/store', this.user).then(response => this.etat = response.data)
+					axios.post('/user/store', this.user).then(response => {
+						success('Utilisateur ajouter avec succès')
+					})
 				}
 			}
 		}

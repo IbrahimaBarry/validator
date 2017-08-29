@@ -195,7 +195,7 @@ import Loader from '../Loader';
                 var self = this;
                 axios.post(page, this.sorts).then(function (response) {
                   self.documents = response.data.data;
-                 self.paginate(response.data);
+                  self.paginate(response.data);
                   self.loading = false;
                 });
               }
