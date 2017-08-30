@@ -4,6 +4,8 @@ import Admin from './components/Admin';
 
 window.today = function() {
     var date = new Date();
+    if (date.getHours() > 16)
+        date.setDate(date.getDate()+1);
     var day = date.getDate();
     var month = date.getMonth()+1;
     var year = date.getFullYear();

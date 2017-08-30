@@ -33261,6 +33261,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 window.today = function () {
     var date = new Date();
+    if (date.getHours() > 16) date.setDate(date.getDate() + 1);
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
@@ -35887,7 +35888,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "tag": "li",
       "to": "/documents/affect"
     }
-  }, [_c('a', [_vm._v("Affecter documents importés")])]), _vm._v(" "), _c('router-link', {
+  }, [_c('a', [_vm._v("Sélectionner documents importés")])]), _vm._v(" "), _c('router-link', {
     attrs: {
       "tag": "li",
       "to": "/documents/clipping"
@@ -36217,7 +36218,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.oldEditing = val.nbrPage;
     },
     doneEdit: function doneEdit(nbrPage) {
-      axios.get('/receptions/update/' + this.editing.id + '/' + nbrPage).then(this.editing = null);
+      if (nbrPage <= 0 || nbrPage % 2 != 0) error('Tout nombre de page doit être paire et superieur à zéro !');else {
+        var self = this;
+        axios.get('/receptions/update/' + this.editing.id + '/' + nbrPage).then(function () {
+          self.editing = null;
+          success('Nombre de page modifié !');
+        });
+      }
     },
     cancelEdit: function cancelEdit() {
       this.editing.nbrPage = this.oldEditing;
@@ -36538,118 +36545,129 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	data: function data() {
-		return {
-			documents: [],
-			selected: [],
-			step: 1,
-			filter: 'all',
-			search: '',
-			type: 'Type',
-			lang: 'Langue',
-			version: 'Version',
+  data: function data() {
+    return {
+      documents: [],
+      selected: [],
+      step: 1,
+      filter: 'all',
+      search: '',
+      type: 'Type',
+      lang: 'Langue',
+      version: 'Version',
 
-			today: ''
-		};
-	},
+      today: ''
+    };
+  },
 
 
-	methods: {
-		hideModal: function hideModal() {
-			this.$emit('hideRecepDoc');
-		},
-		addReception: function addReception() {
-			var _this = this;
+  methods: {
+    hideModal: function hideModal() {
+      this.$emit('hideRecepDoc');
+    },
+    addReception: function addReception() {
+      var _this = this;
 
-			if (this.receptions.length > 0) {
-				axios.post('/receptions/store', this.receptions).then(function (response) {
-					return _this.$emit('documentRecepted');
-				});
-			}
-		},
-		next: function next() {
-			if (this.step < 3) this.step += 1;
-		},
-		back: function back() {
-			if (this.step > 1) this.step -= 1;
-		},
-		update: function update(id, event) {
-			this.receptions.forEach(function (el) {
-				if (el.document_id == id) {
-					if (event.target.name == 'sourceDate') el.sourceDate = event.target.value;else if (event.target.name == 'nbrPage') el.nbrPage = event.target.value;else el.message = event.target.value;
-				}
-			});
-		},
-		reload: function reload() {
-			this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
-		}
-	},
+      if (this.receptions.length > 0) {
+        axios.post('/receptions/store', this.receptions).then(function (response) {
+          return _this.$emit('documentRecepted');
+        });
+      }
+    },
+    verifyNbrPage: function verifyNbrPage(receptions) {
+      var result = true;
+      receptions.forEach(function (el) {
+        if (el.nbrPage <= 0 || el.nbrPage % 2 != 0) result = false;
+      });
+      return result;
+    },
+    next: function next() {
+      if (this.step < 3) {
+        if (this.step === 2) {
+          if (this.verifyNbrPage(this.receptions)) this.step += 1;else error('Tout nombre de page doit être paire et superieur à zéro !');
+        } else this.step += 1;
+      }
+    },
+    back: function back() {
+      if (this.step > 1) this.step -= 1;
+    },
+    update: function update(id, event) {
+      this.receptions.forEach(function (el) {
+        if (el.document_id == id) {
+          if (event.target.name == 'sourceDate') el.sourceDate = event.target.value;else if (event.target.name == 'nbrPage') el.nbrPage = event.target.value;else el.message = event.target.value;
+        }
+      });
+    },
+    reload: function reload() {
+      this.search = '';this.type = 'Type';this.lang = 'Langue';this.version = 'Version';
+    }
+  },
 
-	computed: {
-		selectAll: {
-			get: function get() {
-				return this.sortedDocuments ? this.selected.length == this.sortedDocuments.length : false;
-			},
-			set: function set(value) {
-				if (value) {
-					var selected = [];
-					this.sortedDocuments.forEach(function (el) {
-						selected.push(el);
-					});
-				}
+  computed: {
+    selectAll: {
+      get: function get() {
+        return this.sortedDocuments ? this.selected.length == this.sortedDocuments.length : false;
+      },
+      set: function set(value) {
+        if (value) {
+          var selected = [];
+          this.sortedDocuments.forEach(function (el) {
+            selected.push(el);
+          });
+        }
 
-				this.selected = selected;
-			}
-		},
+        this.selected = selected;
+      }
+    },
 
-		filteredDocuments: function filteredDocuments() {
-			if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
-				return document.frequence == 'Quotidien';
-			});else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
-				return document.frequence == 'Hebdomadaire';
-			});else return this.documents.filter(function (document) {
-				return document.frequence == 'Mensuel';
-			});
-		},
-		sortedDocuments: function sortedDocuments() {
-			var _this2 = this;
+    filteredDocuments: function filteredDocuments() {
+      if (this.filter == 'all') return this.documents;else if (this.filter == 'Quotidien') return this.documents.filter(function (document) {
+        return document.frequence == 'Quotidien';
+      });else if (this.filter == 'Hebdomadaire') return this.documents.filter(function (document) {
+        return document.frequence == 'Hebdomadaire';
+      });else return this.documents.filter(function (document) {
+        return document.frequence == 'Mensuel';
+      });
+    },
+    sortedDocuments: function sortedDocuments() {
+      var _this2 = this;
 
-			var temp;
-			if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
-				return document.name == _this2.search;
-			});
+      var temp;
+      if (this.search == '') temp = this.filteredDocuments;else temp = this.filteredDocuments.filter(function (document) {
+        return document.name == _this2.search;
+      });
 
-			if (this.type != 'Type') temp = temp.filter(function (document) {
-				return document.type == _this2.type;
-			});
-			if (this.lang != 'Langue') temp = temp.filter(function (document) {
-				return document.lang == _this2.lang;
-			});
-			if (this.version != 'Version') temp = temp.filter(function (document) {
-				return document.version == _this2.version;
-			});
+      if (this.type != 'Type') temp = temp.filter(function (document) {
+        return document.type == _this2.type;
+      });
+      if (this.lang != 'Langue') temp = temp.filter(function (document) {
+        return document.lang == _this2.lang;
+      });
+      if (this.version != 'Version') temp = temp.filter(function (document) {
+        return document.version == _this2.version;
+      });
 
-			return temp;
-		},
-		receptions: function receptions() {
-			var tab = [];
-			this.selected.forEach(function (el) {
-				tab.push({ sourceDate: today(),
-					nbrPage: 0,
-					document_id: el.id,
-					message: '' });
-			});
-			return tab;
-		}
-	},
+      return temp;
+    },
+    receptions: function receptions() {
+      var tab = [];
+      this.selected.forEach(function (el) {
+        tab.push({ sourceDate: today(),
+          nbrPage: 0,
+          document_id: el.id,
+          message: '' });
+      });
+      return tab;
+    }
+  },
 
-	mounted: function mounted() {
-		var self = this;
-		axios.get('documents/index').then(function (response) {
-			self.documents = response.data;
-			self.today = today();
-		});
-	}
+  mounted: function mounted() {
+    var self = this;
+    axios.get('documents/index').then(function (response) {
+      self.documents = response.data;
+      self.today = today();
+    });
+  }
 });
 
 /***/ }),
@@ -36928,7 +36946,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "all"
     }
-  })])])]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._m(5), _vm._v(" "), _vm._m(6), _vm._v(" "), _vm._m(7)])]), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(document) {
+  })])])]), _vm._v(" "), _c('th', [_vm._v("Type")]), _vm._v(" "), _c('th', [_vm._v("Nom")]), _vm._v(" "), _c('th', [_vm._v("Source")]), _vm._v(" "), _c('th', [_vm._v("Source name")]), _vm._v(" "), _c('th', [_vm._v("Langue")]), _vm._v(" "), _c('th', [_vm._v("Version")]), _vm._v(" "), _c('th', [_vm._v("Fréquence")]), _vm._v(" "), _c('th', [_vm._v("Emplacement")])])]), _vm._v(" "), _c('tbody', _vm._l((_vm.sortedDocuments), function(document) {
     return _c('tr', [_c('td', [_c('div', {
       staticClass: "field"
     }, [_c('p', {
@@ -36982,7 +37000,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "table"
     }
-  }, [_vm._m(8), _vm._v(" "), _c('tbody', _vm._l((_vm.selected), function(document) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.selected), function(document) {
     return _c('tr', {
       on: {
         "mouseover": function($event) {
@@ -37096,87 +37114,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Annuler")])])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source"
-    }
-  }, [_vm._v("Source")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source name"
-    }
-  }, [_vm._v("Source name")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "langue"
-    }
-  }, [_vm._v("Langue")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "version"
-    }
-  }, [_vm._v("Version")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "frequence"
-    }
-  }, [_vm._v("Fréquence")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('th', [_c('abbr', {
-    attrs: {
-      "title": "emplacement"
-    }
-  }, [_vm._v("Emplacement")])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_c('abbr', {
-    attrs: {
-      "title": "type"
-    }
-  }, [_vm._v("Type")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nom"
-    }
-  }, [_vm._v("Nom")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source"
-    }
-  }, [_vm._v("Source")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "source name"
-    }
-  }, [_vm._v("Source name")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "lang"
-    }
-  }, [_vm._v("Langue")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "sourceDate"
-    }
-  }, [_vm._v("Date de publication")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "nbrPage"
-    }
-  }, [_vm._v("Nombre de page")])]), _vm._v(" "), _c('th', [_c('abbr', {
-    attrs: {
-      "title": "version"
-    }
-  }, [_vm._v("Cause du retard")])])])])
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Type")]), _vm._v(" "), _c('th', [_vm._v("Nom")]), _vm._v(" "), _c('th', [_vm._v("Source")]), _vm._v(" "), _c('th', [_vm._v("Source name")]), _vm._v(" "), _c('th', [_vm._v("Langue")]), _vm._v(" "), _c('th', [_vm._v("Date de publication")]), _vm._v(" "), _c('th', [_vm._v("Nombre de page")]), _vm._v(" "), _c('th', [_vm._v("Cause du retard")])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -39516,7 +39454,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.affect(doc)
         }
       }
-    }, [_vm._v("Affecter")])])])
+    }, [_vm._v("Sélectionner")])])])
   }))]), _vm._v(" "), (_vm.pagination.last_page > 1) ? _c('nav', {
     staticClass: "pagination"
   }, [_c('a', {

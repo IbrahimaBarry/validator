@@ -216,7 +216,16 @@ import Loader from '../Loader';
             },
 
             doneEdit(nbrPage) {
-              axios.get('/receptions/update/'+this.editing.id+'/'+nbrPage).then(this.editing = null);
+              if (nbrPage <= 0 || nbrPage % 2 != 0)
+                error('Tout nombre de page doit être paire et superieur à zéro !');
+              else {
+                var self = this;
+                axios.get('/receptions/update/'+this.editing.id+'/'+nbrPage)
+                  .then(function() {
+                    self.editing = null;
+                    success('Nombre de page modifié !')
+                  });
+              }
             },
 
             cancelEdit() {

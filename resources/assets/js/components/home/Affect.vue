@@ -81,7 +81,7 @@
             </span>
           </td>
           <td v-else>
-            <a class="button is-small is-outlined is-info" @click.prevent="affect(doc)">Affecter</a>
+            <a class="button is-small is-outlined is-info" @click.prevent="affect(doc)">Sélectionner</a>
           </td>
         </tr>
       </tbody>

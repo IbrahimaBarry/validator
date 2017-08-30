@@ -10,7 +10,7 @@ use App\Document;
 use Gate;
 
 class HomeController extends Controller
-{
+{   
     /**
      * Create a new controller instance.
      *

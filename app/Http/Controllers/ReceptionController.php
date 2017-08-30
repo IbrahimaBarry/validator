@@ -7,10 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
+use App\History;
 use App\Helpers\Sort;
 
 class ReceptionController extends Controller
 {
+   /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('auth');
@@ -64,6 +70,10 @@ class ReceptionController extends Controller
     public function update($id ,$nbrPage)
     {
         $reception = Reception::find($id);
+
+        // Save update in Histories
+        History::create(['type' => 'Modification nombre de page', 'description' => 'Le nombre de page du journal ' . $reception->document->name . ', reçu le ' . $reception->created_at . ' à été modifié de ' . $reception->nbrPage . ' à ' . $nbrPage, 'user_id' => Auth::user()->id]);
+
         $reception->nbrPage = $nbrPage;
         $reception->save();
     }
@@ -77,19 +87,6 @@ class ReceptionController extends Controller
      */
     public function sort(Request $request)
     {
-        // if ($model == 'affect') {
-        //     $agents = [];
-
-        //     foreach (User::where('role', 'agent')->get() as $user) {
-        //         foreach ($user->permissions as $permission) {
-        //             if ($permission->name === 'clipping')
-        //                 array_push($agents, $user);
-        //         }
-        //     }
-
-        //     return ['imports' => (new Sort())->index($model, $request), 'agents' => $agents];
-        // }
-        // else
         return (new Sort($request))->reception($request);
     }
 

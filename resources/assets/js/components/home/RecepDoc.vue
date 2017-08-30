@@ -81,14 +81,14 @@
 						  </p>
 						</div>
 		          	</th>
-		            <th><abbr title="type">Type</abbr></th>
-		            <th><abbr title="nom">Nom</abbr></th>
-		            <th><abbr title="source">Source</abbr></th>
-		            <th><abbr title="source name">Source name</abbr></th>
-		            <th><abbr title="langue">Langue</abbr></th>
-		            <th><abbr title="version">Version</abbr></th>
-		            <th><abbr title="frequence">Fréquence</abbr></th>
-		            <th><abbr title="emplacement">Emplacement</abbr></th>
+		            <th>Type</th>
+		            <th>Nom</th>
+		            <th>Source</th>
+		            <th>Source name</th>
+		            <th>Langue</th>
+		            <th>Version</th>
+		            <th>Fréquence</th>
+		            <th>Emplacement</th>
 		          </tr>
 		        </thead>
 		        <tbody>
@@ -118,14 +118,14 @@
 	      	<table v-show="step == 2" id="table" class="table">
 		        <thead>
 		          <tr>
-		            <th><abbr title="type">Type</abbr></th>
-		            <th><abbr title="nom">Nom</abbr></th>
-		            <th><abbr title="source">Source</abbr></th>
-		            <th><abbr title="source name">Source name</abbr></th>
-		            <th><abbr title="lang">Langue</abbr></th>
-		            <th><abbr title="sourceDate">Date de publication</abbr></th>
-		            <th><abbr title="nbrPage">Nombre de page</abbr></th>
-		            <th><abbr title="version">Cause du retard</abbr></th>
+		            <th>Type</th>
+		            <th>Nom</th>
+		            <th>Source</th>
+		            <th>Source name</th>
+		            <th>Langue</th>
+		            <th>Date de publication</th>
+		            <th>Nombre de page</th>
+		            <th>Cause du retard</th>
 		          </tr>
 		        </thead>
 		        <tbody>
@@ -211,9 +211,26 @@
 				}
         	},
 
+        	verifyNbrPage(receptions) {
+        		var result = true;
+            	receptions.forEach(el => {
+            		if (el.nbrPage <= 0 || el.nbrPage % 2 != 0)
+            			result = false;
+            	});
+            	return result;
+            },
+
         	next() {
-        		if (this.step < 3)
-        			this.step += 1;
+        		if (this.step < 3) {
+        			if (this.step === 2) {
+        				if (this.verifyNbrPage(this.receptions))
+        					this.step += 1;
+        				else
+        					error('Tout nombre de page doit être paire et superieur à zéro !');
+        			}
+        			else
+        				this.step += 1;
+        		}
         	},
 
         	back() {

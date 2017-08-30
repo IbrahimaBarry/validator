@@ -7,6 +7,16 @@ use App\Reception;
 
 class AdminController extends Controller
 {
+	/**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function dashboard() {
 		$receptions = Reception::with('document')->get();
 

@@ -12,7 +12,7 @@
 		    	<a>Import</a>
 		    </router-link>
 		    <router-link tag="li" to="/documents/affect">
-			    <a>Affecter documents importés</a>
+			    <a>Sélectionner documents importés</a>
 			</router-link>
 
 			<router-link tag="li" to="/documents/clipping">
