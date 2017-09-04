@@ -20,6 +20,8 @@ class CreateScansTable extends Migration
             $table->boolean('scanned')->default(false);
             $table->boolean('confirmed')->default(false);
             $table->string('admin')->nullable();
+            $table->string('message')->nullable();
+            $table->timestamp('date_scan')->nullable();
             $table->foreign('reception_id')->references('id')->on('receptions')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

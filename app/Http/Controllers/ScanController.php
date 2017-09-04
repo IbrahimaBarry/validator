@@ -6,6 +6,7 @@ use App\Scan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Sort;
+use Carbon\Carbon;
 
 class ScanController extends Controller
 {
@@ -36,11 +37,14 @@ class ScanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function scanning($id)
+    public function scanning($id, $message)
     {
         $scan = Scan::find($id);
         $scan->user_id = Auth::user()->id;
         $scan->scanned = true;
+        $scan->date_scan = Carbon::now();
+        if($message != 'null')
+            $scan->message = $message;
         $scan->save();
     }
 

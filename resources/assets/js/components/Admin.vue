@@ -8,27 +8,20 @@
 				    General
 				  </p>
 				  <ul class="menu-list">
-				  	<li>
-				    	<router-link tag="a" to="/admin/dashboard" exact>
-				      		Tableau de bord
-				      	</router-link>
-					</li>
 				    <li>
 				    	<router-link tag="a" to="/admin/documents" exact>
 				      		Documents
+				      	</router-link>
+					</li>
+					<li>
+				    	<router-link tag="a" to="/admin/histories" exact>
+				      		Historique
 				      	</router-link>
 					</li>
 				  </ul>
 				  <p class="menu-label">
 				    Administration
 				  </p>
-				  <ul class="menu-list">
-				    <li>
-				    	<router-link tag="a" to="/admin/teams" exact>
-				      		Planning des équipes
-				      	</router-link>
-				    </li>
-				  </ul>
 				  <ul class="menu-list">
 				    <li>
 				      <a>Gestion utilisateurs</a>

@@ -21,6 +21,7 @@ class CreateImportsTable extends Migration
             $table->boolean('confirmed')->default(false);
             $table->boolean('affected')->default(false);
             $table->string('admin')->nullable();
+            $table->timestamp('date_import')->nullable();
             $table->foreign('scan_id')->references('id')->on('scans')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

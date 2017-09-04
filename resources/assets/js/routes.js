@@ -42,12 +42,12 @@ let routes = [
 		component: require('./components/Admin'),
 		children: [
 			{
-				path: '/admin/dashboard',
-				component: require('./components/admin/Dashboard')
-			},
-			{
 				path: '/admin/documents',
 				component: require('./components/admin/Documents')
+			},
+			{
+				path: '/admin/histories',
+				component: require('./components/admin/History')
 			},
 			{
 				path: '/admin/addUser',
@@ -61,11 +61,7 @@ let routes = [
 				path: '/admin/user/:id(\\d+)',
 				component: require('./components/admin/Profile'),
 				name: 'profile'
-			},
-			{
-				path: '/admin/teams',
-				component: require('./components/admin/Planning')
-			},
+			}
 		]
 	},
 

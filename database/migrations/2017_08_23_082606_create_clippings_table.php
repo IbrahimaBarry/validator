@@ -22,6 +22,7 @@ class CreateClippingsTable extends Migration
             $table->integer('nbrArtTotal')->nullable();
             $table->boolean('confirmed')->default(false);
             $table->string('admin')->nullable();
+            $table->timestamp('date_clipping')->nullable();
             $table->foreign('import_id')->references('id')->on('imports')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

@@ -75,7 +75,7 @@
             <td>{{ doc.clipping.import.scan.reception.document.name }}</td>
             <td>{{ doc.clipping.import.scan.reception.sourceDate }}</td>
             <td>{{ doc.clipping.import.scan.reception.nbrPage }}</td>
-            <td>{{ doc.clipping.created_at }}</td>
+            <td>{{ doc.clipping.date_clipping }}</td>
             <td>{{ doc.clipping.user.name }}</td>
             <div v-if="doc.exported">
               <td v-if="doc.confirmed">

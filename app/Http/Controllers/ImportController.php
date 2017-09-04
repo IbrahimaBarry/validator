@@ -6,6 +6,7 @@ use App\Import;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Sort;
+use Carbon\Carbon;
 
 class ImportController extends Controller
 {
@@ -41,6 +42,7 @@ class ImportController extends Controller
         $import = Import::find($id);
         $import->user_id = Auth::user()->id;
         $import->imported = true;
+        $import->date_import = Carbon::now();
         $import->save();
     }
 

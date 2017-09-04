@@ -155,7 +155,6 @@
 						        <option value="Retard reception">Retard reception</option>
 						        <option value="Retard publication">Retard publication</option>
 						        <option value="Perte document">Perte document</option>
-						        <option>Autre</option>
 						      </select>
 						    </div>
 						  </div>

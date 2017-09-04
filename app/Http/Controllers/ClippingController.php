@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Clipping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ClippingController extends Controller
 {
@@ -46,6 +47,7 @@ class ClippingController extends Controller
     {
         $clipping = Clipping::find($request->id);
         $clipping->clipped = true;
+        $clipping->date_clipping = Carbon::now();
         $clipping->nbrArtTotal = $request->nbrArtTotal;
         $clipping->time = $request->time;
         $clipping->save();

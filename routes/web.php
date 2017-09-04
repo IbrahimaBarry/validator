@@ -34,7 +34,7 @@ Route::get('/receptions/update/{id}/{nbrPage}', 'ReceptionController@update');
 
 // SCAN
 Route::get('/scan/index', 'ScanController@index');
-Route::get('/scan/scanning/{id}', 'ScanController@scanning');
+Route::get('/scan/scanning/{id}/{message}', 'ScanController@scanning');
 Route::get('/scan/confirm/{id}', 'ScanController@confirm');
 
 // IMPORT
@@ -64,4 +64,4 @@ Route::post('/sort/affect', 'AffectController@sort');
 Route::post('/sort/export', 'ExportController@sort');
 
 // ADMIN
-Route::get('/admin/dashboard', 'AdminController@dashboard');
+Route::get('/admin/histories', 'AdminController@histories');

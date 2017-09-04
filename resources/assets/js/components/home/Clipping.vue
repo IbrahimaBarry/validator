@@ -56,7 +56,7 @@
       </div>
     </nav>
       
-      <Loader v-if="loading"></Loader>
+    <Loader v-if="loading"></Loader>
     <div v-else>
       <table :class="{table: true, loading: loading}">
         <thead>
@@ -68,6 +68,7 @@
             <th>Nombre de page</th>
             <th>Langue</th>
             <th>Date de publication</th>
+            <th></th>
             <th></th>
           </tr>
         </thead>
@@ -96,6 +97,10 @@
             <td v-else>
               <!-- <div class="chrono"><Chrono @endClipping="endClipping"></Chrono></div> -->
               <a class="button is-small is-info is-outlined" @click.prevent="startClipping(doc)">Démarrer le clipping</a>
+            </td>
+            <td>
+              <a class="button is-small" @click.prevent="showDetail = true">Details</a>
+              <Detail :document="doc" v-if="showDetail" @closeDetail="showDetail = false"></Detail>
             </td>
           </tr>
         </tbody>
@@ -148,7 +153,7 @@
 </template>
 
 <script>
-// import Chrono from './Chrono';
+import Detail from './Detail';
 import Loader from '../Loader';
 
     export default {
@@ -162,6 +167,7 @@ import Loader from '../Loader';
         },
 
         components: {
+          Detail,
           Loader
         },
 
@@ -171,6 +177,7 @@ import Loader from '../Loader';
                 documents: [],
                 clipping: null,
                 showModal: false,
+                showDetail: false,
                 filter: 'all',
                 search: '',
                 type: 'Type',

@@ -64,7 +64,7 @@
               <th>Nombre de page</th>
               <th>Date de réception</th>
               <th>Agent reception</th>
-              <th>Cause du retard</th>
+              <th>Observation</th>
               <th>Etat</th>
             </tr>
           </thead>
@@ -76,7 +76,7 @@
               <td>{{ scan.reception.nbrPage }}</td>
               <td>{{ scan.reception.created_at }}</td>
               <td>{{ scan.reception.user.name }}</td>
-              <td>{{ scan.reception.message }}</td>
+              <td>{{ scan.message }}</td>
               <div v-if="scan.scanned">
                 <td v-if="scan.confirmed">
                   <span class="icon">
@@ -91,11 +91,41 @@
                 </div>
               </div>
               <td v-else>
-                <a class="button is-small is-info is-outlined" @click.prevent="addScan(scan)">Démarrer le scanne</a>
+                <a class="button is-small is-info is-outlined" @click.prevent="startScan(scan)">Démarrer le scanne</a>
               </td>
             </tr>
           </tbody>
         </table>
+
+        <!-- Validation SCAN -->
+        <div class="modal is-active" v-if="showModal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Démarrer scan</p>
+              <button class="delete" aria-label="close" @click.prevent="showModal = false"></button>
+            </header>
+            <section class="modal-card-body">
+              <div class="field">
+                <label class="label">Observation</label>
+                <div class="control">
+                  <div class="select">
+                    <select v-model="scan.message">
+                      <option disabled>-- Choisir un message --</option>
+                      <option>Scan avec reserve</option>
+                      <option>Page manquante</option>
+                      <option>Mal imprimé</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-success" @click.prevent="addScan">Valider</button>
+              <button class="button" @click.prevent="showModal = false">Annuler</button>
+            </footer>
+          </div>
+        </div>
 
         <!-- PAGINATION -->
         <nav class="pagination" v-if="pagination.last_page > 1">
@@ -133,6 +163,7 @@ import Loader from '../Loader';
                 showModal: false,
                 role: '',
                 scans: [],
+                scan: null,
                 pagination: {
                   current_page: '',
                   last_page: '',
@@ -162,11 +193,17 @@ import Loader from '../Loader';
               this.pagination.prev_page_url = pages.prev_page_url;
             },
 
-            addScan(scan) {
+            startScan(scan) {
+              this.scan = scan;
+              this.showModal = true;
+            },
+
+            addScan() {
               this.loading = true;
               var self = this;
-              axios.get('/scan/scanning/'+scan.id).then(function (response) {
-                scan.scanned = true;
+              axios.get('/scan/scanning/'+this.scan.id+'/'+this.scan.message).then(function (response) {
+                self.scan.scanned = true;
+                self.showModal = false;
                 self.loading = false;
               });
             },

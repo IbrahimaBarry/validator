@@ -73,7 +73,7 @@
             <td>{{ doc.scan.reception.document.name }}</td>
             <td>{{ doc.scan.reception.sourceDate }}</td>
             <td>{{ doc.scan.reception.nbrPage }}</td>
-            <td>{{ doc.scan.created_at }}</td>
+            <td>{{ doc.scan.date_scan }}</td>
             <td>{{ doc.scan.user.name }}</td>
             <div v-if="doc.imported">
               <td v-if="doc.confirmed">

@@ -72,7 +72,7 @@ class ReceptionController extends Controller
         $reception = Reception::find($id);
 
         // Save update in Histories
-        History::create(['type' => 'Modification nombre de page', 'description' => 'Le nombre de page du journal ' . $reception->document->name . ', reçu le ' . $reception->created_at . ' à été modifié de ' . $reception->nbrPage . ' à ' . $nbrPage, 'user_id' => Auth::user()->id]);
+        History::create(['type' => 'Modification nombre de page', 'description' => 'Le nombre de page du journal " ' . $reception->document->name . ' ", reçu le ' . $reception->created_at . ' à été modifié de ' . $reception->nbrPage . ' à ' . $nbrPage, 'user_id' => Auth::user()->id]);
 
         $reception->nbrPage = $nbrPage;
         $reception->save();
