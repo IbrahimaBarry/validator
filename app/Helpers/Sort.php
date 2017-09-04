@@ -69,7 +69,7 @@ class Sort
                     	else
                     		$query->where($key, $value);
                     }
-                })->whereDate('created_at', $request->date)->latest()->paginate(20);
+                })->whereDate('date_scan', $request->date)->latest()->paginate(20);
         }
         else {
         	return Scan::with(['reception.user', 'reception.document'])
@@ -98,7 +98,7 @@ class Sort
                     	else
                     		$query->where($key, $value);
                     }
-                })->whereDate('created_at', $request->date)->latest()->paginate(20);
+                })->whereDate('date_import', $request->date)->latest()->paginate(20);
         }
         else {
         	return Import::with(['scan.user', 'scan.reception.document'])
@@ -127,7 +127,7 @@ class Sort
                     	else
                     		$query->where($key, $value);
                     }
-                })->whereDate('created_at', $request->date)->latest()->paginate(20);
+                })->whereDate('date_import', $request->date)->latest()->paginate(20);
         }
         else {
         	return Import::with(['user', 'scan.user', 'scan.reception.document'])
@@ -156,7 +156,7 @@ class Sort
                     	else
                     		$query->where($key, $value);
                     }
-                })->whereDate('created_at', $request->date)->latest()->paginate(20);
+                })->whereDate('date_clipping', $request->date)->latest()->paginate(20);
         }
         else {
         	return Export::with(['clipping.user', 'clipping.import.scan.reception.document'])
