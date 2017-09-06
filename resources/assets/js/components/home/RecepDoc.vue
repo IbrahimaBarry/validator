@@ -262,8 +262,8 @@
 					return this.sortedDocuments ? this.selected.length == this.sortedDocuments.length : false;
 				},
 				set(value) {
+					var selected = [];
 					if (value) {
-						var selected = [];
 						this.sortedDocuments.forEach(function (el) {
 							selected.push(el);
 						});

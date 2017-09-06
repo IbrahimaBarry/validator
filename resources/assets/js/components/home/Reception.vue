@@ -52,7 +52,7 @@
         <p class="level-item"><a :class="{'is-active': filter=='Hebdomadaire'}" @click.prevent="filter='Hebdomadaire'">Hebdomadaires</a></p>
         <p class="level-item"><a :class="{'is-active': filter == 'Mensuel'}" @click.prevent="filter = 'Mensuel'">Mensuels</a></p>
         <p class="level-item verticalLine">
-          <a class="button" @click.prevent="showRecepDoc = true">Reception</a>
+          <a class="button rainbow" @click.prevent="showRecepDoc = true">Reception</a>
         </p>
       </div>
     </nav>

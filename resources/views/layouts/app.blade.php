@@ -12,27 +12,6 @@
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-        <style>
-          .rainbow {
-              -webkit-animation: rainbow 8s ease infinite;
-              animation: rainbow 8s ease infinite;
-              background-image: linear-gradient(124deg, #ff470f, #ff3860, #b86bff, #3273dc);
-              background-size: 800% 800%;
-          }
-
-          @keyframes rainbow {
-            0% {
-                background-position: 0% 80%;
-            }
-            50% {
-                background-position: 100% 20%;
-            }
-            100% {
-                background-position: 0% 80%;
-            }
-          }
-        </style>
-
     </head>
     <body>
         
@@ -67,28 +46,6 @@
                   <router-link tag="a" to="/" class="navbar-item">
                       Accueil
                   </router-link>
-                  <!-- <div :class="{'navbar-item': true, 'has-dropdown': true, 'is-active': dropdown}"
-                     @mouseover.prevent="dropdown = true" @mouseleave.prevent="dropdown = false">
-                  <a class="navbar-link">
-                    Docs
-                  </a>
-
-                  <div v-if="dropdown" class="navbar-dropdown">
-                    <a class="navbar-item">
-                      Overview
-                    </a>
-                    <a class="navbar-item">
-                      Elements
-                    </a>
-                    <a class="navbar-item">
-                      Components
-                    </a>
-                    <hr class="navbar-divider">
-                    <div class="navbar-item">
-                      Version 1.0.0
-                    </div>
-                  </div>
-                </div> -->
                 @if (Auth::user()->role === 'admin')
                   <router-link to="/admin" tagb="a" class="navbar-item">
                       Espace administration
@@ -136,13 +93,5 @@
         </div>
 
         <script src="{{ asset('js/app.js' )}}"></script>
-
-        <!-- <script>
-            iziToast.info({
-                title: 'Hello',
-                message: 'Welcome!',
-                position: 'topCenter'
-            });
-        </script> -->
     </body>
 </html>
