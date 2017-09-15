@@ -32,7 +32,7 @@
 		              <div class="select">
 		                <select v-model="type">
 		                  <option>Type</option>
-		                  <option value="Magasine">Magasine</option>
+		                  <option value="Magazine">Magazine</option>
 		                  <option value="Journal">Journal</option>
 		                </select>
 		              </div>

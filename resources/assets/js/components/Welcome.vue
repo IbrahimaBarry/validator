@@ -6,7 +6,7 @@
 		  		<a>Reception</a>
 	  		</router-link>
 		    <router-link tag="li" to="/documents/scan">
-		    	<a>Scanne</a>
+		    	<a>Scan</a>
 	    	</router-link>
 		    <router-link tag="li" to="/documents/import">
 		    	<a>Import</a>

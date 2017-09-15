@@ -48,7 +48,7 @@
 			      <select v-model="document.type">
 			        <option disabled="">-- Choisir un type --</option>
 			        <option value="Journal">Journal</option>
-			        <option value="Magasine">Magasine</option>
+			        <option value="Magazine">Magazine</option>
 			      </select>
 			    </span>
 			  </p>

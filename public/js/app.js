@@ -32079,7 +32079,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "tag": "li",
       "to": "/documents/scan"
     }
-  }, [_c('a', [_vm._v("Scanne")])]), _vm._v(" "), _c('router-link', {
+  }, [_c('a', [_vm._v("Scan")])]), _vm._v(" "), _c('router-link', {
     attrs: {
       "tag": "li",
       "to": "/documents/import"
@@ -32965,9 +32965,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("Magazine")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Journal"
     }
@@ -33486,9 +33486,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("Magazine")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Journal"
     }
@@ -34223,9 +34223,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("Magazine")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Journal"
     }
@@ -34943,9 +34943,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("Magazine")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Journal"
     }
@@ -35577,9 +35577,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("Magazine")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Journal"
     }
@@ -36387,9 +36387,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("Magazine")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Journal"
     }
@@ -37100,9 +37100,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("Type")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("Magazine")]), _vm._v(" "), _c('option', {
     attrs: {
       "value": "Journal"
     }
@@ -38102,9 +38102,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Journal")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")])])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Magazine")])])])])]), _vm._v(" "), _c('div', {
     staticClass: "field"
   }, [_c('label', {
     staticClass: "label"
@@ -38620,9 +38620,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("Journal")]), _vm._v(" "), _c('option', {
     attrs: {
-      "value": "Magasine"
+      "value": "Magazine"
     }
-  }, [_vm._v("Magasine")])])])])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Magazine")])])])])]), _vm._v(" "), _c('div', {
     staticClass: "field"
   }, [_c('label', {
     staticClass: "label"
